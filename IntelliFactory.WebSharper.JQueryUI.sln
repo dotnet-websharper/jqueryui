@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "IntelliFactory.WebSharper.JQueryUI", "IntelliFactory.WebSharper.JQueryUI\IntelliFactory.WebSharper.JQueryUI.fsproj", "{7E70B9E1-7E68-4DF9-A3B8-74378E31BE08}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "IntelliFactory.WebSharper.JQueryUI.Test", "Test\IntelliFactory.WebSharper.JQueryUI.Test.fsproj", "{24E98E4F-26FA-440A-B6B4-AA1152527876}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntelliFactory.WebSharper.JQueryUI.TestWeb", "IntelliFactory.WebSharper.JQueryUI.TestWeb\IntelliFactory.WebSharper.JQueryUI.TestWeb.csproj", "{A54FC40B-BF80-4815-8735-E167D5078392}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E70B9E1-7E68-4DF9-A3B8-74378E31BE08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E70B9E1-7E68-4DF9-A3B8-74378E31BE08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E70B9E1-7E68-4DF9-A3B8-74378E31BE08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E70B9E1-7E68-4DF9-A3B8-74378E31BE08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24E98E4F-26FA-440A-B6B4-AA1152527876}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24E98E4F-26FA-440A-B6B4-AA1152527876}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24E98E4F-26FA-440A-B6B4-AA1152527876}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24E98E4F-26FA-440A-B6B4-AA1152527876}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A54FC40B-BF80-4815-8735-E167D5078392}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A54FC40B-BF80-4815-8735-E167D5078392}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A54FC40B-BF80-4815-8735-E167D5078392}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A54FC40B-BF80-4815-8735-E167D5078392}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
