@@ -6,10 +6,10 @@
 <head runat="server">
     <title></title>
     <WebSharper:ScriptManager runat="server"></WebSharper:ScriptManager>
-    <link type="text/css" href="http://jqueryui.com/latest/themes/base/jquery.ui.all.css" rel="stylesheet" />
+<%--    <link type="text/css" href="http://jqueryui.com/latest/themes/base/jquery.ui.all.css" rel="stylesheet" />
     <script type="text/javascript" src="http://jqueryui.com/latest/jquery-1.4.2.js"></script>
     <script type="text/javascript" src="http://jquery-ui.googlecode.com/svn/tags/1.8rc1/jquery-1.4.1.js"></script>
-    <script type="text/javascript" src="http://jquery-ui.googlecode.com/svn/tags/1.8rc1/ui/jquery-ui.js"></script>
+    <script type="text/javascript" src="http://jquery-ui.googlecode.com/svn/tags/1.8rc1/ui/jquery-ui.js"></script>--%>
 </head>
 <body>
     <form id="form1" runat="server">

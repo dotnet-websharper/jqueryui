@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7e70b9e1-7e68-4df9-a3b8-74378e31be08}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>WebSharperProject</RootNamespace>
+    <AssemblyName>IntelliFactory.WebSharper.JQueryUI</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <Name>IntelliFactory.WebSharper.JQueryUI</Name>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <Tailcalls>false</Tailcalls>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>3</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <Tailcalls>true</Tailcalls>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <WarningLevel>3</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="IntelliFactory.WebSharper">
+      <HintPath>$(ProgramFiles)\IntelliFactory\WebSharper\<!--version-->0.4.79<!--/version-->\IntelliFactory.WebSharper.dll</HintPath>
+      <CopyLocal>true</CopyLocal>
+    </Reference>
+    <Reference Include="IntelliFactory.WebSharper.Compiler">
+      <HintPath>$(ProgramFiles)\IntelliFactory\WebSharper\<!--version-->0.4.79<!--/version-->\IntelliFactory.WebSharper.Compiler.dll</HintPath>
+      <CopyLocal>true</CopyLocal>
+    </Reference>
+    <Reference Include="IntelliFactory.WebSharper.Formlet">
+      <HintPath>$(ProgramFiles)\IntelliFactory\WebSharper\<!--version-->0.4.79<!--/version-->\IntelliFactory.WebSharper.Formlet.dll</HintPath>
+      <CopyLocal>true</CopyLocal>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="WebSharper">
+      <HintPath>$(ProgramFiles)\IntelliFactory\WebSharper\<!--version-->0.4.79<!--/version-->\WebSharper.exe</HintPath>
+      <CopyLocal>true</CopyLocal>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="FSharp.Core">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Dependencies.fs" />
+    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Accordion.fs" />
+    <Compile Include="Autocomplete.fs" />
+    <Compile Include="ButtonOfJQ.fs" />
+    <Compile Include="Datepicker.fs" />
+    <Compile Include="Dialog.fs" />
+    <Compile Include="ProgressBar.fs" />
+    <Compile Include="Slider.fs" />
+    <Compile Include="Tabs.fs" />
+    <Compile Include="Draggable.fs" />
+    <Compile Include="Droppable.fs" />
+    <Compile Include="Resizable.fs" />
+    <Compile Include="Selectable.fs" />
+    <Compile Include="Sortable.fs" />
+    <Compile Include="Position.fs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+</Project>

@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Module1.fs" />
+    <Compile Include="Test.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IntelliFactory.WebSharper.JQueryUI\IntelliFactory.WebSharper.JQueryUI.fsproj">
