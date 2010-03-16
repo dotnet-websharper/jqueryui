@@ -82,24 +82,79 @@ module Accordion =
         [<JavaScriptConstructor>]
         new () = {}
 
+
+    [<Inline "jQuery($el).accordion($conf)">]
+    let internal NewAccordion (el: Element, conf: AccordionConfiguration) = ()
+    
     [<JavaScriptType>]
-    type AccordionInternal =
+    type Accordion =
+        
+        [<JavaScriptConstructor>]
+        new () = {}
+        
+        [<DefaultValue>]
+        val mutable private element : Element
 
-        [<Inline "jQuery($id).accordion()">]
-        static member NewPrivate (id: string) : AccordionInternal = 
-            Unchecked.defaultof<_>
+        [<DefaultValue>]
+        val mutable private actions : option<List<Accordion -> unit>>
 
-        [<Inline "jQuery($el).accordion()">]
-        static member New (el: Element) : AccordionInternal = 
-            Unchecked.defaultof<_>
+        [<Inline "jQuery($this.element).accordion('destroy')">]
+        member private this.destroy() = ()
 
-        [<Inline "jQuery($el).accordion($conf)">]
-        static member New (el: Element, conf: AccordionConfiguration): AccordionInternal = 
-            Unchecked.defaultof<_>
+        [<Inline "jQuery($this.element).accordion('disable')">]
+        member private this.disable () = ()
+
+        [<Inline "jQuery($this.element).accordion('enable')">]
+        member private this.enable () = ()
+
+        [<Inline "jQuery($this.element).accordion('activate', $index)">]
+        member private this.activate (index: int) = ()
+
+        [<Inline "jQuery($this.element).accordion('option', $name, $value)">]
+        member private this.option (name: string, value: obj) = ()
 
         [<JavaScript>]
-        static member New (els : List<string * Element>, conf: AccordionConfiguration): AccordionInternal = 
-            let el =
+        member private this.CallMethod(f: unit -> unit) =
+            match this.actions with
+            | None ->                
+                f ()
+            | Some acs ->                
+                this.actions <- Some ((fun _ -> f ()) :: acs)
+        
+        [<JavaScript>]
+        member this.Destroy() =
+            this.CallMethod (fun () -> this.destroy())
+
+        [<JavaScript>]
+        member this.Disable() =
+            this.CallMethod (fun () -> this.disable())
+                
+        [<JavaScript>]
+        member this.Enable() =
+            this.CallMethod (fun () -> this.enable())
+        
+        [<JavaScript>]
+        member this.Activate(index: int) =
+            this.CallMethod (fun () -> this.activate(index))
+        
+        [<JavaScript>]
+        member this.Init() =            
+            match this.actions with
+            | Some acs ->                
+                acs
+                |> List.rev
+                |> List.iter (fun f -> 
+                    f this
+                )                
+            | None ->
+                ()
+            this.actions <- None                  
+                        
+        [<JavaScript>]
+        static member New (els : List<string * Element>, conf: AccordionConfiguration): Accordion = 
+            let a = new Accordion()            
+            a.actions <- Some [fun a -> NewAccordion(a.Element, conf)]            
+            let panel =
                 els
                 |> List.map (fun (header, el) ->
                     [
@@ -109,21 +164,14 @@ module Accordion =
                 )
                 |> List.concat
                 |> Div
-            AccordionInternal.New(el, conf)
-
+                |> On Events.Attach (fun _ _ -> a.Init())
+            a.element <- panel
+            a
+        
         [<JavaScript>]
-        static member Attach (el: Element) =
-            el
-            |> On Events.Attach (fun _ _ -> 
-                AccordionInternal.New (el)
-                |> ignore
-            )
+        member this.Element
+            with get () =
+                this.element
 
-        [<JavaScript>]
-        static member AttachWithConfiguration (conf: AccordionConfiguration) (el: Element) =
-            el
-            |> On Events.Attach (fun _ _ -> 
-                AccordionInternal.New (el, conf)
-                |> ignore
-            )
+
 
