@@ -14,130 +14,317 @@ namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
+open Utils
+
 
 [<JavaScriptType>]
-//[<Require(typeof<Dependencies.Carousel>)>]
-module Tabs = 
+type TabsAjaxOptionsConfiguration = 
+    {
+    [<Name "ajaxOptions">]
+    async: bool
+    }
+
+    [<JavaScript>]
+    static member Default = {async = false}
+
+[<JavaScriptType>]
+type TabsCookieConfiguration = 
+    {
+    [<Name "cookie">]
+    expires: int
+    }
+
+    [<JavaScript>]
+    static member Default = {expires = 30}
+
+[<JavaScriptType>]
+type TabsFxConfiguration = 
+    {
+    [<Name "fx">]
+    opacity: string
+    }
+    [<JavaScript>]
+    static member Dafault = {opacity = "toggle"}
+
+[<JavaScriptType>]
+type TabsConfiguration = 
     
-    [<JavaScriptType>]
-    type TabsAjaxOptionsConfiguration = 
-        {
-        [<Name "ajaxOptions">]
-        async: bool
-        }
+    [<DefaultValue>]
+    [<Name "ajaxOptions">]
+    //null by default
+    val mutable AjaxOptions: TabsAjaxOptionsConfiguration
 
-        [<JavaScript>]
-        static member Default = {async = false}
+    [<DefaultValue>]
+    [<Name "cache">]
+    //false by default
+    val mutable Cache: bool
 
-    [<JavaScriptType>]
-    type TabsCookieConfiguration = 
-        {
-        [<Name "cookie">]
-        expires: int
-        }
+    [<DefaultValue>]
+    [<Name "collapsible">]
+    //false by default
+    val mutable Collapsible: bool
 
-        [<JavaScript>]
-        static member Default = {expires = 30}
+    [<DefaultValue>]
+    [<Name "cookie">]
+    //null by default
+    val mutable Cookie: TabsCookieConfiguration
 
-    [<JavaScriptType>]
-    type TabsFxConfiguration = 
-        {
-        [<Name "fx">]
-        opacity: string
-        }
-        [<JavaScript>]
-        static member Dafault = {opacity = "toggle"}
+    [<DefaultValue>]
+    [<Name "deselectable">]
+    //false by default
+    val mutable Deselectable: bool
 
-    [<JavaScriptType>]
-    type TabsConfiguration = 
+    [<DefaultValue>]
+    [<Name "disabled">]
+    //[] by default
+    val mutable Disabled: array<int>
+
+    [<DefaultValue>]
+    [<Name "event">]
+    //"click" by default
+    val mutable Event: string
+
+    //Option, Array? 
+    [<DefaultValue>]
+    [<Name "fx">]
+    //null by default
+    val mutable Fx: TabsFxConfiguration
+
+    [<DefaultValue>]
+    [<Name "idPrefix">]
+    //"ui-tabs-" by default
+    val mutable IdPrefix: string
+
+    [<DefaultValue>]
+    [<Name "panelTemplate">]
+    //"<div></div>" by default
+    val mutable PanelTemplate: string
+
+    [<DefaultValue>]
+    [<Name "selected">]
+    //0 by default
+    val mutable Selected: int
+
+    [<DefaultValue>]
+    [<Name "spinner">]
+    //"<em>Loading&#8230;</em>" by default
+    val mutable Spinner: string
+
+    [<DefaultValue>]
+    [<Name "tabTemplate">]
+    //"<li><a href="#{href}"><span>#{label}</span></a></li>" by default
+    val mutable TabTemplate: string
+
+    [<JavaScriptConstructor>]
+    new () = {}
+    
+[<JavaScriptType>]
+module internal TabsInternal =
+    [<Inline "jQuery($el).tabs($conf)">]
+    let Init(el: Element, conf: TabsConfiguration) = ()    
+
+[<JavaScriptType>]
+type Tabs = 
+    [<JavaScriptConstructor>]
+    new () = {}
+    
+    [<DefaultValue>]
+    val mutable private element : Element
+
+    [<DefaultValue>]
+    val mutable private configuration : TabsConfiguration
+
+    [<DefaultValue>]
+    val mutable private renderEvent: Event<Utils.RenderEvent>
+
+    [<DefaultValue>]
+    val mutable private isRendered: bool
+
+    [<JavaScript>]
+    member this.Element
+        with get () =
+            this.element
+
+    (****************************************************************
+    * Constructors
+    *****************************************************************)        
+    [<JavaScript>]
+    [<Name "New2">]
+    static member New (els : List<string * Element>, conf: TabsConfiguration): Tabs =        
+        let el = 
+            let itemPanels =
+                els
+                |> List.map (fun (label, panel) ->
+                   let id = NewId()
+                   let item = LI [A [HRef ("#" + id)] -< [label]] -< [panel]
+                   let tab = Div [Id id] -< [P [panel]]
+                   (item, tab)
+                )
+            let ul = itemPanels |> List.map fst |> UL
+            Div <| ul :: (List.map snd itemPanels)
         
-        [<DefaultValue>]
-        [<Name "ajaxOptions">]
-        //null by default
-        val mutable AjaxOptions: TabsAjaxOptionsConfiguration
+        let tabs = new Tabs ()
+        tabs.configuration <- conf
+        tabs.renderEvent <- new Event<RenderEvent>()
+        tabs.element <-
+            el 
+            |> On Events.Attach (fun _ _ -> tabs.Render())     
+        tabs
 
-        [<DefaultValue>]
-        [<Name "cache">]
-        //false by default
-        val mutable Cache: bool
+    (****************************************************************
+    * Render interface
+    *****************************************************************)          
+    [<JavaScript>]
+    member this.OnBeforeRender(f: unit -> unit) : unit=
+        this.renderEvent.Publish
+        |> Event.Iterate (fun re ->
+            match re with
+            | Utils.RenderEvent.Before  -> f ()
+            | _                         -> ()
+        )
+                    
+    [<JavaScript>]
+    member this.OnAfterRender(f: unit -> unit) : unit=
+        this.renderEvent.Publish
+        |> Event.Iterate (fun re ->
+            match re with
+            | Utils.RenderEvent.After  -> f ()
+            | _                         -> ()
+        )
 
-        [<DefaultValue>]
-        [<Name "collapsible">]
-        //false by default
-        val mutable Collapsible: bool
-
-        [<DefaultValue>]
-        [<Name "cookie">]
-        //null by default
-        val mutable Cookie: TabsCookieConfiguration
-
-        [<DefaultValue>]
-        [<Name "deselectable">]
-        //false by default
-        val mutable Deselectable: bool
-
-        [<DefaultValue>]
-        [<Name "disabled">]
-        //[] by default
-        val mutable Disabled: array<int>
-
-        [<DefaultValue>]
-        [<Name "event">]
-        //"click" by default
-        val mutable Event: string
-
-        //Option, Array? 
-        [<DefaultValue>]
-        [<Name "fx">]
-        //null by default
-        val mutable Fx: TabsFxConfiguration
-
-        [<DefaultValue>]
-        [<Name "idPrefix">]
-        //"ui-tabs-" by default
-        val mutable IdPrefix: string
-
-        [<DefaultValue>]
-        [<Name "panelTemplate">]
-        //"<div></div>" by default
-        val mutable PanelTemplate: string
-
-        [<DefaultValue>]
-        [<Name "selected">]
-        //0 by default
-        val mutable Selected: int
-
-        [<DefaultValue>]
-        [<Name "spinner">]
-        //"<em>Loading&#8230;</em>" by default
-        val mutable Spinner: string
-
-        [<DefaultValue>]
-        [<Name "tabTemplate">]
-        //"<li><a href="#{href}"><span>#{label}</span></a></li>" by default
-        val mutable TabTemplate: string
-
-        [<JavaScriptConstructor>]
-        new () = {}
+    [<JavaScript>]
+    member this.Render() =     
+        if not this.IsRendered  then
+            this.renderEvent.Trigger Utils.RenderEvent.Before
+            TabsInternal.Init(this.Element, this.configuration)
+            this.renderEvent.Trigger Utils.RenderEvent.After
+            this.isRendered <- true
     
-    [<JavaScriptType>]
-    type Tabs = 
+    [<JavaScript>]
+    member this.IsRendered
+        with get () : bool = this.isRendered
 
-        [<Inline "jQuery($id).tabs()">]
-            static member NewPrivate (id: string) = ()
+    (****************************************************************
+    * Methods
+    *****************************************************************) 
+    [<Inline "jQuery($this.element).tabs('destroy')">]
+    member this.Destroy() = ()
 
-            [<Inline "jQuery($el).tabs()">]
-            static member New (el: Element) = ()
+    [<Inline "jQuery($this.element).tabs('disable')">]
+    member this.Disable () = ()
 
-            [<Inline "jQuery($el).tabs($conf)">]
-            static member New (el: Element, conf: TabsConfiguration) = ()
+    [<Inline "jQuery($this.element).tabs('enable')">]
+    member this.Enable () = ()
 
-            [<JavaScript>]
-            static member Attach (el: Element) = 
-                el
-                |> On Events.Attach (fun _ _ -> Tabs.New el)
+    [<Inline "jQuery($this.element).tabs('option', $name, $value)">]
+    member this.Option (name: string, value: obj) = ()
 
-            [<JavaScript>]
-            static member AttachWithConfiguration (conf: TabsConfiguration) (el: Element) = 
-                el
-                |> On Events.Attach (fun _ _ -> Tabs.New (el, conf))
+    [<Inline "jQuery($this.element).tabs('activate', $index)">]
+    member this.Activate (index: int) = ()
+
+    [<Inline "jQuery($this.element).tabs('add', $url, $label, $index)">]
+    member private this.add (url:string, label:string, index: int) = ()
+
+    [<Inline "jQuery($this.element).tabs('length')">]
+    member private this.getLength () = 0
+
+    [<Inline "jQuery($this.element).tabs('remove', $index)">]
+    member this.Remove (index: int) = ()    
+
+    [<Inline "jQuery($this.element).tabs('select', $index)">]
+    member this.Select (index: int) = ()
+
+    [<Inline "jQuery($this.element).tabs('load', $index)">]
+    member this.Load (index: int) = ()
+
+    [<Inline "jQuery($this.element).tabs('url', $index)">]
+    member this.Url (index: int) = ()
+
+    [<Inline "jQuery($this.element).tabs('abort')">]
+    member this.Abort () = ()
+    
+    [<Inline "jQuery($this.element).tabs('rotate', $secs, $loop)">]
+    member this.Rotate (secs: int, loop: bool) = ()
+    
+    [<JavaScript>]
+    member this.Length
+        with get () = this.getLength()
+
+    [<JavaScript>]
+    member this.Add(el: Element, label: string, ix: int) =
+        let id = NewId()
+        let tab = Div [Id id ] -< [el]
+        this.Element.Append tab
+        this.add("#" + id, label, ix)
+
+    [<JavaScript>]
+    member this.Add(el: Element, label: string) =
+        let id = NewId()
+        let tab = Div [Id id ] -< [el]
+        this.Element.Append tab
+        this.add("#" + id, label, this.Length)
+
+    (****************************************************************
+    * Events
+    *****************************************************************)
+    [<Inline "jQuery($this.element).tabs({select: function (x,y) {$f();}})">]
+    member private this.onSelect(f : unit -> unit) = ()
+
+    [<Inline "jQuery($this.element).tabs({load: function (x,y) {$f();}})">]
+    member private this.onLoad(f : unit -> unit) = ()
+
+    [<Inline "jQuery($this.element).tabs({show: function (x,y) {$f();}})">]
+    member private this.onShow(f : unit -> unit) = ()
+
+    [<Inline "jQuery($this.element).tabs({add: function (x,y) {$f();}})">]
+    member private this.onAdd(f : unit -> unit) = ()
+
+    [<Inline "jQuery($this.element).tabs({remove: function (x,y) {$f();}})">]
+    member private this.onRemove(f : unit -> unit) = ()
+
+    [<Inline "jQuery($this.element).tabs({enable: function (x,y) {$f();}})">]
+    member private this.onEnable(f : unit -> unit) = ()
+
+    [<Inline "jQuery($this.element).tabs({diable: function (x,y) {$f();}})">]
+    member private this.onDisable(f : unit -> unit) = ()
+
+    // Adding an event and delaying it if the widget is not yet rendered.
+    [<JavaScript>]
+    member private this.OnAfter (f : unit -> unit) : unit =
+        if this.IsRendered then 
+            f ()
+        else            
+            this.OnAfterRender(fun () -> f ())  
+
+    [<JavaScript>]
+    member this.OnSelect f = 
+        this.OnAfter (fun () -> 
+            this.onSelect f
+        )
+
+    [<JavaScript>]
+    member this.OnLoad f = 
+        this.OnAfter (fun () -> 
+            this.onLoad f
+        )
+    [<JavaScript>]
+    member this.OnShow f = 
+        this.OnAfter (fun () -> 
+            this.onShow f
+        )
+
+    [<JavaScript>]
+    member this.OnAdd f = 
+        this.OnAfter (fun () -> 
+            this.onAdd f
+        )
+    [<JavaScript>]
+    member this.OnEnable f = 
+        this.OnAfter (fun () -> 
+            this.onEnable f
+        )
+    [<JavaScript>]
+    member this.OnDisable f = 
+        this.OnAfter (fun () -> 
+            this.onDisable f
+        )

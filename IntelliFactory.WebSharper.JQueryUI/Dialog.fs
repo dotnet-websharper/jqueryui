@@ -14,49 +14,16 @@ namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
+open Utils
+
 
 [<JavaScriptType>]
-//[<Require(typeof<Dependencies.Carousel>)>]
-module Dialog =
-    
-//    [<JavaScriptType>]
-//    type DialogButtonsConfiguration = 
-//        {
-//        [<Name "buttons">]
-//        OK: InnerDialogButtonsConfiguration
-//        }
-//
-//        [<JavaScript>]
-//        static member Default = {OK = InnerDialogButtonsConfiguration}
-//
-//    [<JavaScriptType>]
-//    type InnerDialogButtonsConfiguration = 
-//        {
-//        f: unit -> unit
-//        }
-//
-//        [<JavaScript>]
-//        //need to use Dialog object method - dialog ("close")
-//        static member Default = {f: fun () -> dialog...}
+type DialogConfiguration = 
 
-//    [<JavaScriptType>]
-//    type DialogPositionConfiguration = 
-//        | Str
-//        | Arr
-//
-//        [<JavaScript>]
-//        static member Default param = 
-//            match param with
-//            | Str -> Str <- "top"
-//            | Arr -> Arr <- [|350; 100|]
-
-    [<JavaScriptType>]
-    type DialogConfiguration = 
-
-        [<DefaultValue>]
-        [<Name "autoOpen">]
-        //true by default
-        val mutable AutoOpen: bool
+    [<DefaultValue>]
+    [<Name "autoOpen">]
+    //true by default
+    val mutable AutoOpen: bool
 
 //        //New version of JQueryUI 1.8 removes bgiframe
 //        [<DefaultValue>]
@@ -64,121 +31,285 @@ module Dialog =
 //        //false by default
 //        val mutable Bgiframe: bool
 
-        //Buttons' type to be confirmed (string -> (string -> unit) -> unit)
-        [<DefaultValue>]
-        [<Name "buttons">]
-        //"" by default
-        val mutable Buttons: string
+    //Buttons' type to be confirmed (string -> (string -> unit) -> unit)
+    [<DefaultValue>]
+    [<Name "buttons">]
+    //"" by default
+    val mutable Buttons: string
 
-        [<DefaultValue>]
-        [<Name "closeOnEscape">]
-        //false by default
-        val mutable CloseOnEscape: bool
+    [<DefaultValue>]
+    [<Name "closeOnEscape">]
+    //false by default
+    val mutable CloseOnEscape: bool
 
-        [<DefaultValue>]
-        [<Name "closeText">]
-        //"close" by default
-        val mutable CloseText: string
+    [<DefaultValue>]
+    [<Name "closeText">]
+    //"close" by default
+    val mutable CloseText: string
 
-        [<DefaultValue>]
-        [<Name "dialogClass">]
-        //"" by default
-        val mutable DialogClass: string
+    [<DefaultValue>]
+    [<Name "dialogClass">]
+    //"" by default
+    val mutable DialogClass: string
 
-        [<DefaultValue>]
-        [<Name "draggable">]
-        //true by default
-        val mutable Draggable: bool
+    [<DefaultValue>]
+    [<Name "draggable">]
+    //true by default
+    val mutable Draggable: bool
 
-        [<DefaultValue>]
-        [<Name "height">]
-        val mutable Height: int
+    [<DefaultValue>]
+    [<Name "height">]
+    val mutable Height: int
 
-        [<DefaultValue>]
-        [<Name "hide">]
-        //"" by default
-        val mutable Hide: string
+    [<DefaultValue>]
+    [<Name "hide">]
+    //"" by default
+    val mutable Hide: string
 
-        [<DefaultValue>]
-        [<Name "maxHeight">]
-        val mutable MaxHeight: int
+    [<DefaultValue>]
+    [<Name "maxHeight">]
+    val mutable MaxHeight: int
 
-        [<DefaultValue>]
-        [<Name "maxWidth">]
-        val mutable MaxWidth: int
+    [<DefaultValue>]
+    [<Name "maxWidth">]
+    val mutable MaxWidth: int
 
-        [<DefaultValue>]
-        [<Name "minHeight">]
-        val mutable MinHeight: int
+    [<DefaultValue>]
+    [<Name "minHeight">]
+    val mutable MinHeight: int
 
-        [<DefaultValue>]
-        [<Name "minWidth">]
-        val mutable MinWidth: int
+    [<DefaultValue>]
+    [<Name "minWidth">]
+    val mutable MinWidth: int
 
-        [<DefaultValue>]
-        [<Name "modal">]
-        //false by default
-        val mutable Modal: bool
+    [<DefaultValue>]
+    [<Name "modal">]
+    //false by default
+    val mutable Modal: bool
 
-        [<DefaultValue>]
-        [<Name "position">]
-        //"center" by default
-        val mutable Position: string
+    [<DefaultValue>]
+    [<Name "position">]
+    //"center" by default
+    val mutable Position: string
 
-        [<DefaultValue>]
-        [<Name "resizable">]
-        //true by default
-        val mutable Resizable: bool
+    [<DefaultValue>]
+    [<Name "resizable">]
+    //true by default
+    val mutable Resizable: bool
 
-        [<DefaultValue>]
-        [<Name "show">]
-        //"" by default
-        val mutable Show: string
+    [<DefaultValue>]
+    [<Name "show">]
+    //"" by default
+    val mutable Show: string
 
-        [<DefaultValue>]
-        [<Name "stack">]
-        //true by default
-        val mutable Stack: bool
+    [<DefaultValue>]
+    [<Name "stack">]
+    //true by default
+    val mutable Stack: bool
 
-        [<DefaultValue>]
-        [<Name "title">]
-        //"" by default
-        val mutable Title: string
+    [<DefaultValue>]
+    [<Name "title">]
+    //"" by default
+    val mutable Title: string
 
-        [<DefaultValue>]
-        [<Name "width">]
-        //300 by default
-        val mutable Width: int
+    [<DefaultValue>]
+    [<Name "width">]
+    //300 by default
+    val mutable Width: int
 
-        [<DefaultValue>]
-        [<Name "zindex">]
-        //1000 by default
-        val mutable ZIndex: int
+    [<DefaultValue>]
+    [<Name "zindex">]
+    //1000 by default
+    val mutable ZIndex: int
 
-        [<JavaScriptConstructor>]
-        new () = {}
+    [<JavaScriptConstructor>]
+    new () = {}
 
-    [<JavaScriptType>]
-    type Dialog = 
+[<JavaScriptType>]
+module internal DialogInternal =        
+    [<Inline "jQuery($el).dialog($conf)">]
+    let Init (el: Element, conf: DialogConfiguration) = ()
+
+[<JavaScriptType>]
+type Dialog = 
+
+    [<JavaScriptConstructor>]
+    new () = {}
   
-        [<Inline "jQuery($id).dialog()">]
-        static member NewPrivate (id: string) = ()
+    [<DefaultValue>]
+    val mutable private element : Element
 
-        [<Inline "jQuery($el).dialog()">]
-        static member New (el: Element) = ()
+    [<DefaultValue>]
+    val mutable private configuration : DialogConfiguration
 
-        [<Inline "jQuery($el).dialog($conf)">]
-        static member New (el: Element, conf: DialogConfiguration) = ()
+    [<DefaultValue>]
+    val mutable private renderEvent: Event<Utils.RenderEvent>
+
+    [<DefaultValue>]
+    val mutable private isRendered: bool
+
+    [<JavaScript>]
+    member this.Element
+        with get () =
+            this.element
+
+    [<JavaScript>]
+    [<Name "New2">]
+    static member New (el: Element, conf: DialogConfiguration): Dialog = 
+        let d = new Dialog()
+        d.configuration <- conf
+        d.renderEvent <- new Event<RenderEvent>()
+        d.element <- el |> On Events.Attach (fun _ _ -> d.Render())            
+        d
+
+    [<JavaScript>]
+    [<Name "New1">]
+    static member New (el: Element): Dialog = 
+        Dialog.New(el, DialogConfiguration())
 
 
-        [<JavaScript>]
-        static member Attach (el: Element) = 
-            el
-            |> On Events.Attach (fun _ _ -> Dialog.New el)
+    (****************************************************************
+    * Render interface
+    *****************************************************************)          
+    [<JavaScript>]
+    member this.OnBeforeRender(f: unit -> unit) : unit=
+        this.renderEvent.Publish
+        |> Event.Iterate (fun re ->
+            match re with
+            | Utils.RenderEvent.Before  -> f ()
+            | _                         -> ()
+        )
+                    
+    [<JavaScript>]
+    member this.OnAfterRender(f: unit -> unit) : unit=
+        this.renderEvent.Publish
+        |> Event.Iterate (fun re ->
+            match re with
+            | Utils.RenderEvent.After  -> f ()
+            | _                         -> ()
+        )
 
-        [<JavaScript>]
-        static member AttachWithConfiguration (conf: DialogConfiguration) (el: Element) = 
-            el
-            |> On Events.Attach (fun _ _ -> Dialog.New (el, conf))
+    [<JavaScript>]
+    member this.Render() =     
+        if not this.IsRendered  then
+            this.renderEvent.Trigger Utils.RenderEvent.Before
+            DialogInternal.Init(this.Element, this.configuration)
+            this.renderEvent.Trigger Utils.RenderEvent.After
+            this.isRendered <- true
+    
+    [<JavaScript>]
+    member this.IsRendered
+        with get () : bool = this.isRendered
+        
+    (****************************************************************
+    * Methods
+    *****************************************************************)        
+    [<Inline "jQuery($this.element).dialog('destroy')">]
+    member this.Destroy() = ()
+
+    [<Inline "jQuery($this.element).dialog('disable')">]
+    member this.Disable () = ()
+
+    [<Inline "jQuery($this.element).dialog('enable')">]
+    member this.Enable () = ()
+
+    [<Inline "jQuery($this.element).dialog('option', $name, $value)">]
+    member this.Option (name: string, value: obj) = ()
+
+    [<Inline "jQuery($this.element).dialog('close')">]
+    member this.Close () = ()
+
+    [<Inline "jQuery($this.element).dialog('isOpen')">]
+    member this.IsOpen () = false
+
+    [<Inline "jQuery($this.element).dialog('moveToTop')">]
+    member this.MoveToTop () = ()
+
+    [<Inline "jQuery($this.element).dialog('open')">]
+    member this.Open () = ()
+            
+    (****************************************************************
+    * Events
+    *****************************************************************)
+    [<Inline "jQuery($this.element).dialog({beforeclose: function (x,y) {$f();}})">]
+    member private this.onBeforeClose(f : unit -> unit) = ()
+
+    [<Inline "jQuery($this.element).dialog({open: function (x,y) {$f();}})">]
+    member private this.onOpen(f : unit -> unit) = ()
+
+    [<Inline "jQuery($this.element).dialog({focus: function (x,y) {$f();}})">]
+    member private this.onFocus(f : unit -> unit) = ()
+
+    [<Inline "jQuery($this.element).dialog({dragStart: function (x,y) {$f();}})">]
+    member private this.onDragStart(f : unit -> unit) = ()
+        
+    [<Inline "jQuery($this.element).dialog({drag: function (x,y) {$f();}})">]
+    member private this.onDrag(f : unit -> unit) = ()
+    
+    [<Inline "jQuery($this.element).dialog({dragStop: function (x,y) {$f();}})">]
+    member private this.onDragStop(f : unit -> unit) = ()
+
+    [<Inline "jQuery($this.element).dialog({resizeStart: function (x,y) {$f();}})">]
+    member private this.onResizeStart(f : unit -> unit) = ()
+
+    [<Inline "jQuery($this.element).dialog({resize: function (x,y) {$f();}})">]
+    member private this.onResize(f : unit -> unit) = ()
+
+    [<Inline "jQuery($this.element).dialog({resizeStop: function (x,y) {$f();}})">]
+    member private this.onResizeStop(f : unit -> unit) = ()
+
+    [<Inline "jQuery($this.element).dialog({close: function (x,y) {$f();}})">]
+    member private this.onClose(f : unit -> unit) = ()
+
+    // Adding an event and delaying it if the widget is not yet rendered.
+    [<JavaScript>]
+    member private this.OnAfter (f : unit -> unit) : unit =
+        if this.IsRendered then 
+            f ()
+        else            
+            this.OnAfterRender(fun () -> f ())    
+    
+    [<JavaScript>]
+    member this.OnBeforeClose(f : unit -> unit) = 
+        this.OnAfter (fun () -> this.onBeforeClose f)
+
+    [<JavaScript>]
+    member this.OnOpen (f : unit -> unit) = 
+        this.OnAfter (fun () -> this.onOpen f)
+
+    [<JavaScript>]
+    member this.OnFocus (f : unit -> unit) = 
+        this.OnAfter (fun () -> this.onFocus f)
+
+    [<JavaScript>]
+    member this.OnDragStart (f : unit -> unit) = 
+        this.OnAfter (fun () -> this.onDragStart f)
+
+    [<JavaScript>]
+    member this.OnDrag (f : unit -> unit) = 
+        this.OnAfter (fun () -> this.onDrag f)
+
+    [<JavaScript>]
+    member this.OnDragStop (f : unit -> unit) = 
+        this.OnAfter (fun () -> this.onDragStop f)
+
+    [<JavaScript>]
+    member this.OnResizeStart (f : unit -> unit) = 
+        this.OnAfter (fun () -> this.onResizeStart f)
+
+    [<JavaScript>]
+    member this.OnResize (f : unit -> unit) = 
+        this.OnAfter (fun () -> this.onResize f)
+
+    [<JavaScript>]
+    member this.OnResizeStop (f : unit -> unit) = 
+        this.OnAfter (fun () -> this.onResizeStop f)
+
+    [<JavaScript>]
+    member this.OnClose (f : unit -> unit) = 
+        this.OnAfter (fun () -> this.onClose f)
+            
+               
+
 
 

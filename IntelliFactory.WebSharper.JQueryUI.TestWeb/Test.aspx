@@ -14,7 +14,9 @@
 <body>
     <form id="form1" runat="server">
     <div>
-        <test:Test runat="server"></test:Test>
+        <%--<test:Test runat="server"></test:Test>--%>
+        <test:Demo ID="Test1" runat="server"></test:Demo>
+        
     </div>
     </form>
 </body>

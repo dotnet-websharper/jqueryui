@@ -231,6 +231,26 @@ module Draggable =
     [<JavaScriptType>]
     type Draggable =
 
+        [<JavaScriptConstructor>]
+        new () = {}
+        
+        [<DefaultValue>]
+        val mutable private element : Element
+
+        [<DefaultValue>]
+        val mutable private configuration : AccordionConfiguration
+
+        [<DefaultValue>]
+        val mutable private renderEvent: Event<Utils.RenderEvent>
+
+        [<DefaultValue>]
+        val mutable private isRendered: bool
+
+        [<JavaScript>]
+        member this.Element
+            with get () =
+                this.element
+
         [<Inline "jQuery($id).draggable()">]
         static member NewPrivate (id: string) : Draggable = Unchecked.defaultof<_>
 

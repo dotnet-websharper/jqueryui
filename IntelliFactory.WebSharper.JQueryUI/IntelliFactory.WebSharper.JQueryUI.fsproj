@@ -57,11 +57,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Settings.fs" />
     <Compile Include="Dependencies.fs" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Accordion.fs" />
     <Compile Include="Autocomplete.fs" />
-    <Compile Include="ButtonOfJQ.fs" />
+    <Compile Include="Button.fs" />
     <Compile Include="Datepicker.fs" />
     <Compile Include="Dialog.fs" />
     <Compile Include="ProgressBar.fs" />
