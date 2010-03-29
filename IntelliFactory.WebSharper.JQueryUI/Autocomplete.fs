@@ -137,20 +137,20 @@ type Autocomplete =
     (****************************************************************
     * Events
     *****************************************************************) 
-    [<Inline "jQuery($this.element).autocomplete({search: function (x,y) {$f();}})">]
-    member private this.onSearch(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).autocomplete({search: function (x,y) {($f(x))(y.search);}})">]
+    member private this.onSearch(f : Events.EventArgs -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).autocomplete({focus: function (x,y) {$f();}})">]
-    member private this.onFocus(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).autocomplete({focus: function (x,y) {($f(x))(y.focus);}})">]
+    member private this.onFocus(f : Events.EventArgs -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).autocomplete({select: function (x,y) {$f();}})">]
-    member private this.onSelect(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).autocomplete({select: function (x,y) {($f(x))(y.select);}})">]
+    member private this.onSelect(f : Events.EventArgs -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).autocomplete({close: function (x,y) {$f();}})">]
-    member private this.onClose(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).autocomplete({close: function (x,y) {($f(x))(y.close);}})">]
+    member private this.onClose(f : Events.EventArgs -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).autocomplete({change: function (x,y) {$f();}})">]
-    member private this.onChange(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).autocomplete({change: function (x,y) {($f(x))(y.change);}})">]
+    member private this.onChange(f : Events.EventArgs -> Element -> unit) = ()
 
     // Adding an event and delayin it if the widget is not yet rendered.
     [<JavaScript>]
@@ -161,20 +161,20 @@ type Autocomplete =
 
     // Adding an event and delayin it if the widget is not yet rendered.
     [<JavaScript>]
-    member this.OnSearch(f : unit -> unit) =
+    member this.OnSearch f =
         this.On (fun () -> this.onSearch f)
 
     /// After an item was selected. Always triggered after the close event.
     [<JavaScript>]
-    member this.OnChange(f : unit -> unit) =
+    member this.OnChange f =
         this.On (fun () -> this.onChange f)
 
     // Adding an event and delayin it if the widget is not yet rendered.
     [<JavaScript>]
-    member this.OnClose(f : unit -> unit) =
+    member this.OnClose f =
         this.On (fun () -> this.onClose f)
 
     // Adding an event and delayin it if the widget is not yet rendered.
     [<JavaScript>]
-    member this.OnFocus(f : unit -> unit) =
+    member this.OnFocus f =
         this.On (fun () -> this.onFocus f)

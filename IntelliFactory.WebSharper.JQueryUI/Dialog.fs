@@ -231,35 +231,35 @@ type Dialog =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element).dialog({beforeclose: function (x,y) {$f();}})">]
-    member private this.onBeforeClose(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).dialog({beforeclose: function (x,y) {$f(x);}})">]
+    member private this.onBeforeClose(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).dialog({open: function (x,y) {$f();}})">]
-    member private this.onOpen(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).dialog({open: function (x,y) {$f(x);}})">]
+    member private this.onOpen(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).dialog({focus: function (x,y) {$f();}})">]
-    member private this.onFocus(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).dialog({focus: function (x,y) {$f(x);}})">]
+    member private this.onFocus(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).dialog({dragStart: function (x,y) {$f();}})">]
-    member private this.onDragStart(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).dialog({dragStart: function (x,y) {$f(x);}})">]
+    member private this.onDragStart(f : Events.EventArgs -> unit) = ()
         
-    [<Inline "jQuery($this.element).dialog({drag: function (x,y) {$f();}})">]
-    member private this.onDrag(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).dialog({drag: function (x,y) {$f(x);}})">]
+    member private this.onDrag(f : Events.EventArgs -> unit) = ()
     
-    [<Inline "jQuery($this.element).dialog({dragStop: function (x,y) {$f();}})">]
-    member private this.onDragStop(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).dialog({dragStop: function (x,y) {$f(x);}})">]
+    member private this.onDragStop(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).dialog({resizeStart: function (x,y) {$f();}})">]
-    member private this.onResizeStart(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).dialog({resizeStart: function (x,y) {$f(x);}})">]
+    member private this.onResizeStart(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).dialog({resize: function (x,y) {$f();}})">]
-    member private this.onResize(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).dialog({resize: function (x,y) {$f(x);}})">]
+    member private this.onResize(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).dialog({resizeStop: function (x,y) {$f();}})">]
-    member private this.onResizeStop(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).dialog({resizeStop: function (x,y) {$f(x);}})">]
+    member private this.onResizeStop(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).dialog({close: function (x,y) {$f();}})">]
-    member private this.onClose(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).dialog({close: function (x,y) {$f(x);}})">]
+    member private this.onClose(f : Events.EventArgs -> unit) = ()
 
     // Adding an event and delaying it if the widget is not yet rendered.
     [<JavaScript>]
@@ -270,43 +270,43 @@ type Dialog =
             this.OnAfterRender(fun () -> f ())    
     
     [<JavaScript>]
-    member this.OnBeforeClose(f : unit -> unit) = 
+    member this.OnBeforeClose(f : Events.EventArgs -> unit) = 
         this.OnAfter (fun () -> this.onBeforeClose f)
 
     [<JavaScript>]
-    member this.OnOpen (f : unit -> unit) = 
+    member this.OnOpen (f : Events.EventArgs -> unit) = 
         this.OnAfter (fun () -> this.onOpen f)
 
     [<JavaScript>]
-    member this.OnFocus (f : unit -> unit) = 
+    member this.OnFocus (f : Events.EventArgs -> unit) = 
         this.OnAfter (fun () -> this.onFocus f)
 
     [<JavaScript>]
-    member this.OnDragStart (f : unit -> unit) = 
+    member this.OnDragStart (f : Events.EventArgs -> unit) = 
         this.OnAfter (fun () -> this.onDragStart f)
 
     [<JavaScript>]
-    member this.OnDrag (f : unit -> unit) = 
+    member this.OnDrag (f : Events.EventArgs -> unit) = 
         this.OnAfter (fun () -> this.onDrag f)
 
     [<JavaScript>]
-    member this.OnDragStop (f : unit -> unit) = 
+    member this.OnDragStop (f : Events.EventArgs -> unit) = 
         this.OnAfter (fun () -> this.onDragStop f)
 
     [<JavaScript>]
-    member this.OnResizeStart (f : unit -> unit) = 
+    member this.OnResizeStart (f : Events.EventArgs -> unit) = 
         this.OnAfter (fun () -> this.onResizeStart f)
 
     [<JavaScript>]
-    member this.OnResize (f : unit -> unit) = 
+    member this.OnResize (f : Events.EventArgs -> unit) = 
         this.OnAfter (fun () -> this.onResize f)
 
     [<JavaScript>]
-    member this.OnResizeStop (f : unit -> unit) = 
+    member this.OnResizeStop (f : Events.EventArgs -> unit) = 
         this.OnAfter (fun () -> this.onResizeStop f)
 
     [<JavaScript>]
-    member this.OnClose (f : unit -> unit) = 
+    member this.OnClose (f : Events.EventArgs -> unit) = 
         this.OnAfter (fun () -> this.onClose f)
             
                

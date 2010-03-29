@@ -16,127 +16,21 @@ open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 open Utils
 
-    [<JavaScriptType>]
-    type AxisConfiguration = 
-        | [<Constant "X">] X
-        | [<Constant "Y">] Y
-
-    [<JavaScriptType>]
-    type ToleranceConfiguration = 
-        | [<Constant "intersect">] Intersect
-        | [<Constant "Pointer">] Pointer
+[<JavaScriptType>]
+type AxisConfiguration = 
+    | [<Constant "X">] X
+    | [<Constant "Y">] Y
 
 [<JavaScriptType>]
-type Start = 
-    {
-        start: Element
-    }
-
-[<JavaScriptType>]
-type Sort = 
-    {
-        sort: Element
-    }
-
-[<JavaScriptType>]
-type Change = 
-    {
-        change: Element
-    }
-
-[<JavaScriptType>]
-type BeforeStop= 
-    {
-        beforeStop: Element
-    }
-
-
-[<JavaScriptType>]
-type Stop = 
-    {
-        stop: Element
-    }
-
-[<JavaScriptType>]
-type Update = 
-    {
-        update: Element
-    }
-
-[<JavaScriptType>]
-type Receive = 
-    {
-        receive: Element
-    }
-
-[<JavaScriptType>]
-type Remove = 
-    {
-        remove: Element
-    }
-
-[<JavaScriptType>]
-type Over = 
-    {
-        over: Element
-    }
-
-[<JavaScriptType>]
-type Out = 
-    {
-        out: Element
-    }
-
-[<JavaScriptType>]
-type Activate = 
-    {
-        activate: Element
-    }
-
-[<JavaScriptType>]
-type Deactivate = 
-    {
-        deactivate: Element
-    }
+type ToleranceConfiguration = 
+    | [<Constant "intersect">] Intersect
+    | [<Constant "Pointer">] Pointer
 
 [<JavaScriptType>]
 type SortableConfiguration = 
 
-    [<DefaultValue>]
-    val mutable start: JavaScript.Function<Events.EventArgs, Start, unit>
-
-    [<DefaultValue>]
-    val mutable sort: JavaScript.Function<Events.EventArgs, Sort, unit>
-
-    [<DefaultValue>]
-    val mutable change: JavaScript.Function<Events.EventArgs, Change, unit>
-
-    [<DefaultValue>]
-    val mutable beforeStop: JavaScript.Function<Events.EventArgs, BeforeStop, unit>
-    
-    [<DefaultValue>]
-    val mutable stop: JavaScript.Function<Events.EventArgs, Stop, unit>
-
-    [<DefaultValue>]
-    val mutable update: JavaScript.Function<Events.EventArgs, Update, unit>
-
-    [<DefaultValue>]
-    val mutable receive: JavaScript.Function<Events.EventArgs, Receive, unit>
-
-    [<DefaultValue>]
-    val mutable remove: JavaScript.Function<Events.EventArgs, Remove, unit>
-
-    [<DefaultValue>]
-    val mutable over: JavaScript.Function<Events.EventArgs, Over, unit>
-
-    [<DefaultValue>]
-    val mutable out: JavaScript.Function<Events.EventArgs, Out, unit>
-
-    [<DefaultValue>]
-    val mutable activate: JavaScript.Function<Events.EventArgs, Activate, unit>
-
-    [<DefaultValue>]
-    val mutable deactivate: JavaScript.Function<Events.EventArgs, Deactivate, unit>
+    [<JavaScriptConstructor>]
+    new () = {}
 
     [<DefaultValue>]
     [<Name "appendTo">]
@@ -249,76 +143,16 @@ type SortableConfiguration =
     //"1000" by default
     val mutable ZIndex: int
 
-    [<JavaScript>]
-    member ui.SetStart (f: obj -> Element -> unit)  =   
-        let fS (o: obj) (s: Start) = f o s.start
-        ui.start    <- new JavaScript.Function<_,_,_>(fS)
-
-    [<JavaScript>]
-    member ui.SetSort (f: obj -> Element -> unit)  =   
-        let fS (o: obj) (s: Sort) = f o s.sort
-        ui.sort    <- new JavaScript.Function<_,_,_>(fS)
-
-    [<JavaScript>]
-    member ui.SetChange (f: obj -> Element -> unit)  =   
-        let fS (o: obj) (s: Change) = f o s.change
-        ui.change  <- new JavaScript.Function<_,_,_>(fS)
-
-    [<JavaScript>]
-    member ui.SetBeforeStop (f: obj -> Element -> unit)  =   
-        let fS (o: obj) (s: BeforeStop) = f o s.beforeStop
-        ui.beforeStop <- new JavaScript.Function<_,_,_>(fS)
-
-    [<JavaScript>]
-    member ui.SetStop (f: obj -> Element -> unit)  =   
-        let fS (o: obj) (s: Stop) = f o s.stop
-        ui.stop    <- new JavaScript.Function<_,_,_>(fS)
-
-    [<JavaScript>]
-    member ui.SetUpdate (f: obj -> Element -> unit)  =   
-        let fS (o: obj) (s: Update) = f o s.update
-        ui.update   <- new JavaScript.Function<_,_,_>(fS)
-
-    [<JavaScript>]
-    member ui.SetReceive (f: obj -> Element -> unit)  =   
-        let fS (o: obj) (s: Receive) = f o s.receive
-        ui.receive  <- new JavaScript.Function<_,_,_>(fS)
-
-    [<JavaScript>]
-    member ui.SetRemove (f: obj -> Element -> unit)  =   
-        let fS (o: obj) (s: Remove) = f o s.remove
-        ui.remove  <- new JavaScript.Function<_,_,_>(fS)
-
-    [<JavaScript>]
-    member ui.SetOver (f: obj -> Element -> unit)  =   
-        let fS (o: obj) (s: Over) = f o s.over
-        ui.over  <- new JavaScript.Function<_,_,_>(fS)
-
-    [<JavaScript>]
-    member ui.SetOut (f: obj -> Element -> unit)  =   
-        let fS (o: obj) (s: Out) = f o s.out
-        ui.out  <- new JavaScript.Function<_,_,_>(fS)
-
-    [<JavaScript>]
-    member ui.SetActivate (f: obj -> Element -> unit)  =   
-        let fS (o: obj) (s: Activate) = f o s.activate
-        ui.activate  <- new JavaScript.Function<_,_,_>(fS)
-
-    [<JavaScript>]
-    member ui.SetDeactivate (f: obj -> Element -> unit)  =   
-        let fS (o: obj) (s: Deactivate) = f o s.deactivate
-        ui.deactivate  <- new JavaScript.Function<_,_,_>(fS)
-
-    [<JavaScriptConstructor>]
-    new () = {}
 
 [<JavaScriptType>]
 module internal SortableInternal =    
     [<Inline "jQuery($el).sortable($conf)">]
     let Init (el: Element, conf: SortableConfiguration) = ()
 
+
 [<JavaScriptType>]
 type Sortable = 
+
     [<JavaScriptConstructor>]
     new () = {}
   
@@ -329,7 +163,7 @@ type Sortable =
     val mutable private configuration : SortableConfiguration
 
     [<DefaultValue>]
-    val mutable private renderEvent: Event<Utils.RenderEvent>
+    val mutable private renderEvent: Event<RenderEvent>
 
     [<DefaultValue>]
     val mutable private isRendered: bool
@@ -338,19 +172,29 @@ type Sortable =
     member this.Element
         with get () =
             this.element
+
+    (****************************************************************
+    * Constructors
+    *****************************************************************) 
                 
     [<JavaScript>]
-    [<Name "New1">]
+    [<Name "New_Sortable">]
     static member New (el: Element, conf: SortableConfiguration) : Sortable = 
         let s = new Sortable()
+        s.configuration <- conf
+        s.renderEvent <- new Event<RenderEvent>()
         s.element <- 
             el
             |> On Events.Attach (fun _ _ ->
                 s.Render()   
             )
-        s.configuration <- conf
-        s.renderEvent <- new Event<RenderEvent>()
         s
+
+    [<JavaScript>]
+    [<Name "New_Sortable_Shortcut">]
+    static member New (el: Element) : Sortable =
+        let conf = new SortableConfiguration()
+        Sortable.New(el, conf)
 
     (****************************************************************
     * Render interface
@@ -360,8 +204,8 @@ type Sortable =
         this.renderEvent.Publish
         |> Event.Iterate (fun re ->
             match re with
-            | Utils.RenderEvent.Before  -> f ()
-            | _                         -> ()
+            | RenderEvent.Before  -> f ()
+            | _                   -> ()
         )
                     
     [<JavaScript>]
@@ -369,8 +213,8 @@ type Sortable =
         this.renderEvent.Publish
         |> Event.Iterate (fun re ->
             match re with
-            | Utils.RenderEvent.After  -> f ()
-            | _                         -> ()
+            | RenderEvent.After  -> f ()
+            | _                  -> ()
         )
 
     [<JavaScript>]
@@ -389,6 +233,7 @@ type Sortable =
     (****************************************************************
     * Methods
     *****************************************************************) 
+
     [<Inline "$this.sortable('destroy')">]
     member this.Destroy() = ()
             
@@ -418,39 +263,43 @@ type Sortable =
 
     (****************************************************************
     * Events
-    *****************************************************************) 
-    [<Inline "jQuery($this.element).sortable({sort: function (x,y) {$f();}})">]
-    member private this.onSort(f : unit -> unit) = ()
+    *****************************************************************)
 
-    [<Inline "jQuery($this.element).sortable({change: function (x,y) {$f();}})">]
-    member private this.onChange(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).sortable({sort: function (x,y) {($f(x))(y.start);}})">]
+    member private this.onStart(f : Events.EventArgs -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({beforeStop: function (x,y) {$f();}})">]
-    member private this.onBeforeStop(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).sortable({sort: function (x,y) {($f(x))(y.sort);}})">]
+    member private this.onSort(f : Events.EventArgs -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({stop: function (x,y) {$f();}})">]
-    member private this.onStop(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).sortable({change: function (x,y) {($f(x))(y.change);}})">]
+    member private this.onChange(f : Events.EventArgs -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({update: function (x,y) {$f();}})">]
-    member private this.onUpdate(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).sortable({beforeStop: function (x,y) {($f(x))(y.beforeStop);}})">]
+    member private this.onBeforeStop(f : Events.EventArgs -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({receive: function (x,y) {$f();}})">]
-    member private this.onReceive(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).sortable({stop: function (x,y) {($f(x))(y.stop);}})">]
+    member private this.onStop(f : Events.EventArgs -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({remove: function (x,y) {$f();}})">]
-    member private this.onRemove(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).sortable({update: function (x,y) {($f(x))(y.update);}})">]
+    member private this.onUpdate(f : Events.EventArgs -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({over: function (x,y) {$f();}})">]
-    member private this.onOver(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).sortable({receive: function (x,y) {($f(x))(y.receive);}})">]
+    member private this.onReceive(f : Events.EventArgs -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({out: function (x,y) {$f();}})">]
-    member private this.onOut(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).sortable({remove: function (x,y) {($f(x))(y.remove);}})">]
+    member private this.onRemove(f : Events.EventArgs -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({activate: function (x,y) {$f();}})">]
-    member private this.onActivate(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).sortable({over: function (x,y) {($f(x))(y.over);}})">]
+    member private this.onOver(f : Events.EventArgs -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({deactivate: function (x,y) {$f();}})">]
-    member private this.onDeactivate(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).sortable({out: function (x,y) {($f(x))(y.out);}})">]
+    member private this.onOut(f : Events.EventArgs -> Element -> unit) = ()
+
+    [<Inline "jQuery($this.element).sortable({activate: function (x,y) {($f(x))(y.activate);}})">]
+    member private this.onActivate(f : Events.EventArgs -> Element -> unit) = ()
+
+    [<Inline "jQuery($this.element).sortable({deactivate: function (x,y) {($f(x))(y.deactivate);}})">]
+    member private this.onDeactivate(f : Events.EventArgs -> Element -> unit) = ()
 
     // Adding an event and delayin it if the widget is not yet rendered.
     [<JavaScript>]
@@ -458,6 +307,10 @@ type Sortable =
         if this.IsRendered then f ()
         else            
             this.OnAfterRender(fun () -> f ())
+
+    [<JavaScript>]
+    member this.OnStart(f : Events.EventArgs -> Element -> unit) =
+        this.On (fun () ->  this.onStart f)
 
     [<JavaScript>]
     member this.OnSort f = this.On (fun () -> this.onSort f)
@@ -488,6 +341,3 @@ type Sortable =
 
     [<JavaScript>]
     member this.OnDeactivate f = this.On (fun () -> this.onDeactivate f)
-
-
-

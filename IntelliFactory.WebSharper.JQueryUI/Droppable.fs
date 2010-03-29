@@ -14,162 +14,204 @@ namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
+open Utils
+    
+[<JavaScriptType>]
+type ToleranceOfDroppable =     
+    | [<Constant "fit">] Fit
+    | [<Constant "intersect">] Intersect
+    | [<Constant "pointer">] Pointer
+    | [<Constant "touch">] Touch
+
 
 [<JavaScriptType>]
-//[<Require(typeof<Dependencies.Carousel>)>]
-module Droppable =
+type DroppableConfiguration = 
+
+    [<JavaScriptConstructor>]
+    new () = {}
+
+    [<DefaultValue>]
+    [<Name "accept">]
+    //"" by default
+    val mutable Accept: string
+
+    [<DefaultValue>]
+    [<Name "activeClass">]
+    val mutable ActiveClass: string
+
+    [<DefaultValue>]
+    [<Name "addClasses">]
+    //true by default
+    val mutable AddClasses: bool
+
+    [<DefaultValue>]
+    [<Name "greedy">]
+    //false by default
+    val mutable Greedy: bool
+
+    [<DefaultValue>]
+    [<Name "hoverClass">]
+    //"drophover" by default
+    val mutable HoverClass: string
+
+    [<DefaultValue>]
+    [<Name "scope">]
+    //"default" by default
+    val mutable Scope: string
+
+    [<DefaultValue>]
+    [<Name "tolerance">]
+    //"intersect" by default
+    val mutable Tolerance: ToleranceOfDroppable
+
+
+[<JavaScriptType>]    
+module internal DroppableInternal =
+    [<Inline "jQuery($el).droppable($conf)">]
+    let internal New (el: Element, conf: DroppableConfiguration) = ()
+
+[<JavaScriptType>]
+type Droppable =
+
+    [<JavaScriptConstructor>]
+    new () = {}
+
+    [<DefaultValue>]
+    val mutable private element : Element
+
+    [<DefaultValue>]
+    val mutable private configuration : DroppableConfiguration
+
+    [<DefaultValue>]
+    val mutable private renderEvent: Event<RenderEvent>
+
+    [<DefaultValue>]
+    val mutable private isRendered: bool
+
+    [<JavaScript>]
+    member this.Element
+        with get () =
+            this.element
+
+    (****************************************************************
+    * Constructors
+    *****************************************************************) 
+
+    [<JavaScript>]
+    [<Name "New_Droppable">]
+    static member New (el : Element, conf: DroppableConfiguration): Droppable = 
+        let a = new Droppable()
+        a.configuration <- conf
+        a.renderEvent <- new Event<RenderEvent>()
+        a.element <- 
+            el
+            |> On Events.Attach (fun _ _ -> a.Render())
+        a
+
+    [<JavaScript>]
+    [<Name "New_Droppable_Shortcut">]
+    static member New (el : Element) : Droppable = 
+        let conf = new DroppableConfiguration()
+        Droppable.New(el, conf)
+
+
+    (****************************************************************
+    * Render interface
+    *****************************************************************)       
+       
+    [<JavaScript>]
+    member this.OnBeforeRender(f: unit -> unit) : unit=
+        this.renderEvent.Publish
+        |> Event.Iterate (fun re ->
+            match re with
+            | RenderEvent.Before  -> f ()
+            | _                         -> ()
+        )
+                    
+    [<JavaScript>]
+    member this.OnAfterRender(f: unit -> unit) : unit=
+        this.renderEvent.Publish
+        |> Event.Iterate (fun re ->
+            match re with
+            | RenderEvent.After  -> f ()
+            | _                        -> ()
+        )
+
+    [<JavaScript>]
+    member this.Render() =     
+        if not this.IsRendered  then
+            this.renderEvent.Trigger RenderEvent.Before
+            DroppableInternal.New(this.Element, this.configuration)
+            this.renderEvent.Trigger RenderEvent.After
+            this.isRendered <- true
     
-    [<JavaScriptType>]
-    type Tolerance =     
-        | [<Constant "fit">] Fit
-        | [<Constant "intersect">] Intersect
-        | [<Constant "pointer">] Pointer
-        | [<Constant "touch">] Touch
-
-    [<JavaScriptType>]
-    type Activate =
-        {
-            activate: Element
-        } 
-
-    [<JavaScriptType>]
-    type Deactivate =
-        {
-            deactivate: Element
-        }
-
-    [<JavaScriptType>]
-    type Over =
-        {
-            over: Element
-        }
-
-    [<JavaScriptType>]
-    type Out =
-        {
-            out: Element
-        }
-
-    [<JavaScriptType>]
-    type Drop =
-        {
-            drop: Element
-        }
-
-    [<JavaScriptType>]
-    type DroppableConfiguration = 
-
-        [<DefaultValue>]
-        val mutable activate: JavaScript.Function<Events.EventArgs, Activate, unit>
-
-        [<DefaultValue>]
-        val mutable deactivate: JavaScript.Function<Events.EventArgs, Deactivate, unit>
-
-        [<DefaultValue>]
-        val mutable over: JavaScript.Function<Events.EventArgs, Over, unit>
-
-        [<DefaultValue>]
-        val mutable out: JavaScript.Function<Events.EventArgs, Out, unit>
-
-        [<DefaultValue>]
-        val mutable drop: JavaScript.Function<Events.EventArgs, Drop, unit>
-        
-        [<DefaultValue>]
-        [<Name "accept">]
-        //"" by default
-        val mutable Accept: string
-
-        [<DefaultValue>]
-        [<Name "activeClass">]
-        val mutable ActiveClass: string
-
-        [<DefaultValue>]
-        [<Name "addClasses">]
-        //true by default
-        val mutable AddClasses: bool
-
-        [<DefaultValue>]
-        [<Name "greedy">]
-        //false by default
-        val mutable Greedy: bool
-
-        [<DefaultValue>]
-        [<Name "hoverClass">]
-        //"drophover" by default
-        val mutable HoverClass: string
-
-        [<DefaultValue>]
-        [<Name "scope">]
-        //"default" by default
-        val mutable Scope: string
-
-        [<DefaultValue>]
-        [<Name "tolerance">]
-        //"intersect" by default
-        val mutable Tolerance: Tolerance
-
-        [<JavaScript>]
-        member ui.SetActivate (f: obj -> Element -> unit)  =   
-            let fS (o: obj) (s: Activate) = f o s.activate
-            ui.activate<- new JavaScript.Function<_,_,_>(fS)
-
-        [<JavaScript>]
-        member ui.SetDeactivate (f: obj -> Element -> unit)  =   
-            let fS (o: obj) (s: Deactivate) = f o s.deactivate
-            ui.deactivate<- new JavaScript.Function<_,_,_>(fS)
-
-        [<JavaScript>]
-        member ui.SetOver (f: obj -> Element -> unit)  =   
-            let fS (o: obj) (s: Over) = f o s.over
-            ui.over<- new JavaScript.Function<_,_,_>(fS)
-
-        [<JavaScript>]
-        member ui.SetOut(f: obj -> Element -> unit)  =   
-            let fS (o: obj) (s: Out) = f o s.out
-            ui.out<- new JavaScript.Function<_,_,_>(fS)
-
-        [<JavaScript>]
-        member ui.SetDrop(f: obj -> Element -> unit)  =   
-            let fS (o: obj) (s: Drop) = f o s.drop
-            ui.drop<- new JavaScript.Function<_,_,_>(fS)
-
-        [<JavaScriptConstructor>]
-        new () = {}
+    [<JavaScript>]
+    member this.IsRendered
+        with get () : bool = this.isRendered
 
 
-    [<JavaScriptType>]
-    type Droppable =
+    (****************************************************************
+    * Methods
+    *****************************************************************) 
 
-        [<Inline "jQuery($id).droppable()">]
-        static member NewPrivate (id: string) : Droppable = Unchecked.defaultof<_>
+    [<Inline "jQuery($this.element).droppable('destroy')">]
+    member this.Destroy() = ()
+            
+    [<Inline "jQuery($this.element).droppable('disable')">]
+    member this.Disable() = ()
 
-        [<Inline "jQuery($el).droppable()">]
-        static member New (el: Element) : Droppable = Unchecked.defaultof<_>
+    [<Inline "jQuery($this.element).droppable('enable')">]
+    member this.Enable() = ()
 
-        [<Inline "jQuery($el).droppable($conf)">]
-        static member New (el: Element, conf: DroppableConfiguration) : Droppable = Unchecked.defaultof<_>
-
-        [<Inline "$this.droppable('destroy')">]
-        member this.Destroy() = ()
-                
-        [<Inline "$this.droppable('disable')">]
-        member this.Disable() = ()
-
-        [<Inline "$this.droppable('enable')">]
-        member this.Enable() = ()
-        
-        [<Inline "$this.droppable('option', $optionName, $value)">]
-        member this.Option(optionName: string, value: obj) : unit = ()
-
-        [<JavaScript>]
-        static member Attach (el: Element) =
-            el
-            |> On Events.Attach (fun _ _ -> Droppable.New (el) |> ignore)
-
-        [<JavaScript>]
-        static member AttachWithConfiguration (conf: DroppableConfiguration) (el: Element) =
-            el
-            |> On Events.Attach (fun _ _ -> Droppable.New (el, conf) |> ignore)
+    [<Inline "jQuery($this.element).droppable('widget')">]
+    member this.Widget() = ()
+    
+    [<Inline "jQuery($this.element).droppable('option', $name, $value)">]
+    member this.Option(optionName: string, value: obj) : unit = ()
 
 
+    (****************************************************************
+    * Events
+    *****************************************************************) 
+
+    [<Inline "jQuery($this.element).droppable({activate: function (x,y) {($f(x))(y.activate);}})">]
+    member private this.onActivate(f : Events.EventArgs -> Element -> unit) = ()
+
+    [<Inline "jQuery($this.element).droppable({deactivate: function (x,y) {($f(x))(y.deactivate);}})">]
+    member private this.onDeactivate(f : Events.EventArgs -> Element -> unit) = ()
+
+    [<Inline "jQuery($this.element).droppable({over: function (x,y) {($f(x))(y.over);}})">]
+    member private this.onOver(f : Events.EventArgs -> Element -> unit) = ()
+
+    [<Inline "jQuery($this.element).droppable({out: function (x,y) {($f(x))(y.out);}})">]
+    member private this.onOut(f : Events.EventArgs -> Element -> unit) = ()
+
+    [<Inline "jQuery($this.element).droppable({drop: function (x,y) {($f(x))(y.drop);}})">]
+    member private this.onDrop(f : Events.EventArgs -> Element -> unit) = ()
+
+    [<JavaScript>]
+    member private this.On (f : unit -> unit) =
+        if this.IsRendered then f ()
+        else            
+            this.OnAfterRender(fun () -> f ())
+
+    [<JavaScript>]
+    member this.OnActivate f =
+        this.On (fun () -> this.onActivate f)
+
+    [<JavaScript>]
+    member this.OnDeactivate f =
+        this.On (fun () -> this.onDeactivate f)
+
+    [<JavaScript>]
+    member this.OnOver f =
+        this.On (fun () -> this.onOver f)
+
+    [<JavaScript>]
+    member this.OnOut f =
+        this.On (fun () -> this.onOut f)
+
+    [<JavaScript>]
+    member this.OnDrop f =
+        this.On (fun () -> this.onDrop f)
 

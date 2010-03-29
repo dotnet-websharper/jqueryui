@@ -179,17 +179,17 @@ type Slider =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element).slider({start: function (x,y) {$f();}})">]
-    member private this.onStart(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).slider({start: function (x,y) {$f(x);}})">]
+    member private this.onStart(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).slider({change: function (x,y) {$f();}})">]
-    member private this.onChange(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).slider({change: function (x,y) {$f(x);}})">]
+    member private this.onChange(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).slider({slide: function (x,y) {$f();}})">]
-    member private this.onSlide(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).slider({slide: function (x,y) {$f(x);}})">]
+    member private this.onSlide(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).slider({stop: function (x,y) {$f();}})">]
-    member private this.onStop(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).slider({stop: function (x,y) {$f(x);}})">]
+    member private this.onStop(f : Events.EventArgs -> unit) = ()
 
     [<JavaScript>]
     member private this.OnAfter (f : unit -> unit) : unit =
@@ -199,19 +199,19 @@ type Slider =
             this.OnAfterRender(fun () -> f ())
 
     [<JavaScript>]
-    member this.OnStart(f : unit -> unit) =
+    member this.OnStart(f : Events.EventArgs -> unit) =
         this.OnAfter (fun () -> this.onStart f)
 
     [<JavaScript>]
-    member this.OnChange(f : unit -> unit) =
+    member this.OnChange(f : Events.EventArgs -> unit) =
         this.OnAfter (fun () -> this.onChange f)
 
     [<JavaScript>]
-    member this.OnSlide(f : unit -> unit) =
+    member this.OnSlide(f : Events.EventArgs -> unit) =
         this.OnAfter (fun () -> this.onSlide f)
 
     [<JavaScript>]
-    member this.OnStop(f : unit -> unit) =
+    member this.OnStop(f : Events.EventArgs -> unit) =
         this.OnAfter (fun () -> this.onStop f)
 
 

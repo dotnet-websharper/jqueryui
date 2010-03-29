@@ -135,12 +135,12 @@ type Progressbar =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element).accordion({change: function (x,y) {$f();}})">]
-    member private this.onChange(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).accordion({change: function (x,y) {$f(x);}})">]
+    member private this.onChange(f : Events.EventArgs -> unit) = ()
 
     // Adding an event and delayin it if the widget is not yet rendered.
     [<JavaScript>]
-    member this.OnChange(f : unit -> unit) =
+    member this.OnChange(f : Events.EventArgs -> unit) =
         if this.IsRendered then
             this.onChange f
         else            

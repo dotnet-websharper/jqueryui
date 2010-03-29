@@ -179,12 +179,12 @@ type Button =
     * Events
     *****************************************************************)
     [<JavaScript>]
-    member this.OnClick (f : unit -> unit) : unit =
+    member this.OnClick (f : Events.EventArgs -> unit) : unit =
         this.element
         |> On Events.Click (fun _ ev ->
             ev.PreventDefault()
             if this.isEnabled then
-                f ()
+                f ev
         )
         |> ignore
 

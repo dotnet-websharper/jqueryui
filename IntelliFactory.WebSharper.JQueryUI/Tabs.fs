@@ -267,26 +267,26 @@ type Tabs =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element).tabs({select: function (x,y) {$f();}})">]
-    member private this.onSelect(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).tabs({select: function (x,y) {$f(x);}})">]
+    member private this.onSelect(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).tabs({load: function (x,y) {$f();}})">]
-    member private this.onLoad(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).tabs({load: function (x,y) {$f(x);}})">]
+    member private this.onLoad(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).tabs({show: function (x,y) {$f();}})">]
-    member private this.onShow(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).tabs({show: function (x,y) {$f(x);}})">]
+    member private this.onShow(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).tabs({add: function (x,y) {$f();}})">]
-    member private this.onAdd(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).tabs({add: function (x,y) {$f(x);}})">]
+    member private this.onAdd(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).tabs({remove: function (x,y) {$f();}})">]
-    member private this.onRemove(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).tabs({remove: function (x,y) {$f(x);}})">]
+    member private this.onRemove(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).tabs({enable: function (x,y) {$f();}})">]
-    member private this.onEnable(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).tabs({enable: function (x,y) {$f(x);}})">]
+    member private this.onEnable(f : Events.EventArgs -> unit) = ()
 
-    [<Inline "jQuery($this.element).tabs({diable: function (x,y) {$f();}})">]
-    member private this.onDisable(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).tabs({diable: function (x,y) {$f(x);}})">]
+    member private this.onDisable(f : Events.EventArgs -> unit) = ()
 
     // Adding an event and delaying it if the widget is not yet rendered.
     [<JavaScript>]

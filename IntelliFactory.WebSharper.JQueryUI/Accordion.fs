@@ -14,6 +14,7 @@ namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
+open Utils
 
 [<JavaScriptType>]
 type AccordionIconConfiguration =
@@ -96,7 +97,7 @@ type Accordion =
     val mutable private configuration : AccordionConfiguration
 
     [<DefaultValue>]
-    val mutable private renderEvent: Event<Utils.RenderEvent>
+    val mutable private renderEvent: Event<RenderEvent>
 
     [<DefaultValue>]
     val mutable private isRendered: bool
@@ -113,7 +114,7 @@ type Accordion =
     [<Name "New2">]
     static member New (els : List<string * Element>, conf: AccordionConfiguration): Accordion = 
         let a = new Accordion()
-        a.renderEvent <- new Event<Utils.RenderEvent>()
+        a.renderEvent <- new Event<RenderEvent>()
         a.configuration <- conf
         let panel =
             els
@@ -143,8 +144,8 @@ type Accordion =
         this.renderEvent.Publish
         |> Event.Iterate (fun re ->
             match re with
-            | Utils.RenderEvent.Before  -> f ()
-            | _                         -> ()
+            | RenderEvent.Before  -> f ()
+            | _                   -> ()
         )
                     
     [<JavaScript>]
@@ -152,16 +153,16 @@ type Accordion =
         this.renderEvent.Publish
         |> Event.Iterate (fun re ->
             match re with
-            | Utils.RenderEvent.After  -> f ()
-            | _                         -> ()
+            | RenderEvent.After  -> f ()
+            | _                  -> ()
         )
 
     [<JavaScript>]
     member this.Render() =     
         if not this.IsRendered  then
-            this.renderEvent.Trigger Utils.RenderEvent.Before
+            this.renderEvent.Trigger RenderEvent.Before
             AccordianInternal.New(this.Element, this.configuration)
-            this.renderEvent.Trigger Utils.RenderEvent.After
+            this.renderEvent.Trigger RenderEvent.After
             this.isRendered <- true
     
     [<JavaScript>]
@@ -190,15 +191,27 @@ type Accordion =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element).accordion({change: function (x,y) {$f();}})">]
-    member private this.onChange(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element).accordion({change: function (x,y) {($f(x))(y.change);}})">]
+    member private this.onChange(f : Events.EventArgs -> Element -> unit) = ()
+
+    [<Inline "jQuery($this.element).accordion({change: function (x,y) {($f(x))(y.changestart);}})">]
+    member private this.onChangestart(f : Events.EventArgs -> Element -> unit) = ()
 
     // Adding an event and delayin it if the widget is not yet rendered.
     [<JavaScript>]
-    member this.OnChange(f : unit -> unit) =
+    member this.OnChange f =
         if this.IsRendered then
             this.onChange f
         else            
             this.OnAfterRender(fun () ->
                 this.onChange f
+            )
+
+    [<JavaScript>]
+    member this.OnChangestart f =
+        if this.IsRendered then
+            this.onChangestart f
+        else            
+            this.OnAfterRender(fun () ->
+                this.onChangestart f
             )
