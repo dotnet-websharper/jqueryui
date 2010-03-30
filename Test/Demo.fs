@@ -25,10 +25,10 @@ module DemoInternal =
     let Dialog () =
         let button = Button.New "Open"        
         let pan = Div [button.Element]
-        button.OnClick (fun () ->            
+        button.OnClick (fun ev ->            
             let dialog = Dialog.New(H1 ["Dialog"])
             pan.Append(dialog.Element)
-            dialog.OnClose(fun () ->
+            dialog.OnClose(fun ev ->
                 button.Enable()
             )
             button.Disable()
@@ -51,7 +51,7 @@ module DemoInternal =
     let Slider () =
         let slider = Slider.New()
         let selVal = Label []
-        slider.OnChange(fun () ->
+        slider.OnChange(fun ev ->
             selVal.Text <- string slider.Value + "%"
         )
         Div [

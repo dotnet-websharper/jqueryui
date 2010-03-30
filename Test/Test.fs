@@ -42,7 +42,7 @@ module Tests =
         // Events
         acc1.OnBeforeRender <| fun () -> L "Acc1 - Before Render" 
         acc1.OnAfterRender <| fun () -> L "Acc1 - After Render" 
-        acc1.OnChange <| fun () -> L "Acc1 - Change"        
+        acc1.OnChange <| fun _ _ -> L "Acc1 - Change"        
         
         let els2 = 
             [
@@ -55,7 +55,7 @@ module Tests =
         // Events
         acc2.OnBeforeRender <| fun () -> L "Acc2 - Before Render" 
         acc2.OnAfterRender <| fun () -> L "Acc2 - After Render" 
-        acc2.OnChange <| fun () -> L "Acc2 - Change"    
+        acc2.OnChange <| fun _ _ -> L "Acc2 - Change"    
                 
         let button =
             B "Click" <| fun () ->
@@ -73,10 +73,10 @@ module Tests =
             L "After Render"
             a.Search "Z"
         
-        a.OnChange <| fun () -> L "Change"
-        a.OnClose <| fun () -> L "Close"
-        a.OnSearch <| fun () -> L "Search"
-        a.OnFocus <| fun () -> L "Focus"
+        a.OnChange <| fun _ _ -> L "Change"
+        a.OnClose <| fun _ _ -> L "Close"
+        a.OnSearch <| fun _ _ -> L "Search"
+        a.OnFocus <| fun _ _ -> L "Focus"
 
         let bClose = 
             B "Close" <| fun () -> a.Close()         
@@ -94,10 +94,10 @@ module Tests =
         let b1 = Button.New ("Click")
         b1.OnAfterRender(fun () -> L "After Render")
         b1.OnBeforeRender(fun () -> L "Before Render")
-        b1.OnClick(fun () -> L "Click")
+        b1.OnClick(fun ev -> L "Click")
         let b2 = Button.New "Click 2"
-        b2.OnClick(fun () ->
-            b1.OnClick (fun () -> L "New CB")
+        b2.OnClick(fun ev ->
+            b1.OnClick (fun ev -> L "New CB")
             if b1.IsEnabled then
                 b1.Disable()
             else
@@ -120,24 +120,24 @@ module Tests =
         let conf =DialogConfiguration()
         conf.Buttons <- "Buttons"
         let d = Dialog.New(Div ["Dialog"], conf)    
-        d.OnClose(fun () ->
+        d.OnClose(fun ev ->
             Native.Window.Alert "close"
         )                  
         d.OnAfterRender(fun () -> L "dialog: before render")
         d.OnAfterRender(fun () -> L "dialog: after render")
-        d.OnOpen(fun () -> L "dialog: open")
-        d.OnClose(fun () -> L "dialog: close")
-        d.OnResize(fun () -> L "dialog: resize")
-        d.OnResizeStop(fun () -> L "dialog: resize stop")
-        d.OnResizeStart(fun () -> L "dialog: resize start")
-        d.OnFocus(fun () -> L "dialog: focus")
-        d.OnDrag(fun () -> L "dialog: drag")
-        d.OnDragStart(fun () -> L "dialog: drag start")
-        d.OnDragStop(fun () -> L "dialog: drag stop")
+        d.OnOpen(fun ev -> L "dialog: open")
+        d.OnClose(fun ev -> L "dialog: close")
+        d.OnResize(fun ev -> L "dialog: resize")
+        d.OnResizeStop(fun ev -> L "dialog: resize stop")
+        d.OnResizeStart(fun ev -> L "dialog: resize start")
+        d.OnFocus(fun ev -> L "dialog: focus")
+        d.OnDrag(fun ev -> L "dialog: drag")
+        d.OnDragStart(fun ev -> L "dialog: drag start")
+        d.OnDragStop(fun ev -> L "dialog: drag stop")
         let bO = Button.New ("open")
-        bO.OnClick (fun () -> d.Open())
+        bO.OnClick (fun ev -> d.Open())
         let bC = Button.New "Close"
-        bC.OnClick (fun () -> d.Close())
+        bC.OnClick (fun ev -> d.Close())
         Div [        
             d.Element
             bO.Element
@@ -155,7 +155,7 @@ module Tests =
         )
         
         let b = Button.New("inc")
-        b.OnClick (fun () ->
+        b.OnClick (fun ev ->
             p.Value <- p.Value + 10
         )
         Div [p.Element; b.Element]
@@ -169,13 +169,13 @@ module Tests =
             // s.Value <- 10
             L "slider: after render"
         )
-        s.OnChange(fun () ->
+        s.OnChange(fun ev ->
             L "change"
             // L (string s.Value)
         )
         let b = Button.New("inc")
         let pan = Div [s.Element; b.Element]
-        b.OnClick (fun () ->          
+        b.OnClick (fun ev ->          
             let d = Dialog.New(Div [string s.Value]) 
             pan.Append(d.Element)
         )        
@@ -198,7 +198,7 @@ module Tests =
         )
 
         let b = Button.New("inc")
-        b.OnClick (fun () ->          
+        b.OnClick (fun ev ->          
             t.Activate 2
             t.Add( Div [H1 ["New tab"]], "tab" + (string t.Length))
         )        
@@ -217,8 +217,8 @@ module Tests =
         s.OnAfterRender( fun () ->
             L "sortable: after render"
         )
-        s.OnSort( fun () -> L "sort")
-        s.OnChange(fun () -> L "change")
+        s.OnSort( fun _ _ -> L "sort")
+        s.OnChange(fun _ _ -> L "change")
         s.Element
 
 
