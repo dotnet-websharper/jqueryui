@@ -34,12 +34,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="IntelliFactory.WebSharper">
-      <HintPath>C:\Program Files\IntelliFactory\WebSharper\0.4.79\IntelliFactory.WebSharper.dll</HintPath>
+      <HintPath>..\lib\IntelliFactory.WebSharper.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core" />
     <Reference Include="System" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -61,13 +60,9 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
-  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-	     Other similar extension points exist, see Microsoft.Common.targets.
-	<Target Name="BeforeBuild">
-	</Target>
-	<Target Name="AfterBuild">
-	</Target>
-	-->
+  <PropertyGroup Condition="'$(IntelliFactory)' == ''">
+    <IntelliFactory>//ifbuds01/pub</IntelliFactory>
+  </PropertyGroup>
+  <Import Project="$(IntelliFactory)/FSharp/1.9.9.9/bin/Microsoft.FSharp.Targets" />
+  <Import Project="$(IntelliFactory)/bin/IntelliFactory.Targets" />
 </Project>

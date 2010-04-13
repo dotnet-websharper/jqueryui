@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>WebSharperProject</RootNamespace>
     <AssemblyName>IntelliFactory.WebSharper.JQueryUI</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <Name>IntelliFactory.WebSharper.JQueryUI</Name>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -31,28 +31,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="IntelliFactory.WebSharper">
-      <HintPath>$(ProgramFiles)\IntelliFactory\WebSharper\<!--version-->0.4.79<!--/version-->\IntelliFactory.WebSharper.dll</HintPath>
-      <CopyLocal>true</CopyLocal>
-    </Reference>
-    <Reference Include="IntelliFactory.WebSharper.Compiler">
-      <HintPath>$(ProgramFiles)\IntelliFactory\WebSharper\<!--version-->0.4.79<!--/version-->\IntelliFactory.WebSharper.Compiler.dll</HintPath>
-      <CopyLocal>true</CopyLocal>
+      <HintPath>..\lib\IntelliFactory.WebSharper.dll</HintPath>
     </Reference>
     <Reference Include="IntelliFactory.WebSharper.Formlet">
-      <HintPath>$(ProgramFiles)\IntelliFactory\WebSharper\<!--version-->0.4.79<!--/version-->\IntelliFactory.WebSharper.Formlet.dll</HintPath>
-      <CopyLocal>true</CopyLocal>
+      <HintPath>..\lib\IntelliFactory.WebSharper.Formlet.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration" />
-    <Reference Include="WebSharper">
-      <HintPath>$(ProgramFiles)\IntelliFactory\WebSharper\<!--version-->0.4.79<!--/version-->\WebSharper.exe</HintPath>
-      <CopyLocal>true</CopyLocal>
-    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core">
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -75,6 +64,9 @@
     <Compile Include="Sortable.fs" />
     <Compile Include="Position.fs" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
-  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+  <PropertyGroup Condition="'$(IntelliFactory)' == ''">
+    <IntelliFactory>//ifbuds01/pub</IntelliFactory>
+  </PropertyGroup>
+  <Import Project="$(IntelliFactory)/FSharp/1.9.9.9/bin/Microsoft.FSharp.Targets" />
+  <Import Project="$(IntelliFactory)/bin/IntelliFactory.Targets" />
 </Project>
