@@ -17,11 +17,6 @@ module Dependencies =
     open System.Configuration
 
     module Utils = 
-
-        let inline D<'T when 'T :> Resources.IResource
-                         and 'T : (new : unit -> 'T)> =
-            new 'T() :> Resources.IResource
-
         let JQueryForUIBase =
             match ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQuery"] with
             | null ->
@@ -38,37 +33,39 @@ module Dependencies =
                 url
 
         let RelativeLocation loc = 
-            JQueryUIBase + loc
-            |> Resources.AbsoluteLocation
-
+            JQueryUIBase + loc       
+        
         [<AbstractClass>]
         type Module(name: string) =
-            inherit Resources.JavaScriptResource()
-            override this.Location =
-                #if DEBUG
-                sprintf "/ui/%s.js"  name
-                #else
-                sprintf "/ui/minified/%s/%s-min.js" name name
-                #endif
-                |> RelativeLocation
+            interface IResource with            
+                member this.Render(resolver, writer) =
+                    let loc =
+                        #if DEBUG
+                        sprintf "/ui/%s.js"  name
+                        #else
+                        sprintf "/ui/minified/%s/%s-min.js" name name
+                        #endif
+                        |> RelativeLocation
+                    Resource.RenderJavaScript loc writer
 
         [<AbstractClass>]
         type ModuleCss(name: string) =
-            inherit Resources.CssResource()
-            override this.Location =
-                sprintf "/themes/base/%s.css" name
-                |> RelativeLocation
+            interface IResource with
+                member this.Render(resolver, writer) =
+                    let loc = 
+                        sprintf "/themes/base/%s.css" name
+                        |> RelativeLocation
+                    Resource.RenderCss loc writer
 
     open Utils
 
     type JQueryBase() =
-        inherit Resources.JavaScriptResource()
-        override this.Location = 
-            JQueryForUIBase
-            |> Resources.AbsoluteLocation
+        interface IResource with
+            member this.Render(resolver, writer) =
+                Resource.RenderJavaScript JQueryForUIBase writer
 
     and JQueryUIAll() = 
         inherit Module("jquery-ui")
-        override this.Dependencies = [] :> _
+                
     and AllCss()= 
         inherit ModuleCss("jquery.ui.all")

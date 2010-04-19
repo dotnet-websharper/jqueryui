@@ -25,10 +25,7 @@ type ToleranceOfDroppable =
 
 
 [<JavaScriptType>]
-type DroppableConfiguration = 
-
-    [<JavaScriptConstructor>]
-    new () = {}
+type DroppableConfiguration[<JavaScript>]() = 
 
     [<DefaultValue>]
     [<Name "accept">]
@@ -68,25 +65,16 @@ type DroppableConfiguration =
 [<JavaScriptType>]    
 module internal DroppableInternal =
     [<Inline "jQuery($el).droppable($conf)">]
-    let internal New (el: Element, conf: DroppableConfiguration) = ()
+    let internal New (el: Dom.Element, conf: DroppableConfiguration) = ()
 
 [<JavaScriptType>]
-type Droppable =
-
-    [<JavaScriptConstructor>]
-    new () = {}
+type Droppable[<JavaScript>]() =
 
     [<DefaultValue>]
     val mutable private element : Element
 
     [<DefaultValue>]
     val mutable private configuration : DroppableConfiguration
-
-    [<DefaultValue>]
-    val mutable private renderEvent: Event<RenderEvent>
-
-    [<DefaultValue>]
-    val mutable private isRendered: bool
 
     [<JavaScript>]
     member this.Element
@@ -96,16 +84,14 @@ type Droppable =
     (****************************************************************
     * Constructors
     *****************************************************************) 
-
     [<JavaScript>]
     [<Name "New_Droppable">]
     static member New (el : Element, conf: DroppableConfiguration): Droppable = 
         let a = new Droppable()
         a.configuration <- conf
-        a.renderEvent <- new Event<RenderEvent>()
         a.element <- 
             el
-            |> On Events.Attach (fun _ _ -> a.Render())
+            |>! OnAfterRender (fun _  -> (a :> IWidget).Render())
         a
 
     [<JavaScript>]
@@ -116,57 +102,59 @@ type Droppable =
 
 
     (****************************************************************
-    * Render interface
-    *****************************************************************)       
-       
-    [<JavaScript>]
-    member this.OnBeforeRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | RenderEvent.Before  -> f ()
-            | _                         -> ()
-        )
-                    
-    [<JavaScript>]
-    member this.OnAfterRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | RenderEvent.After  -> f ()
-            | _                        -> ()
-        )
+    * INode
+    *****************************************************************)              
+    interface INode with
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = 
+                (this :> IWidget).Render()
+                (this.Element.Dom :> Dom.Node)
+                
+    (****************************************************************
+    * IWidget
+    *****************************************************************)                  
+    interface IWidget with
+        [<JavaScript>]
+        member this.OnBeforeRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnBeforeRender (fun _ -> f ())
+                        
+        [<JavaScript>]
+        member this.OnAfterRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnAfterRender (fun _ -> 
+                (this :> IWidget).Render()
+                f ()
+            )
 
-    [<JavaScript>]
-    member this.Render() =     
-        if not this.IsRendered  then
-            this.renderEvent.Trigger RenderEvent.Before
-            DroppableInternal.New(this.Element, this.configuration)
-            this.renderEvent.Trigger RenderEvent.After
-            this.isRendered <- true
-    
-    [<JavaScript>]
-    member this.IsRendered
-        with get () : bool = this.isRendered
+        [<JavaScript>]
+        member this.Render() =
+            (this.Element :> IWidget).Render()
+            DroppableInternal.New (this.Element.Dom, this.configuration)
+
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = this.Element.Dom
 
 
     (****************************************************************
     * Methods
     *****************************************************************) 
 
-    [<Inline "jQuery($this.element).droppable('destroy')">]
+    [<Inline "jQuery($this.element.el).droppable('destroy')">]
     member this.Destroy() = ()
             
-    [<Inline "jQuery($this.element).droppable('disable')">]
+    [<Inline "jQuery($this.element.el).droppable('disable')">]
     member this.Disable() = ()
 
-    [<Inline "jQuery($this.element).droppable('enable')">]
+    [<Inline "jQuery($this.element.el).droppable('enable')">]
     member this.Enable() = ()
 
-    [<Inline "jQuery($this.element).droppable('widget')">]
+    [<Inline "jQuery($this.element.el).droppable('widget')">]
     member this.Widget() = ()
     
-    [<Inline "jQuery($this.element).droppable('option', $name, $value)">]
+    [<Inline "jQuery($this.element.el).droppable('option', $name, $value)">]
     member this.Option(optionName: string, value: obj) : unit = ()
 
 
@@ -174,44 +162,39 @@ type Droppable =
     * Events
     *****************************************************************) 
 
-    [<Inline "jQuery($this.element).droppable({activate: function (x,y) {($f(x))(y.activate);}})">]
-    member private this.onActivate(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).droppable({activate: function (x,y) {($f(x))(y.activate);}})">]
+    member private this.onActivate(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).droppable({deactivate: function (x,y) {($f(x))(y.deactivate);}})">]
-    member private this.onDeactivate(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).droppable({deactivate: function (x,y) {($f(x))(y.deactivate);}})">]
+    member private this.onDeactivate(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).droppable({over: function (x,y) {($f(x))(y.over);}})">]
-    member private this.onOver(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).droppable({over: function (x,y) {($f(x))(y.over);}})">]
+    member private this.onOver(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).droppable({out: function (x,y) {($f(x))(y.out);}})">]
-    member private this.onOut(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).droppable({out: function (x,y) {($f(x))(y.out);}})">]
+    member private this.onOut(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).droppable({drop: function (x,y) {($f(x))(y.drop);}})">]
-    member private this.onDrop(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).droppable({drop: function (x,y) {($f(x))(y.drop);}})">]
+    member private this.onDrop(f : JQueryEvent -> Element -> unit) = ()
 
-    [<JavaScript>]
-    member private this.On (f : unit -> unit) =
-        if this.IsRendered then f ()
-        else            
-            this.OnAfterRender(fun () -> f ())
 
     [<JavaScript>]
     member this.OnActivate f =
-        this.On (fun () -> this.onActivate f)
+        this |> OnAfterRender(fun _ -> this.onActivate f)
 
     [<JavaScript>]
     member this.OnDeactivate f =
-        this.On (fun () -> this.onDeactivate f)
+        this |> OnAfterRender(fun _ -> this.onDeactivate f)
 
     [<JavaScript>]
     member this.OnOver f =
-        this.On (fun () -> this.onOver f)
+        this |> OnAfterRender(fun _ -> this.onOver f)
 
     [<JavaScript>]
     member this.OnOut f =
-        this.On (fun () -> this.onOut f)
+        this |> OnAfterRender(fun _ -> this.onOut f)
 
     [<JavaScript>]
     member this.OnDrop f =
-        this.On (fun () -> this.onDrop f)
+        this |> OnAfterRender(fun _ -> this.onDrop f)
 

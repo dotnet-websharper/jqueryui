@@ -22,10 +22,8 @@ type ToleranceOfSelectable =
     | [<Constant "touch">] Touch
 
 [<JavaScriptType>]
-type SelectableConfiguration = 
+type SelectableConfiguration[<JavaScript>]() = 
 
-    [<JavaScriptConstructor>]
-    new () = {}
 
     [<DefaultValue>]
     [<Name "disabled">]
@@ -66,26 +64,17 @@ type SelectableConfiguration =
 [<JavaScriptType>]    
 module internal SelectableInternal =
     [<Inline "jQuery($el).selectable($conf)">]
-    let internal New (el: Element, conf: SelectableConfiguration) = ()
+    let internal New (el: Dom.Element, conf: SelectableConfiguration) = ()
 
 
 [<JavaScriptType>]
-type Selectable = 
-
-    [<JavaScriptConstructor>]
-    new () = {}
+type Selectable[<JavaScript>]() = 
     
     [<DefaultValue>]
     val mutable private element : Element
 
     [<DefaultValue>]
     val mutable private configuration : SelectableConfiguration
-
-    [<DefaultValue>]
-    val mutable private renderEvent: Event<RenderEvent>
-
-    [<DefaultValue>]
-    val mutable private isRendered: bool
 
     [<JavaScript>]
     member this.Element
@@ -96,16 +85,13 @@ type Selectable =
     (****************************************************************
     * Constructors
     *****************************************************************) 
-
     [<JavaScript>]
     [<Name "New_Selectable">]
     static member New (el : Element, conf: SelectableConfiguration): Selectable = 
         let a = new Selectable()
         a.configuration <- conf
-        a.renderEvent <- new Event<RenderEvent>()
         a.element <- 
-            el
-            |> On Events.Attach (fun _ _ -> a.Render())
+            el |>! OnAfterRender (fun _  -> (a :> IWidget).Render())
         a
 
     [<JavaScript>]
@@ -115,60 +101,62 @@ type Selectable =
         Selectable.New(el, conf)
 
     (****************************************************************
-    * Render interface
-    *****************************************************************)       
-       
-    [<JavaScript>]
-    member this.OnBeforeRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | RenderEvent.Before  -> f ()
-            | _                   -> ()
-        )
-                    
-    [<JavaScript>]
-    member this.OnAfterRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | RenderEvent.After  -> f ()
-            | _                  -> ()
-        )
+    * INode
+    *****************************************************************)              
+    interface INode with
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = 
+                (this :> IWidget).Render()
+                (this.Element.Dom :> Dom.Node)
+                
+    (****************************************************************
+    * IWidget
+    *****************************************************************)                  
+    interface IWidget with
+        [<JavaScript>]
+        member this.OnBeforeRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnBeforeRender (fun _ -> f ())
+                        
+        [<JavaScript>]
+        member this.OnAfterRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnAfterRender (fun _ -> 
+                (this :> IWidget).Render()
+                f ()
+            )
 
-    [<JavaScript>]
-    member this.Render() =     
-        if not this.IsRendered  then
-            this.renderEvent.Trigger RenderEvent.Before
-            SelectableInternal.New(this.Element, this.configuration)
-            this.renderEvent.Trigger RenderEvent.After
-            this.isRendered <- true
-    
-    [<JavaScript>]
-    member this.IsRendered
-        with get () : bool = this.isRendered
+        [<JavaScript>]
+        member this.Render() =
+            (this.Element :> IWidget).Render()
+            SelectableInternal.New (this.Element.Dom, this.configuration)
+
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = this.Element.Dom
 
 
     (****************************************************************
     * Methods
     *****************************************************************) 
 
-    [<Inline "jQuery($this.element).selectable('destroy')">]
+    [<Inline "jQuery($this.element.el).selectable('destroy')">]
     member this.Destroy() = ()
    
-    [<Inline "jQuery($this.element).selectable('disable')">]
+    [<Inline "jQuery($this.element.el).selectable('disable')">]
     member this.Disable() = ()
 
-    [<Inline "jQuery($this.element).selectable('enable')">]
+    [<Inline "jQuery($this.element.el).selectable('enable')">]
     member this.Enable() = ()
 
-    [<Inline "jQuery($this.element).selectable('refresh')">]
+    [<Inline "jQuery($this.element.el).selectable('refresh')">]
     member this.Refresh() = ()
 
-    [<Inline "jQuery($this.element).selectable('widget')">]
+    [<Inline "jQuery($this.element.el).selectable('widget')">]
     member this.Widget() = ()
 
-    [<Inline "jQuery($this.element).selectable('option', $name, $value)">]
+    [<Inline "jQuery($this.element.el).selectable('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
 
@@ -177,50 +165,45 @@ type Selectable =
     * Events
     *****************************************************************) 
 
-    [<Inline "jQuery($this.element).selectable({selected: function (x,y) {($f(x))(y.selected);}})">]
-    member private this.onSelected(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).selectable({selected: function (x,y) {($f(x))(y.selected);}})">]
+    member private this.onSelected(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).selectable({selecting: function (x,y) {($f(x))(y.selecting);}})">]
-    member private this.onSelecting(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).selectable({selecting: function (x,y) {($f(x))(y.selecting);}})">]
+    member private this.onSelecting(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).selectable({start: function (x,y) {($f(x))(y.start);}})">]
-    member private this.onStart(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).selectable({start: function (x,y) {($f(x))(y.start);}})">]
+    member private this.onStart(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).selectable({stop: function (x,y) {($f(x))(y.stop);}})">]
-    member private this.onStop(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).selectable({stop: function (x,y) {($f(x))(y.stop);}})">]
+    member private this.onStop(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).selectable({unselected: function (x,y) {($f(x))(y.unselected);}})">]
-    member private this.onUnselected(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).selectable({unselected: function (x,y) {($f(x))(y.unselected);}})">]
+    member private this.onUnselected(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).selectable({unselecting: function (x,y) {($f(x))(y.unselecting);}})">]
-    member private this.onUnselecting(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).selectable({unselecting: function (x,y) {($f(x))(y.unselecting);}})">]
+    member private this.onUnselecting(f : JQueryEvent -> Element -> unit) = ()
 
-    [<JavaScript>]
-    member private this.On (f : unit -> unit) =
-        if this.IsRendered then f ()
-        else            
-            this.OnAfterRender(fun () -> f ())
 
     [<JavaScript>]
-    member this.OnSelected(f : Events.EventArgs -> Element -> unit) =
-        this.On (fun () ->  this.onSelected f)
+    member this.OnSelected(f : JQueryEvent -> Element -> unit) =
+        this |> OnAfterRender(fun _ ->  this.onSelected f)
 
     [<JavaScript>]
-    member this.OnSelecting(f : Events.EventArgs -> Element -> unit) =
-        this.On (fun () -> this.onSelecting f)
+    member this.OnSelecting(f : JQueryEvent -> Element -> unit) =
+        this |> OnAfterRender(fun _ -> this.onSelecting f)
 
     [<JavaScript>]
-    member this.OnStart(f : Events.EventArgs -> Element -> unit) =
-        this.On (fun () -> this.onStart f)
+    member this.OnStart(f : JQueryEvent -> Element -> unit) =
+        this |> OnAfterRender(fun _ -> this.onStart f)
 
     [<JavaScript>]
-    member this.OnStop(f : Events.EventArgs -> Element -> unit) =
-        this.On (fun () -> this.onStop f)
+    member this.OnStop(f : JQueryEvent -> Element -> unit) =
+        this |> OnAfterRender(fun _ -> this.onStop f)
 
     [<JavaScript>]
-    member this.OnUnselected(f : Events.EventArgs -> Element -> unit) =
-        this.On (fun () ->  this.onUnselected f)
+    member this.OnUnselected(f : JQueryEvent -> Element -> unit) =
+        this |> OnAfterRender(fun _ ->  this.onUnselected f)
 
     [<JavaScript>]
-    member this.OnUnselecting(f : Events.EventArgs -> Element -> unit) =
-        this.On (fun () -> this.onUnselecting f)
+    member this.OnUnselecting(f : JQueryEvent -> Element -> unit) =
+        this |> OnAfterRender(fun _ -> this.onUnselecting f)

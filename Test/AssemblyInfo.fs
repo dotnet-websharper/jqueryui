@@ -2,5 +2,5 @@
 
 open IntelliFactory.WebSharper
 
-[<assembly: WebSharperAssembly>]
+[<assembly: WebSharper>]
 do ()

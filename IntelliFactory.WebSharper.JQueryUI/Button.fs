@@ -29,7 +29,7 @@ type ButtonIconsConfiguration =
     static member Default = {Primary = "ui-icon-gear"; Secondary = "ui-icon-triangle-1-s" }
 
 [<JavaScriptType>]
-type ButtonConfiguration = 
+type ButtonConfiguration[<JavaScript>]() = 
     
     [<DefaultValue>]
     [<Name "text">]
@@ -45,32 +45,19 @@ type ButtonConfiguration =
     [<Name "icons">]
     val mutable Icons: ButtonIconsConfiguration
 
-    [<JavaScriptConstructor>]
-    new () = {}
-
 [<JavaScriptType>]
 module internal ButtonInternal =
     [<Inline "jQuery($el).button($conf)">]
-    let New (el: Element, conf: ButtonConfiguration) = ()    
-
+    let New (el: Dom.Element, conf: ButtonConfiguration) = ()
 
 [<JavaScriptType>]
-type Button = 
-
-    [<JavaScriptConstructor>]
-    new () = {}
+type Button [<JavaScript>]()= 
   
     [<DefaultValue>]
     val mutable private element : Element
 
     [<DefaultValue>]
     val mutable private configuration : ButtonConfiguration
-
-    [<DefaultValue>]
-    val mutable private renderEvent: Event<Utils.RenderEvent>
-
-    [<DefaultValue>]
-    val mutable private isRendered: bool
 
     [<DefaultValue>]
     val mutable private isEnabled: bool
@@ -89,22 +76,28 @@ type Button =
     * Constructors
     *****************************************************************)     
     [<JavaScript>]
-    [<Name "New3">]
     static member New (el : Element, conf: ButtonConfiguration): Button = 
+
+        el
+        |>! OnClick (fun _ ev ->
+            ev.PreventDefault()
+        )
+        |> ignore
+        
         let b = new Button()
         b.configuration <- conf
         b.isEnabled <- true
-        b.renderEvent <- new Event<RenderEvent>()
         el 
-        |> On Events.Attach (fun _ _ -> b.Render())
+        |>! OnAfterRender (fun _  -> 
+            (b :> IWidget).Render()
+        )
         |> ignore
         b.element <- el
         b
 
     [<JavaScript>]
-    [<Name "New11">]
     static member New (conf: ButtonConfiguration): Button = 
-        Button.New(Tags.Button [], conf)
+        Button.New(Tag.Button [], conf)
 
     [<JavaScript>]
     [<Name "New12">]
@@ -115,45 +108,48 @@ type Button =
         
     
     (****************************************************************
-    * Render interface
-    *****************************************************************)          
-    [<JavaScript>]
-    member this.OnBeforeRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | Utils.RenderEvent.Before  -> f ()
-            | _                         -> ()
-        )
-                    
-    [<JavaScript>]
-    member this.OnAfterRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | Utils.RenderEvent.After  -> f ()
-            | _                         -> ()
-        )
+    * INode
+    *****************************************************************)              
+    interface INode with
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = 
+                (this :> IWidget).Render()
+                (this.Element.Dom :> Dom.Node)
+                
+    (****************************************************************
+    * IWidget
+    *****************************************************************)                  
+    interface IWidget with
+        [<JavaScript>]
+        member this.OnBeforeRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnBeforeRender (fun _ -> f ())
+                        
+        [<JavaScript>]
+        member this.OnAfterRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnAfterRender (fun _ -> 
+                (this :> IWidget).Render()
+                f ()
+            )
 
-    [<JavaScript>]
-    member this.Render() =     
-        if not this.IsRendered  then
-            this.renderEvent.Trigger Utils.RenderEvent.Before
-            ButtonInternal.New(this.Element, this.configuration)
-            this.renderEvent.Trigger Utils.RenderEvent.After
-            this.isRendered <- true
-    
-    [<JavaScript>]
-    member this.IsRendered
-        with get () : bool = this.isRendered
+        [<JavaScript>]
+        member this.Render() =
+            (this.Element :> IWidget).Render()
+            ButtonInternal.New(this.Element.Dom, this.configuration)
+
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = this.Element.Dom
 
     (****************************************************************
     * Methods
     *****************************************************************)
-    [<Inline "jQuery($this.element).button('destroy')">]
+    [<Inline "jQuery($this.element.el).button('destroy')">]
     member this.Destroy() = ()
 
-    [<Inline "jQuery($this.element).button('disable')">]
+    [<Inline "jQuery($this.element.el).button('disable')">]
     member private this.disable () = ()
 
     [<JavaScript>]
@@ -161,7 +157,7 @@ type Button =
         this.isEnabled <- false
         this.disable()
 
-    [<Inline "jQuery($this.element).button('enable')">]
+    [<Inline "jQuery($this.element.el).button('enable')">]
     member private this.enable () = ()
 
     [<JavaScript>]
@@ -169,19 +165,19 @@ type Button =
         this.isEnabled <- true
         this.enable()
 
-    [<Inline "jQuery($this.element).button('option', $name, $value)">]
+    [<Inline "jQuery($this.element.el).button('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
-    [<Inline "jQuery($this.element).button('refresh')">]
+    [<Inline "jQuery($this.element.el).button('refresh')">]
     member this.Refresh (index: int) = ()
 
     (****************************************************************
     * Events
     *****************************************************************)
     [<JavaScript>]
-    member this.OnClick (f : Events.EventArgs -> unit) : unit =
+    member this.OnClick (f : JQueryEvent -> unit) : unit =
         this.element
-        |> On Events.Click (fun _ ev ->
+        |>! OnClick (fun _ ev ->
             ev.PreventDefault()
             if this.isEnabled then
                 f ev

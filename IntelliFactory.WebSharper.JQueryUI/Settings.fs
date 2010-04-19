@@ -19,3 +19,52 @@ module Utils =
     type RenderEvent =
         | Before
         | After
+
+
+//[<AbstractClass>]
+//[<JavaScriptType>]
+//type Widget<'T>[<JavaScript>]() =
+//    
+//    [<DefaultValue>]        
+//    val mutable init:  Dom.Element * 'T -> unit
+//
+//    [<DefaultValue>]
+//    val mutable element : Element
+//    
+//    [<DefaultValue>]
+//    val mutable configuration : 'T
+//
+//    (****************************************************************
+//    * INode
+//    *****************************************************************)              
+//    interface INode with
+//        [<JavaScript>]                                       
+//        member this.Body
+//            with get () = (this.element.Dom :> Dom.Node)
+//                
+//    (****************************************************************
+//    * IWidget
+//    *****************************************************************)                  
+//    interface IWidget with
+//        [<JavaScript>]
+//        member this.OnBeforeRender(f: unit -> unit) : unit=
+//            this.element
+//            |> OnBeforeRender (fun _ -> f ())
+//                        
+//        [<JavaScript>]
+//        member this.OnAfterRender(f: unit -> unit) : unit=
+//            this.element
+//            |> OnAfterRender (fun _ -> 
+//                (this :> IWidget).Render()
+//                f ()
+//            )
+//
+//        [<JavaScript>]
+//        member this.Render() =
+//            (this.element :> IWidget).Render()
+//            this.init(this.element.Dom, this.configuration)
+//
+//        [<JavaScript>]                                       
+//        member this.Body
+//            with get () = this.element.Dom
+        

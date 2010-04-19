@@ -23,7 +23,7 @@ open Utils
 [<JavaScriptType>]
 type Target = 
     | Element of Element
-    | Event of Events.EventArgs
+    | Event of JQueryEvent
     | Id of string
     [<JavaScript>]
     [<Name "toString">]
@@ -34,10 +34,7 @@ type Target =
         | Id str     -> "#" + str 
 
 [<JavaScriptType>]
-type PositionConfiguration =
-
-    [<JavaScriptConstructor>]
-    new () = {}
+type PositionConfiguration [<JavaScript>]() =
 
     [<DefaultValue>]
     [<Name "my">]
@@ -97,28 +94,18 @@ type PositionConfiguration =
             let (x,y) = pos
             this.offset <- string x + " " + string y
 
-[<JavaScriptType>]    
+[<JavaScriptType>]
 module internal PositionInternal =
     [<Inline "jQuery($el).position($conf)">]
-    let internal New (el: Element, conf: PositionConfiguration) = ()
+    let internal New (el: Dom.Element, conf: PositionConfiguration) = ()
 
 [<JavaScriptType>]
-type Position = 
-
-    [<JavaScriptConstructor>]
-    new () = {}
-    
+type Position [<JavaScript>]() =        
     [<DefaultValue>]
     val mutable private element : Element
 
     [<DefaultValue>]
     val mutable private configuration : PositionConfiguration
-
-    [<DefaultValue>]
-    val mutable private renderEvent: Event<RenderEvent>
-
-    [<DefaultValue>]
-    val mutable private isRendered: bool
 
     [<JavaScript>]
     member this.Element
@@ -127,79 +114,55 @@ type Position =
 
     (****************************************************************
     * Constructors
-    *****************************************************************) 
-
+    *****************************************************************)
     [<JavaScript>]
-    [<Name "New_Position">]
     static member New (el : Element, conf: PositionConfiguration): Position = 
         let a = new Position()
         a.configuration <- conf
-        a.renderEvent <- new Event<RenderEvent>()
         a.element <- 
             el
-            |> On Events.Attach (fun _ _ -> a.Render())
+            |>! OnAfterRender (fun _  -> 
+                (a :> IWidget).Render()
+            )
         a
 
     [<JavaScript>]
-    [<Name "New_Position_Shortcut">]
     static member New (el : Element) : Position = 
         let conf = new PositionConfiguration()
         Position.New(el, conf)
 
     (****************************************************************
-    * Render interface
-    *****************************************************************)       
-       
-    [<JavaScript>]
-    member this.OnBeforeRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | RenderEvent.Before  -> f ()
-            | _                   -> ()
-        )
-                    
-    [<JavaScript>]
-    member this.OnAfterRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | RenderEvent.After  -> f ()
-            | _                  -> ()
-        )
-
-    [<JavaScript>]
-    member this.Render() =     
-        if not this.IsRendered  then
-            this.renderEvent.Trigger RenderEvent.Before
-            PositionInternal.New(this.Element, this.configuration)
-            this.renderEvent.Trigger RenderEvent.After
-            this.isRendered <- true
-    
-    [<JavaScript>]
-    member this.IsRendered
-        with get () : bool = this.isRendered
-
-
+    * INode
+    *****************************************************************)              
+    interface INode with
+        [<JavaScript>]                                       
+        member this.Body
+            with get () =                 
+                (this :> IWidget).Render()
+                (this.Element.Dom :> Dom.Node)
+                
     (****************************************************************
-    * Methods
-    *****************************************************************) 
-        
-//    [<Inline "jQuery($id).position()">]
-//    static member NewPrivate (id: string) = ()
-//
-//    [<Inline "jQuery($el).position()">]
-//    static member New (el: Element) = ()
-//
-//    [<Inline "jQuery($el).position($conf)">]
-//    static member New (el: Element, conf: PositionConfiguration) = ()
-//
-//    [<JavaScript>]
-//    static member Attach (el: Element) =
-//        el
-//        |> On Events.Attach (fun _ _ -> Position.New (el))
-//
-//    [<JavaScript>]
-//    static member AttachWithConfiguration (conf: PositionConfiguration) (el: Element) =
-//        el
-//        |> On Events.Attach (fun _ _ -> Position.New (el, conf))
+    * IWidget
+    *****************************************************************)                  
+    interface IWidget with
+        [<JavaScript>]
+        member this.OnBeforeRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnBeforeRender (fun _ -> f ())
+                        
+        [<JavaScript>]
+        member this.OnAfterRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnAfterRender (fun _ -> 
+                (this :> IWidget).Render()
+                f ()
+            )
+
+        [<JavaScript>]
+        member this.Render() =
+            (this.Element :> IWidget).Render()
+            PositionInternal.New (this.Element.Dom, this.configuration)
+
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = this.Element.Dom

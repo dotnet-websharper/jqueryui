@@ -18,7 +18,7 @@ open Utils
 
     
 [<JavaScriptType>]
-type AutocompleteConfiguration = 
+type AutocompleteConfiguration[<JavaScript>]() = 
 
     [<DefaultValue>]
     [<Name "delay">]
@@ -32,30 +32,20 @@ type AutocompleteConfiguration =
     [<Name "source">]
     val mutable Source: array<string>
 
-    [<JavaScriptConstructor>]
-    new () = {}
 
 [<JavaScriptType>]
 module internal AutocompleteInternal =
     [<Inline "jQuery($el).autocomplete($conf)">]
-    let New (el: Element, conf: AutocompleteConfiguration) = ()    
+    let New (el: Dom.Element, conf: AutocompleteConfiguration) = ()    
 
 [<JavaScriptType>]
-type Autocomplete = 
-    [<JavaScriptConstructor>]
-    new () = {}
+type Autocomplete[<JavaScript>]() = 
   
     [<DefaultValue>]
     val mutable private element : Element
 
     [<DefaultValue>]
     val mutable private configuration : AutocompleteConfiguration
-
-    [<DefaultValue>]
-    val mutable private renderEvent: Event<Utils.RenderEvent>
-
-    [<DefaultValue>]
-    val mutable private isRendered: bool
 
     [<JavaScript>]
     member this.Element
@@ -69,112 +59,109 @@ type Autocomplete =
     static member New (el : Element, conf: AutocompleteConfiguration): Autocomplete = 
         let a = new Autocomplete()
         a.configuration <- conf
-        a.renderEvent <- new Event<RenderEvent>()
         el 
-        |> On Events.Attach (fun _ _ -> a.Render())
-        |> ignore
+        |> OnAfterRender (fun _  -> 
+            (a :> IWidget).Render()
+        )
         a.element <- el
         a
 
     (****************************************************************
-    * Render interface
-    *****************************************************************)          
-    [<JavaScript>]
-    member this.OnBeforeRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | Utils.RenderEvent.Before  -> f ()
-            | _                         -> ()
-        )
-                    
-    [<JavaScript>]
-    member this.OnAfterRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | Utils.RenderEvent.After  -> f ()
-            | _                         -> ()
-        )
+    * INode
+    *****************************************************************)              
+    interface INode with
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = 
+                (this :> IWidget).Render()
+                this.Element.Dom :> Dom.Node 
+                
+    (****************************************************************
+    * IWidget
+    *****************************************************************)                  
+    interface IWidget with
+        [<JavaScript>]
+        member this.OnBeforeRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnBeforeRender (fun _ -> f ())
+                        
+        [<JavaScript>]
+        member this.OnAfterRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnAfterRender (fun _ -> 
+                (this :> IWidget).Render()
+                f ()
+            )
 
-    [<JavaScript>]
-    member this.Render() =     
-        if not this.IsRendered  then
-            this.renderEvent.Trigger Utils.RenderEvent.Before
-            AutocompleteInternal.New(this.Element, this.configuration)
-            this.renderEvent.Trigger Utils.RenderEvent.After
-            this.isRendered <- true
-    
-    [<JavaScript>]
-    member this.IsRendered
-        with get () : bool = this.isRendered
+        [<JavaScript>]
+        member this.Render() =
+            (this.Element :> IWidget).Render()
+            AutocompleteInternal.New(this.Element.Dom, this.configuration)
+
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = this.Element.Dom
 
 
     (****************************************************************
     * Methods
     *****************************************************************) 
-    [<Inline "jQuery($this.element).autocomplete('destroy')">]
+    [<Inline "jQuery($this.element.el).autocomplete('destroy')">]
     member this.Destroy() = ()
 
-    [<Inline "jQuery($this.element).autocomplete('disable')">]
+    [<Inline "jQuery($this.element.el).autocomplete('disable')">]
     member this.Disable () = ()
 
-    [<Inline "jQuery($this.element).autocomplete('enable')">]
+    [<Inline "jQuery($this.element.el).autocomplete('enable')">]
     member this.Enable () = ()
 
-    [<Inline "jQuery($this.element).autocomplete('option', $name, $value)">]
+    [<Inline "jQuery($this.element.el).autocomplete('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
-    [<Inline "jQuery($this.element).autocomplete('search')">]
+    [<Inline "jQuery($this.element.el).autocomplete('search')">]
     member this.Search () = ()
 
-    [<Inline "jQuery($this.element).autocomplete('search', $value)">]
+    [<Inline "jQuery($this.element.el).autocomplete('search', $value)">]
     member this.Search (value: string) = ()
 
-    [<Inline "jQuery($this.element).autocomplete('close')">]
+    [<Inline "jQuery($this.element.el).autocomplete('close')">]
     member this.Close () = ()
 
     (****************************************************************
     * Events
     *****************************************************************) 
-    [<Inline "jQuery($this.element).autocomplete({search: function (x,y) {($f(x))(y.search);}})">]
-    member private this.onSearch(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).autocomplete({search: function (x,y) {($f(x))(y.search);}})">]
+    member private this.onSearch(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).autocomplete({focus: function (x,y) {($f(x))(y.focus);}})">]
-    member private this.onFocus(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).autocomplete({focus: function (x,y) {($f(x))(y.focus);}})">]
+    member private this.onFocus(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).autocomplete({select: function (x,y) {($f(x))(y.select);}})">]
-    member private this.onSelect(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).autocomplete({select: function (x,y) {($f(x))(y.select);}})">]
+    member private this.onSelect(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).autocomplete({close: function (x,y) {($f(x))(y.close);}})">]
-    member private this.onClose(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).autocomplete({close: function (x,y) {($f(x))(y.close);}})">]
+    member private this.onClose(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).autocomplete({change: function (x,y) {($f(x))(y.change);}})">]
-    member private this.onChange(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).autocomplete({change: function (x,y) {($f(x))(y.change);}})">]
+    member private this.onChange(f : JQueryEvent -> Element -> unit) = ()
 
-    // Adding an event and delayin it if the widget is not yet rendered.
-    [<JavaScript>]
-    member private this.On (f : unit -> unit) =
-        if this.IsRendered then f ()
-        else            
-            this.OnAfterRender(fun () -> f ())
 
     // Adding an event and delayin it if the widget is not yet rendered.
     [<JavaScript>]
     member this.OnSearch f =
-        this.On (fun () -> this.onSearch f)
+        this |> OnAfterRender (fun _ -> this.onSearch f)
 
     /// After an item was selected. Always triggered after the close event.
     [<JavaScript>]
     member this.OnChange f =
-        this.On (fun () -> this.onChange f)
+        this |> OnAfterRender (fun _ -> this.onChange f)
 
     // Adding an event and delayin it if the widget is not yet rendered.
     [<JavaScript>]
     member this.OnClose f =
-        this.On (fun () -> this.onClose f)
+        this |> OnAfterRender (fun _ -> this.onClose f)
 
     // Adding an event and delayin it if the widget is not yet rendered.
     [<JavaScript>]
     member this.OnFocus f =
-        this.On (fun () -> this.onFocus f)
+        this |> OnAfterRender (fun _ -> this.onFocus f)

@@ -17,43 +17,32 @@ open IntelliFactory.WebSharper.Html
 open Utils
 
 [<JavaScriptType>]
-type ProgressbarConfiguration =
+type ProgressbarConfiguration[<JavaScript>]() =
     
     [<DefaultValue>]
     [<Name "value">]
     //0 by default
     val mutable Value: int
 
-    [<JavaScriptConstructor>]
-    new () = {}
 
 [<JavaScriptType>]    
 module internal ProgressbarInternal =
     [<Inline "jQuery($el).progressbar($conf)">]
-    let Init (el: Element, conf: ProgressbarConfiguration) = ()
+    let Init (el: Dom.Element, conf: ProgressbarConfiguration) = ()
 
 [<JavaScriptType>]
-type Progressbar = 
-
-    [<JavaScriptConstructor>]
-    new () = {}
+type Progressbar[<JavaScript>]() = 
     
     [<DefaultValue>]
     val mutable private element : Element
 
     [<DefaultValue>]
     val mutable private configuration : ProgressbarConfiguration
-
-    [<DefaultValue>]
-    val mutable private renderEvent: Event<Utils.RenderEvent>
-
-    [<DefaultValue>]
-    val mutable private isRendered: bool
-
+    
     [<JavaScript>]
     member this.Element
         with get () =
-            this.element 
+            this.element
 
     (****************************************************************
     * Constructors
@@ -63,66 +52,70 @@ type Progressbar =
         let pb = new Progressbar()
         pb.configuration <- conf
         pb.element <- el
-        pb.renderEvent <- new Event<RenderEvent>()
         el
-        |> On Events.Attach (fun _ _ -> pb.Render())
+        |>! OnAfterRender (fun _  -> 
+            (pb :> IWidget).Render()
+        )
         |> ignore
         pb
 
     (****************************************************************
-    * Render interface
-    *****************************************************************)          
-    [<JavaScript>]
-    member this.OnBeforeRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | Utils.RenderEvent.Before  -> f ()
-            | _                         -> ()
-        )
-                    
-    [<JavaScript>]
-    member this.OnAfterRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | Utils.RenderEvent.After  -> f ()
-            | _                         -> ()
-        )
+    * INode
+    *****************************************************************)              
+    interface INode with
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = 
+                (this :> IWidget).Render()
+                (this.Element.Dom :> Dom.Node)
+                
+    (****************************************************************
+    * IWidget
+    *****************************************************************)                  
+    interface IWidget with
+        [<JavaScript>]
+        member this.OnBeforeRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnBeforeRender (fun _ -> f ())
+                        
+        [<JavaScript>]
+        member this.OnAfterRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnAfterRender (fun _ -> 
+                (this :> IWidget).Render()
+                f ()
+            )
 
-    [<JavaScript>]
-    member this.Render() =     
-        if not this.IsRendered  then
-            this.renderEvent.Trigger Utils.RenderEvent.Before
-            ProgressbarInternal.Init(this.Element, this.configuration)
-            this.renderEvent.Trigger Utils.RenderEvent.After
-            this.isRendered <- true
-    
-    [<JavaScript>]
-    member this.IsRendered
-        with get () : bool = this.isRendered
+        [<JavaScript>]
+        member this.Render() =
+            (this.Element :> IWidget).Render()
+            ProgressbarInternal.Init(this.Element.Dom, this.configuration)
+
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = this.Element.Dom
 
 
 
     (****************************************************************
     * Methods
     *****************************************************************) 
-    [<Inline "jQuery($this.element).progressbar('destroy')">]
+    [<Inline "jQuery($this.element.el).progressbar('destroy')">]
     member this.Destroy() = ()
 
-    [<Inline "jQuery($this.element).progressbar('disable')">]
+    [<Inline "jQuery($this.element.el).progressbar('disable')">]
     member this.Disable () = ()
 
-    [<Inline "jQuery($this.element).progressbar('enable')">]
+    [<Inline "jQuery($this.element.el).progressbar('enable')">]
     member this.Enable () = ()
 
-    [<Inline "jQuery($this.element).progressbar('option', $name, $value)">]
+    [<Inline "jQuery($this.element.el).progressbar('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
-    [<Inline "jQuery($this.element).progressbar('value', $v)">]
+    [<Inline "jQuery($this.element.el).progressbar('value', $v)">]
     member private this.setValue (v: int) = ()
 
-    [<Inline "jQuery($this.element).progressbar('value')">]
+    [<Inline "jQuery($this.element.el).progressbar('value')">]
     member private this.getValue () = 0
 
     [<JavaScript>]
@@ -135,15 +128,12 @@ type Progressbar =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element).accordion({change: function (x,y) {$f(x);}})">]
-    member private this.onChange(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).accordion({change: function (x,y) {$f(x);}})">]
+    member private this.onChange(f : JQueryEvent -> unit) = ()
 
     // Adding an event and delayin it if the widget is not yet rendered.
     [<JavaScript>]
-    member this.OnChange(f : Events.EventArgs -> unit) =
-        if this.IsRendered then
+    member this.OnChange(f : JQueryEvent -> unit) =
+        this |> OnAfterRender(fun _ ->
             this.onChange f
-        else            
-            this.OnAfterRender(fun () ->
-                this.onChange f
-            )
+        )

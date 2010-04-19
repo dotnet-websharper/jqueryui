@@ -26,7 +26,7 @@ module DemoInternal =
         let button = Button.New "Open"        
         let pan = Div [button.Element]
         button.OnClick (fun ev ->            
-            let dialog = Dialog.New(H1 ["Dialog"])
+            let dialog = Dialog.New(H1 [Text "Dialog"])
             pan.Append(dialog.Element)
             dialog.OnClose(fun ev ->
                 button.Enable()
@@ -34,15 +34,14 @@ module DemoInternal =
             button.Disable()
         )
         pan
-
     
     [<JavaScript>]
     let Accordion () =
         let accElems =
             [
-                "Panel 1", H1 ["Panel 1"]
-                "Panel 2", H1 ["Panel 2"]
-                "Panel 3", H1 ["Panel 3"]
+                "Panel 1", H1 [Text "Panel 1"]
+                "Panel 2", H1 [Text "Panel 2"]
+                "Panel 3", H1 [Text "Panel 3"]
             ]
         let accordion = Accordion.New(accElems)
         accordion.Element
@@ -56,7 +55,7 @@ module DemoInternal =
         )
         Div [
             Div [
-                Label ["Selected Value: "]
+                Label [Text "Selected Value: "]
                 selVal
             ]
             slider.Element
@@ -67,11 +66,10 @@ module DemoInternal =
         let datepicker = Datepicker.New()
         let selDate = Label []
         datepicker.OnSelect (fun dt ->
-            selDate.Text <- dt.toLocaleDateString()
+            selDate.Text <- dt.ToLocaleDateString()
         )
         Div [
-            datepicker.Element
-            Div [Label ["Selected date:"]; selDate]
+            Div [Label [Text "Selected date:"]; selDate]
         ]
                     
     [<JavaScript>]
@@ -85,11 +83,12 @@ module DemoInternal =
             ]
         let tabsConf = new TabsConfiguration()
         let tabs = Tabs.New(tabElems, new TabsConfiguration())
-        Div [StyleAttribute "width:500px"] -< [tabs.Element]
+        Div [Style "width:500px"] -< [tabs.Element]
 
 [<JavaScriptType>]
 type Demo() = 
     inherit Web.Control()
 
     [<JavaScript>]
-    override this.Body = DemoInternal.Main()
+    override this.Body = 
+        DemoInternal.Accordion()

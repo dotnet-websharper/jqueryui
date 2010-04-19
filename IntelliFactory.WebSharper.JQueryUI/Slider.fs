@@ -16,7 +16,7 @@ open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
     
 [<JavaScriptType>]
-type SliderConfiguration = 
+type SliderConfiguration[<JavaScript>]() = 
 
     [<DefaultValue>]
     [<Name "animate">]
@@ -57,31 +57,20 @@ type SliderConfiguration =
     //0 by default
     val mutable Values: array<int>
 
-    [<JavaScriptConstructor>]
-    new () = {}
 
 [<JavaScriptType>]
 module internal SliderInternal =
     [<Inline "jQuery($el).slider($conf)">]
-    let Init(el: Element, conf: SliderConfiguration) = ()
+    let Init(el: Dom.Element, conf: SliderConfiguration) = ()
     
 [<JavaScriptType>]
-type Slider = 
-
-    [<JavaScriptConstructor>]
-    new () = {}
+type Slider[<JavaScript>]() = 
     
     [<DefaultValue>]
     val mutable private element : Element
 
     [<DefaultValue>]
     val mutable private configuration : SliderConfiguration
-
-    [<DefaultValue>]
-    val mutable private renderEvent: Event<Utils.RenderEvent>
-
-    [<DefaultValue>]
-    val mutable private isRendered: bool
 
     [<JavaScript>]
     member this.Element
@@ -95,70 +84,71 @@ type Slider =
     [<Name "New1">]
     static member New (conf: SliderConfiguration): Slider =         
         let s = new Slider()
-        s.renderEvent <- new Event<Utils.RenderEvent>()
         s.configuration <- conf
         s.element <- 
             Div []
-            |> On Events.Attach (fun _ _ -> s.Render())
+            |>! OnAfterRender (fun _  -> (s :> IWidget).Render())
         s
     
     [<JavaScript>]
-    [<Name "New0">]
     static member New (): Slider =
         Slider.New (new SliderConfiguration())
 
     (****************************************************************
-    * Render interface
-    *****************************************************************)          
-    [<JavaScript>]
-    member this.OnBeforeRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | Utils.RenderEvent.Before  -> f ()
-            | _                         -> ()
-        )
-                    
-    [<JavaScript>]
-    member this.OnAfterRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | Utils.RenderEvent.After  -> f ()
-            | _                         -> ()
-        )
+    * INode
+    *****************************************************************)              
+    interface INode with
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = 
+                (this :> IWidget).Render()
+                (this.Element.Dom :> Dom.Node)
+                
+    (****************************************************************
+    * IWidget
+    *****************************************************************)                  
+    interface IWidget with
+        [<JavaScript>]
+        member this.OnBeforeRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnBeforeRender (fun _ -> f ())
+                        
+        [<JavaScript>]
+        member this.OnAfterRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnAfterRender (fun _ -> 
+                (this :> IWidget).Render()
+                f ()
+            )
 
-    [<JavaScript>]
-    member this.Render() =     
-        if not this.IsRendered  then
-            this.renderEvent.Trigger Utils.RenderEvent.Before
-            SliderInternal.Init(this.Element, this.configuration)
-            this.renderEvent.Trigger Utils.RenderEvent.After
-            this.isRendered <- true
-    
-    [<JavaScript>]
-    member this.IsRendered
-        with get () : bool = this.isRendered
+        [<JavaScript>]
+        member this.Render() =
+            (this.Element :> IWidget).Render()
+            SliderInternal.Init(this.Element.Dom, this.configuration)
+
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = this.Element.Dom
 
     (****************************************************************
     * Methods
     *****************************************************************) 
-    [<Inline "jQuery($this.element).slider('destroy')">]
+    [<Inline "jQuery($this.element.el).slider('destroy')">]
     member this.Destroy() = ()
 
-    [<Inline "jQuery($this.element).slider('disable')">]
+    [<Inline "jQuery($this.element.el).slider('disable')">]
     member this.Disable () = ()
 
-    [<Inline "jQuery($this.element).slider('enable')">]
+    [<Inline "jQuery($this.element.el).slider('enable')">]
     member this.Enable () = ()
 
-    [<Inline "jQuery($this.element).slider('option', $name, $value)">]
+    [<Inline "jQuery($this.element.el).slider('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
-    [<Inline "jQuery($this.element).slider('value', $v)">]
+    [<Inline "jQuery($this.element.el).slider('value', $v)">]
     member private this.setValue (v: int) = ()
 
-    [<Inline "jQuery($this.element).slider('value')">]
+    [<Inline "jQuery($this.element.el).slider('value')">]
     member private this.getValue () = 0
 
 
@@ -179,40 +169,37 @@ type Slider =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element).slider({start: function (x,y) {$f(x);}})">]
-    member private this.onStart(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).slider({start: function (x,y) {$f(x);}})">]
+    member private this.onStart(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).slider({change: function (x,y) {$f(x);}})">]
-    member private this.onChange(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).slider({change: function (x,y) {$f(x);}})">]
+    member private this.onChange(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).slider({slide: function (x,y) {$f(x);}})">]
-    member private this.onSlide(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).slider({slide: function (x,y) {$f(x);}})">]
+    member private this.onSlide(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).slider({stop: function (x,y) {$f(x);}})">]
-    member private this.onStop(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).slider({stop: function (x,y) {$f(x);}})">]
+    member private this.onStop(f : JQueryEvent -> unit) = ()
 
     [<JavaScript>]
     member private this.OnAfter (f : unit -> unit) : unit =
-        if this.IsRendered then 
-            f ()
-        else            
-            this.OnAfterRender(fun () -> f ())
+        this |> OnAfterRender(fun _ -> f ())
 
     [<JavaScript>]
-    member this.OnStart(f : Events.EventArgs -> unit) =
-        this.OnAfter (fun () -> this.onStart f)
+    member this.OnStart(f : JQueryEvent -> unit) =
+        this |> OnAfterRender (fun _ -> this.onStart f)
 
     [<JavaScript>]
-    member this.OnChange(f : Events.EventArgs -> unit) =
-        this.OnAfter (fun () -> this.onChange f)
+    member this.OnChange(f : JQueryEvent -> unit) =
+        this |> OnAfterRender (fun _ -> this.onChange f)
 
     [<JavaScript>]
-    member this.OnSlide(f : Events.EventArgs -> unit) =
-        this.OnAfter (fun () -> this.onSlide f)
+    member this.OnSlide(f : JQueryEvent -> unit) =
+        this |> OnAfterRender (fun _ -> this.onSlide f)
 
     [<JavaScript>]
-    member this.OnStop(f : Events.EventArgs -> unit) =
-        this.OnAfter (fun () -> this.onStop f)
+    member this.OnStop(f : JQueryEvent -> unit) =
+        this |> OnAfterRender (fun _ -> this.onStop f)
 
 
                   

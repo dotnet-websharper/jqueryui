@@ -16,9 +16,8 @@ open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 open Utils
 
-
 [<JavaScriptType>]
-type DialogConfiguration = 
+type DialogConfiguration[<JavaScript>]() = 
 
     [<DefaultValue>]
     [<Name "autoOpen">]
@@ -122,19 +121,13 @@ type DialogConfiguration =
     //1000 by default
     val mutable ZIndex: int
 
-    [<JavaScriptConstructor>]
-    new () = {}
-
 [<JavaScriptType>]
 module internal DialogInternal =        
     [<Inline "jQuery($el).dialog($conf)">]
-    let Init (el: Element, conf: DialogConfiguration) = ()
+    let Init (el: Dom.Element, conf: DialogConfiguration) = ()
 
 [<JavaScriptType>]
-type Dialog = 
-
-    [<JavaScriptConstructor>]
-    new () = {}
+type Dialog[<JavaScript>]() = 
   
     [<DefaultValue>]
     val mutable private element : Element
@@ -154,160 +147,155 @@ type Dialog =
             this.element
 
     [<JavaScript>]
-    [<Name "New2">]
     static member New (el: Element, conf: DialogConfiguration): Dialog = 
         let d = new Dialog()
         d.configuration <- conf
         d.renderEvent <- new Event<RenderEvent>()
-        d.element <- el |> On Events.Attach (fun _ _ -> d.Render())            
+        d.element <- el |>! OnAfterRender (fun _  -> (d :> IWidget).Render())            
         d
 
     [<JavaScript>]
-    [<Name "New1">]
     static member New (el: Element): Dialog = 
         Dialog.New(el, DialogConfiguration())
 
 
-    (****************************************************************
-    * Render interface
-    *****************************************************************)          
-    [<JavaScript>]
-    member this.OnBeforeRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | Utils.RenderEvent.Before  -> f ()
-            | _                         -> ()
-        )
-                    
-    [<JavaScript>]
-    member this.OnAfterRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | Utils.RenderEvent.After  -> f ()
-            | _                         -> ()
-        )
 
-    [<JavaScript>]
-    member this.Render() =     
-        if not this.IsRendered  then
-            this.renderEvent.Trigger Utils.RenderEvent.Before
-            DialogInternal.Init(this.Element, this.configuration)
-            this.renderEvent.Trigger Utils.RenderEvent.After
-            this.isRendered <- true
-    
-    [<JavaScript>]
-    member this.IsRendered
-        with get () : bool = this.isRendered
+    (****************************************************************
+    * INode
+    *****************************************************************)              
+    interface INode with
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = 
+                (this :> IWidget).Render()
+                (this.Element.Dom :> Dom.Node)
+                
+    (****************************************************************
+    * IWidget
+    *****************************************************************)                  
+    interface IWidget with
+        [<JavaScript>]
+        member this.OnBeforeRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnBeforeRender (fun _ -> f ())
+                        
+        [<JavaScript>]
+        member this.OnAfterRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnAfterRender (fun _ -> 
+                (this :> IWidget).Render()
+                f ()
+            )
+
+        [<JavaScript>]
+        member this.Render() =
+            (this.Element :> IWidget).Render()
+            DialogInternal.Init(this.Element.Dom, this.configuration)
+
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = this.Element.Dom
         
     (****************************************************************
     * Methods
     *****************************************************************)        
-    [<Inline "jQuery($this.element).dialog('destroy')">]
+    [<Inline "jQuery($this.element.el).dialog('destroy')">]
     member this.Destroy() = ()
 
-    [<Inline "jQuery($this.element).dialog('disable')">]
+    [<Inline "jQuery($this.element.el).dialog('disable')">]
     member this.Disable () = ()
 
-    [<Inline "jQuery($this.element).dialog('enable')">]
+    [<Inline "jQuery($this.element.el).dialog('enable')">]
     member this.Enable () = ()
 
-    [<Inline "jQuery($this.element).dialog('option', $name, $value)">]
+    [<Inline "jQuery($this.element.el).dialog('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
-    [<Inline "jQuery($this.element).dialog('close')">]
+    [<Inline "jQuery($this.element.el).dialog('close')">]
     member this.Close () = ()
 
-    [<Inline "jQuery($this.element).dialog('isOpen')">]
+    [<Inline "jQuery($this.element.el).dialog('isOpen')">]
     member this.IsOpen () = false
 
-    [<Inline "jQuery($this.element).dialog('moveToTop')">]
+    [<Inline "jQuery($this.element.el).dialog('moveToTop')">]
     member this.MoveToTop () = ()
 
-    [<Inline "jQuery($this.element).dialog('open')">]
+    [<Inline "jQuery($this.element.el).dialog('open')">]
     member this.Open () = ()
             
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element).dialog({beforeclose: function (x,y) {$f(x);}})">]
-    member private this.onBeforeClose(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).dialog({beforeclose: function (x,y) {$f(x);}})">]
+    member private this.onBeforeClose(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).dialog({open: function (x,y) {$f(x);}})">]
-    member private this.onOpen(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).dialog({open: function (x,y) {$f(x);}})">]
+    member private this.onOpen(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).dialog({focus: function (x,y) {$f(x);}})">]
-    member private this.onFocus(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).dialog({focus: function (x,y) {$f(x);}})">]
+    member private this.onFocus(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).dialog({dragStart: function (x,y) {$f(x);}})">]
-    member private this.onDragStart(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).dialog({dragStart: function (x,y) {$f(x);}})">]
+    member private this.onDragStart(f : JQueryEvent -> unit) = ()
         
-    [<Inline "jQuery($this.element).dialog({drag: function (x,y) {$f(x);}})">]
-    member private this.onDrag(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).dialog({drag: function (x,y) {$f(x);}})">]
+    member private this.onDrag(f : JQueryEvent -> unit) = ()
     
-    [<Inline "jQuery($this.element).dialog({dragStop: function (x,y) {$f(x);}})">]
-    member private this.onDragStop(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).dialog({dragStop: function (x,y) {$f(x);}})">]
+    member private this.onDragStop(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).dialog({resizeStart: function (x,y) {$f(x);}})">]
-    member private this.onResizeStart(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).dialog({resizeStart: function (x,y) {$f(x);}})">]
+    member private this.onResizeStart(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).dialog({resize: function (x,y) {$f(x);}})">]
-    member private this.onResize(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).dialog({resize: function (x,y) {$f(x);}})">]
+    member private this.onResize(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).dialog({resizeStop: function (x,y) {$f(x);}})">]
-    member private this.onResizeStop(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).dialog({resizeStop: function (x,y) {$f(x);}})">]
+    member private this.onResizeStop(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).dialog({close: function (x,y) {$f(x);}})">]
-    member private this.onClose(f : Events.EventArgs -> unit) = ()
-
-    // Adding an event and delaying it if the widget is not yet rendered.
-    [<JavaScript>]
-    member private this.OnAfter (f : unit -> unit) : unit =
-        if this.IsRendered then 
-            f ()
-        else            
-            this.OnAfterRender(fun () -> f ())    
+    [<Inline "jQuery($this.element.el).dialog({close: function (x,y) {$f(x);}})">]
+    member private this.onClose(f : JQueryEvent -> unit) = ()
+ 
     
     [<JavaScript>]
-    member this.OnBeforeClose(f : Events.EventArgs -> unit) = 
-        this.OnAfter (fun () -> this.onBeforeClose f)
+    member this.OnBeforeClose(f : JQueryEvent -> unit) = 
+        this |> OnAfterRender (fun _ -> this.onBeforeClose f)
 
     [<JavaScript>]
-    member this.OnOpen (f : Events.EventArgs -> unit) = 
-        this.OnAfter (fun () -> this.onOpen f)
+    member this.OnOpen (f : JQueryEvent -> unit) = 
+        this |> OnAfterRender (fun _  -> this.onOpen f)
 
     [<JavaScript>]
-    member this.OnFocus (f : Events.EventArgs -> unit) = 
-        this.OnAfter (fun () -> this.onFocus f)
+    member this.OnFocus (f : JQueryEvent -> unit) = 
+        this |> OnAfterRender (fun _  -> this.onFocus f)
 
     [<JavaScript>]
-    member this.OnDragStart (f : Events.EventArgs -> unit) = 
-        this.OnAfter (fun () -> this.onDragStart f)
+    member this.OnDragStart (f : JQueryEvent -> unit) = 
+        this |> OnAfterRender (fun _ -> this.onDragStart f)
 
     [<JavaScript>]
-    member this.OnDrag (f : Events.EventArgs -> unit) = 
-        this.OnAfter (fun () -> this.onDrag f)
+    member this.OnDrag (f : JQueryEvent -> unit) = 
+        this |> OnAfterRender (fun _ -> this.onDrag f)
 
     [<JavaScript>]
-    member this.OnDragStop (f : Events.EventArgs -> unit) = 
-        this.OnAfter (fun () -> this.onDragStop f)
+    member this.OnDragStop (f : JQueryEvent -> unit) = 
+        this |> OnAfterRender (fun _ -> this.onDragStop f)
 
     [<JavaScript>]
-    member this.OnResizeStart (f : Events.EventArgs -> unit) = 
-        this.OnAfter (fun () -> this.onResizeStart f)
+    member this.OnResizeStart (f : JQueryEvent -> unit) = 
+        this |> OnAfterRender (fun _ -> this.onResizeStart f)
 
     [<JavaScript>]
-    member this.OnResize (f : Events.EventArgs -> unit) = 
-        this.OnAfter (fun () -> this.onResize f)
+    member this.OnResize (f : JQueryEvent -> unit) = 
+        this |> OnAfterRender (fun _ -> this.onResize f)
 
     [<JavaScript>]
-    member this.OnResizeStop (f : Events.EventArgs -> unit) = 
-        this.OnAfter (fun () -> this.onResizeStop f)
+    member this.OnResizeStop (f : JQueryEvent -> unit) = 
+        this |> OnAfterRender (fun _ -> this.onResizeStop f)
 
     [<JavaScript>]
-    member this.OnClose (f : Events.EventArgs -> unit) = 
-        this.OnAfter (fun () -> this.onClose f)
+    member this.OnClose (f : JQueryEvent -> unit) = 
+        this |> OnAfterRender (fun _ -> this.onClose f)
             
                
 

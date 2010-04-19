@@ -27,10 +27,9 @@ type ToleranceConfiguration =
     | [<Constant "Pointer">] Pointer
 
 [<JavaScriptType>]
-type SortableConfiguration = 
+type SortableConfiguration[<JavaScript>]() = 
 
-    [<JavaScriptConstructor>]
-    new () = {}
+    
 
     [<DefaultValue>]
     [<Name "appendTo">]
@@ -147,14 +146,11 @@ type SortableConfiguration =
 [<JavaScriptType>]
 module internal SortableInternal =    
     [<Inline "jQuery($el).sortable($conf)">]
-    let Init (el: Element, conf: SortableConfiguration) = ()
+    let Init (el: Dom.Element, conf: SortableConfiguration) = ()
 
 
 [<JavaScriptType>]
-type Sortable = 
-
-    [<JavaScriptConstructor>]
-    new () = {}
+type Sortable [<JavaScript>]() = 
   
     [<DefaultValue>]
     val mutable private element : Element
@@ -185,8 +181,8 @@ type Sortable =
         s.renderEvent <- new Event<RenderEvent>()
         s.element <- 
             el
-            |> On Events.Attach (fun _ _ ->
-                s.Render()   
+            |>! OnAfterRender (fun _  ->
+                (s:> IWidget).Render()   
             )
         s
 
@@ -197,37 +193,40 @@ type Sortable =
         Sortable.New(el, conf)
 
     (****************************************************************
-    * Render interface
-    *****************************************************************)          
-    [<JavaScript>]
-    member this.OnBeforeRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | RenderEvent.Before  -> f ()
-            | _                   -> ()
-        )
-                    
-    [<JavaScript>]
-    member this.OnAfterRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | RenderEvent.After  -> f ()
-            | _                  -> ()
-        )
+    * INode
+    *****************************************************************)              
+    interface INode with
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = 
+                (this :> IWidget).Render()
+                (this.Element.Dom :> Dom.Node)
+                
+    (****************************************************************
+    * IWidget
+    *****************************************************************)                  
+    interface IWidget with
+        [<JavaScript>]
+        member this.OnBeforeRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnBeforeRender (fun _ -> f ())
+                        
+        [<JavaScript>]
+        member this.OnAfterRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnAfterRender (fun _ -> 
+                (this :> IWidget).Render()
+                f ()
+            )
 
-    [<JavaScript>]
-    member this.Render() =     
-        if not this.IsRendered  then
-            this.renderEvent.Trigger Utils.RenderEvent.Before
-            SortableInternal.Init(this.Element, this.configuration)
-            this.renderEvent.Trigger Utils.RenderEvent.After
-            this.isRendered <- true
-    
-    [<JavaScript>]
-    member this.IsRendered
-        with get () : bool = this.isRendered
+        [<JavaScript>]
+        member this.Render() =
+            (this.Element :> IWidget).Render()
+            SortableInternal.Init (this.Element.Dom, this.configuration)
+
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = this.Element.Dom
 
 
     (****************************************************************
@@ -265,79 +264,82 @@ type Sortable =
     * Events
     *****************************************************************)
 
-    [<Inline "jQuery($this.element).sortable({sort: function (x,y) {($f(x))(y.start);}})">]
-    member private this.onStart(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).sortable({sort: function (x,y) {($f(x))(y.start);}})">]
+    member private this.onStart(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({sort: function (x,y) {($f(x))(y.sort);}})">]
-    member private this.onSort(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).sortable({sort: function (x,y) {($f(x))(y.sort);}})">]
+    member private this.onSort(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({change: function (x,y) {($f(x))(y.change);}})">]
-    member private this.onChange(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).sortable({change: function (x,y) {($f(x))(y.change);}})">]
+    member private this.onChange(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({beforeStop: function (x,y) {($f(x))(y.beforeStop);}})">]
-    member private this.onBeforeStop(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).sortable({beforeStop: function (x,y) {($f(x))(y.beforeStop);}})">]
+    member private this.onBeforeStop(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({stop: function (x,y) {($f(x))(y.stop);}})">]
-    member private this.onStop(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).sortable({stop: function (x,y) {($f(x))(y.stop);}})">]
+    member private this.onStop(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({update: function (x,y) {($f(x))(y.update);}})">]
-    member private this.onUpdate(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).sortable({update: function (x,y) {($f(x))(y.update);}})">]
+    member private this.onUpdate(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({receive: function (x,y) {($f(x))(y.receive);}})">]
-    member private this.onReceive(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).sortable({receive: function (x,y) {($f(x))(y.receive);}})">]
+    member private this.onReceive(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({remove: function (x,y) {($f(x))(y.remove);}})">]
-    member private this.onRemove(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).sortable({remove: function (x,y) {($f(x))(y.remove);}})">]
+    member private this.onRemove(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({over: function (x,y) {($f(x))(y.over);}})">]
-    member private this.onOver(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).sortable({over: function (x,y) {($f(x))(y.over);}})">]
+    member private this.onOver(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({out: function (x,y) {($f(x))(y.out);}})">]
-    member private this.onOut(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).sortable({out: function (x,y) {($f(x))(y.out);}})">]
+    member private this.onOut(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({activate: function (x,y) {($f(x))(y.activate);}})">]
-    member private this.onActivate(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).sortable({activate: function (x,y) {($f(x))(y.activate);}})">]
+    member private this.onActivate(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).sortable({deactivate: function (x,y) {($f(x))(y.deactivate);}})">]
-    member private this.onDeactivate(f : Events.EventArgs -> Element -> unit) = ()
-
-    // Adding an event and delayin it if the widget is not yet rendered.
-    [<JavaScript>]
-    member private this.On (f : unit -> unit) =
-        if this.IsRendered then f ()
-        else            
-            this.OnAfterRender(fun () -> f ())
+    [<Inline "jQuery($this.element.el).sortable({deactivate: function (x,y) {($f(x))(y.deactivate);}})">]
+    member private this.onDeactivate(f : JQueryEvent -> Element -> unit) = ()
 
     [<JavaScript>]
-    member this.OnStart(f : Events.EventArgs -> Element -> unit) =
-        this.On (fun () ->  this.onStart f)
+    member this.OnStart(f : JQueryEvent -> Element -> unit) =
+        this |> OnAfterRender(fun _ ->  this.onStart f)
 
     [<JavaScript>]
-    member this.OnSort f = this.On (fun () -> this.onSort f)
+    member this.OnSort f = 
+        this |> OnAfterRender(fun _ -> this.onSort f)
 
     [<JavaScript>]
-    member this.OnChange f = this.On (fun () -> this.onChange f)
+    member this.OnChange f = 
+        this |> OnAfterRender(fun _ -> this.onChange f)
 
     [<JavaScript>]
-    member this.OnBeforeStop f = this.On (fun () -> this.onBeforeStop f)
+    member this.OnBeforeStop f = 
+        this |> OnAfterRender(fun _ -> this.onBeforeStop f)
 
     [<JavaScript>]
-    member this.OnStop f = this.On (fun () -> this.onStop f)
+    member this.OnStop f = 
+        this |> OnAfterRender(fun _ -> this.onStop f)
 
     [<JavaScript>]
-    member this.OnUpdate f = this.On (fun () -> this.onUpdate f)
+    member this.OnUpdate f = 
+        this |> OnAfterRender(fun _ -> this.onUpdate f)
 
     [<JavaScript>]
-    member this.OnReceive f = this.On (fun () -> this.onReceive f)
+    member this.OnReceive f = 
+        this |> OnAfterRender(fun _ -> this.onReceive f)
     
     [<JavaScript>]
-    member this.OnRemove f = this.On (fun () -> this.onRemove f)
+    member this.OnRemove f = 
+        this |> OnAfterRender(fun _ -> this.onRemove f)
 
     [<JavaScript>]
-    member this.OnOver f = this.On (fun () -> this.onOut f)
+    member this.OnOver f = 
+        this |> OnAfterRender(fun _ -> this.onOut f)
 
     [<JavaScript>]
-    member this.OnActivate f = this.On (fun () -> this.onActivate f)
+    member this.OnActivate f = 
+        this |> OnAfterRender(fun _ -> this.onActivate f)
 
     [<JavaScript>]
-    member this.OnDeactivate f = this.On (fun () -> this.onDeactivate f)
+    member this.OnDeactivate f = 
+        this |> OnAfterRender(fun _ -> this.onDeactivate f)

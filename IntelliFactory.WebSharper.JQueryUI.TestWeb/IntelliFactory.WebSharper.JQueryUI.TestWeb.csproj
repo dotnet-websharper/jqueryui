@@ -12,7 +12,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IntelliFactory.WebSharper.JQueryUI.TestWeb</RootNamespace>
     <AssemblyName>IntelliFactory.WebSharper.JQueryUI.TestWeb</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,7 +35,11 @@
   <ItemGroup>
     <Reference Include="IntelliFactory.WebSharper, Version=0.4.79.18243, Culture=neutral, PublicKeyToken=dcd983dec8f76a71, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\IntelliFactory\WebSharper\0.4.79\IntelliFactory.WebSharper.dll</HintPath>
+      <HintPath>..\lib\IntelliFactory.WebSharper.dll</HintPath>
+    </Reference>
+    <Reference Include="IntelliFactory.WebSharper.Compiler, Version=0.0.0.0, Culture=neutral, PublicKeyToken=dcd983dec8f76a71, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\IntelliFactory.WebSharper.Compiler.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -51,20 +56,14 @@
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="WebSharper">
-      <HintPath>C:\Program Files\IntelliFactory\WebSharper\0.4.79\WebSharper.exe</HintPath>
+    <Reference Include="WebSharper, Version=0.4.79.18255, Culture=neutral, PublicKeyToken=dcd983dec8f76a71, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <ExecutableExtension>.exe</ExecutableExtension>
+      <HintPath>..\lib\WebSharper.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="About.aspx" />
-    <Content Include="Account\ChangePassword.aspx" />
-    <Content Include="Account\ChangePasswordSuccess.aspx" />
-    <Content Include="Account\Login.aspx" />
-    <Content Include="Account\Register.aspx" />
     <Content Include="Styles\Site.css" />
-    <Content Include="Default.aspx" />
-    <Content Include="Global.asax" />
     <Content Include="Scripts\jquery-1.3.2-vsdoc.js" />
     <Content Include="Scripts\jquery-1.3.2.js" />
     <Content Include="Scripts\jquery-1.3.2.min.js" />
@@ -80,66 +79,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="About.aspx.cs">
-      <DependentUpon>About.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="About.aspx.designer.cs">
-      <DependentUpon>About.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Account\ChangePassword.aspx.cs">
-      <DependentUpon>ChangePassword.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Account\ChangePassword.aspx.designer.cs">
-      <DependentUpon>ChangePassword.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Account\ChangePasswordSuccess.aspx.cs">
-      <DependentUpon>ChangePasswordSuccess.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Account\ChangePasswordSuccess.aspx.designer.cs">
-      <DependentUpon>ChangePasswordSuccess.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Account\Login.aspx.cs">
-      <DependentUpon>Login.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Account\Login.aspx.designer.cs">
-      <DependentUpon>Login.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Account\Register.aspx.cs">
-      <DependentUpon>Register.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Account\Register.aspx.designer.cs">
-      <DependentUpon>Register.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Global.asax.cs">
-      <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Site.Master.cs">
-      <DependentUpon>Site.Master</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Site.Master.designer.cs">
-      <DependentUpon>Site.Master</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Account\Web.config" />
-    <Content Include="Site.Master" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IntelliFactory.WebSharper.JQueryUI\IntelliFactory.WebSharper.JQueryUI.fsproj">
@@ -173,10 +116,6 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>cd $(TargetDir)
-WebSharper.exe IntelliFactory.WebSharper.JQueryUI.dll
-WebSharper.exe IntelliFactory.WebSharper.JQueryUI.Test.dll
-</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -185,4 +124,20 @@ WebSharper.exe IntelliFactory.WebSharper.JQueryUI.Test.dll
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="AfterBuild">
+    <MakeDir Directories="js" />
+    <Exec Command="WebSharper.exe" WorkingDirectory="$(OutputPath)" />
+    <ItemGroup>
+      <JS Include="$(OutputPath)/*.js" />
+    </ItemGroup>
+    <Copy SourceFiles="@(JS)" DestinationFolder="js" />
+  </Target>
+  <Target Name="AfterClean">
+    <ItemGroup>
+      <FS Include="$(OutputPath)/*.js" />
+      <FS Include="$(OutputPath)/*.wsweb" />
+      <FS Include="$(OutputPath)/*.wsdep" />
+    </ItemGroup>
+    <Delete Files="@(FS)" />
+  </Target>
 </Project>

@@ -46,8 +46,6 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Test.fs" />
     <Compile Include="Demo.fs" />
-    <Compile Include="DraggableTest.fs" />
-    <Compile Include="DroppableTest.fs" />
     <Compile Include="ResizableTest.fs" />
     <Compile Include="SelectableTest.fs" />
     <Compile Include="SortableTest.fs" />

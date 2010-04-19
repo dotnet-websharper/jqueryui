@@ -25,9 +25,9 @@ module ResizableInternal =
     let ResizDragImg () =
         let img = Img [Src "http://www.look4design.co.uk/l4design/companies/light-iq/image14.jpg" ]
         let resizable = Resizable.New img
-        resizable.OnStart  (fun _ _ -> JavaScript.console.log("Started!"))
-        resizable.OnResize (fun _ _ -> JavaScript.console.log("Resized!"))
-        resizable.OnStop   (fun _ _ -> JavaScript.console.log("Stopped!"))
+        resizable.OnStart  (fun _ _ -> JConsole.Log("Started!")) 
+        resizable.OnResize (fun _ _ -> JConsole.Log("Resized!"))
+        resizable.OnStop   (fun _ _ -> JConsole.Log("Stopped!"))
         let drag = Draggable.New (Div [resizable.Element])
         drag.Element
 

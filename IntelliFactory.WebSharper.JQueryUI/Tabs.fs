@@ -47,7 +47,7 @@ type TabsFxConfiguration =
     static member Dafault = {opacity = "toggle"}
 
 [<JavaScriptType>]
-type TabsConfiguration = 
+type TabsConfiguration[<JavaScript>]() = 
     
     [<DefaultValue>]
     [<Name "ajaxOptions">]
@@ -115,30 +115,20 @@ type TabsConfiguration =
     //"<li><a href="#{href}"><span>#{label}</span></a></li>" by default
     val mutable TabTemplate: string
 
-    [<JavaScriptConstructor>]
-    new () = {}
     
 [<JavaScriptType>]
 module internal TabsInternal =
     [<Inline "jQuery($el).tabs($conf)">]
-    let Init(el: Element, conf: TabsConfiguration) = ()    
+    let Init(el: Dom.Element, conf: TabsConfiguration) = ()    
 
 [<JavaScriptType>]
-type Tabs = 
-    [<JavaScriptConstructor>]
-    new () = {}
+type Tabs[<JavaScript>]() = 
     
     [<DefaultValue>]
     val mutable private element : Element
 
     [<DefaultValue>]
     val mutable private configuration : TabsConfiguration
-
-    [<DefaultValue>]
-    val mutable private renderEvent: Event<Utils.RenderEvent>
-
-    [<DefaultValue>]
-    val mutable private isRendered: bool
 
     [<JavaScript>]
     member this.Element
@@ -156,7 +146,7 @@ type Tabs =
                 els
                 |> List.map (fun (label, panel) ->
                    let id = NewId()
-                   let item = LI [A [HRef ("#" + id)] -< [label]] -< [panel]
+                   let item = LI [A [HRef ("#" + id)] -< [Text label]] -< [panel]
                    let tab = Div [Id id] -< [P [panel]]
                    (item, tab)
                 )
@@ -165,85 +155,87 @@ type Tabs =
         
         let tabs = new Tabs ()
         tabs.configuration <- conf
-        tabs.renderEvent <- new Event<RenderEvent>()
         tabs.element <-
             el 
-            |> On Events.Attach (fun _ _ -> tabs.Render())     
+            |>! OnAfterRender (fun _  -> (tabs :> IWidget).Render())     
         tabs
 
     (****************************************************************
-    * Render interface
-    *****************************************************************)          
-    [<JavaScript>]
-    member this.OnBeforeRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | Utils.RenderEvent.Before  -> f ()
-            | _                         -> ()
-        )
-                    
-    [<JavaScript>]
-    member this.OnAfterRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | Utils.RenderEvent.After  -> f ()
-            | _                         -> ()
-        )
+    * INode
+    *****************************************************************)              
+    interface INode with
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = 
+                (this :> IWidget).Render()
+                (this.Element.Dom :> Dom.Node)
+                
+    (****************************************************************
+    * IWidget
+    *****************************************************************)                  
+    interface IWidget with
+        [<JavaScript>]
+        member this.OnBeforeRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnBeforeRender (fun _ -> f ())
+                        
+        [<JavaScript>]
+        member this.OnAfterRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnAfterRender (fun _ -> 
+                (this :> IWidget).Render()
+                f ()
+            )
 
-    [<JavaScript>]
-    member this.Render() =     
-        if not this.IsRendered  then
-            this.renderEvent.Trigger Utils.RenderEvent.Before
-            TabsInternal.Init(this.Element, this.configuration)
-            this.renderEvent.Trigger Utils.RenderEvent.After
-            this.isRendered <- true
-    
-    [<JavaScript>]
-    member this.IsRendered
-        with get () : bool = this.isRendered
+        [<JavaScript>]
+        member this.Render() =
+            (this.Element :> IWidget).Render()
+            TabsInternal.Init(this.Element.Dom, this.configuration)
+
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = this.Element.Dom
 
     (****************************************************************
     * Methods
     *****************************************************************) 
-    [<Inline "jQuery($this.element).tabs('destroy')">]
+    [<Inline "jQuery($this.element.el).tabs('destroy')">]
     member this.Destroy() = ()
 
-    [<Inline "jQuery($this.element).tabs('disable')">]
+    [<Inline "jQuery($this.element.el).tabs('disable')">]
     member this.Disable () = ()
 
-    [<Inline "jQuery($this.element).tabs('enable')">]
+    [<Inline "jQuery($this.element.el).tabs('enable')">]
     member this.Enable () = ()
 
-    [<Inline "jQuery($this.element).tabs('option', $name, $value)">]
+    [<Inline "jQuery($this.element.el).tabs('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
-    [<Inline "jQuery($this.element).tabs('activate', $index)">]
+    [<Inline "jQuery($this.element.el).tabs('activate', $index)">]
     member this.Activate (index: int) = ()
 
-    [<Inline "jQuery($this.element).tabs('add', $url, $label, $index)">]
+    [<Inline "jQuery($this.element.el).tabs('add', $url, $label, $index)">]
     member private this.add (url:string, label:string, index: int) = ()
 
-    [<Inline "jQuery($this.element).tabs('length')">]
+    [<Inline "jQuery($this.element.el).tabs('length')">]
     member private this.getLength () = 0
 
-    [<Inline "jQuery($this.element).tabs('remove', $index)">]
+    [<Inline "jQuery($this.element.el).tabs('remove', $index)">]
     member this.Remove (index: int) = ()    
 
-    [<Inline "jQuery($this.element).tabs('select', $index)">]
+    [<Inline "jQuery($this.element.el).tabs('select', $index)">]
     member this.Select (index: int) = ()
 
-    [<Inline "jQuery($this.element).tabs('load', $index)">]
+    [<Inline "jQuery($this.element.el).tabs('load', $index)">]
     member this.Load (index: int) = ()
 
-    [<Inline "jQuery($this.element).tabs('url', $index)">]
+    [<Inline "jQuery($this.element.el).tabs('url', $index)">]
     member this.Url (index: int) = ()
 
-    [<Inline "jQuery($this.element).tabs('abort')">]
+    [<Inline "jQuery($this.element.el).tabs('abort')">]
     member this.Abort () = ()
     
-    [<Inline "jQuery($this.element).tabs('rotate', $secs, $loop)">]
+    [<Inline "jQuery($this.element.el).tabs('rotate', $secs, $loop)">]
     member this.Rotate (secs: int, loop: bool) = ()
     
     [<JavaScript>]
@@ -267,64 +259,57 @@ type Tabs =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element).tabs({select: function (x,y) {$f(x);}})">]
-    member private this.onSelect(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).tabs({select: function (x,y) {$f(x);}})">]
+    member private this.onSelect(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).tabs({load: function (x,y) {$f(x);}})">]
-    member private this.onLoad(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).tabs({load: function (x,y) {$f(x);}})">]
+    member private this.onLoad(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).tabs({show: function (x,y) {$f(x);}})">]
-    member private this.onShow(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).tabs({show: function (x,y) {$f(x);}})">]
+    member private this.onShow(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).tabs({add: function (x,y) {$f(x);}})">]
-    member private this.onAdd(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).tabs({add: function (x,y) {$f(x);}})">]
+    member private this.onAdd(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).tabs({remove: function (x,y) {$f(x);}})">]
-    member private this.onRemove(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).tabs({remove: function (x,y) {$f(x);}})">]
+    member private this.onRemove(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).tabs({enable: function (x,y) {$f(x);}})">]
-    member private this.onEnable(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).tabs({enable: function (x,y) {$f(x);}})">]
+    member private this.onEnable(f : JQueryEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element).tabs({diable: function (x,y) {$f(x);}})">]
-    member private this.onDisable(f : Events.EventArgs -> unit) = ()
+    [<Inline "jQuery($this.element.el).tabs({diable: function (x,y) {$f(x);}})">]
+    member private this.onDisable(f : JQueryEvent -> unit) = ()
 
-    // Adding an event and delaying it if the widget is not yet rendered.
-    [<JavaScript>]
-    member private this.OnAfter (f : unit -> unit) : unit =
-        if this.IsRendered then 
-            f ()
-        else            
-            this.OnAfterRender(fun () -> f ())  
 
     [<JavaScript>]
     member this.OnSelect f = 
-        this.OnAfter (fun () -> 
+        this |> OnAfterRender(fun _ -> 
             this.onSelect f
         )
 
     [<JavaScript>]
     member this.OnLoad f = 
-        this.OnAfter (fun () -> 
+        this |> OnAfterRender(fun _ -> 
             this.onLoad f
         )
     [<JavaScript>]
     member this.OnShow f = 
-        this.OnAfter (fun () -> 
+        this |> OnAfterRender(fun _  -> 
             this.onShow f
         )
 
     [<JavaScript>]
     member this.OnAdd f = 
-        this.OnAfter (fun () -> 
+        this |> OnAfterRender(fun _  -> 
             this.onAdd f
         )
     [<JavaScript>]
     member this.OnEnable f = 
-        this.OnAfter (fun () -> 
+        this |> OnAfterRender(fun _  -> 
             this.onEnable f
         )
     [<JavaScript>]
     member this.OnDisable f = 
-        this.OnAfter (fun () -> 
+        this |> OnAfterRender(fun _  -> 
             this.onDisable f
         )

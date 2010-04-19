@@ -17,10 +17,7 @@ open IntelliFactory.WebSharper.Html
 open Utils
     
 [<JavaScriptType>]
-type ResizableConfiguration = 
-
-    [<JavaScriptConstructor>]
-    new () = {}
+type ResizableConfiguration[<JavaScript>]() = 
 
     [<DefaultValue>]
     [<Name "alsoResize">]
@@ -107,25 +104,16 @@ type ResizableConfiguration =
 [<JavaScriptType>]    
 module internal ResizableInternal =
     [<Inline "jQuery($el).resizable($conf)">]
-    let internal New (el: Element, conf: ResizableConfiguration) = ()
+    let internal New (el: Dom.Element, conf: ResizableConfiguration) = ()
 
 [<JavaScriptType>]
-type Resizable = 
-    
-    [<JavaScriptConstructor>]
-    new () = {}
+type Resizable[<JavaScript>]() = 
     
     [<DefaultValue>]
     val mutable private element : Element
 
     [<DefaultValue>]
     val mutable private configuration : ResizableConfiguration
-
-    [<DefaultValue>]
-    val mutable private renderEvent: Event<RenderEvent>
-
-    [<DefaultValue>]
-    val mutable private isRendered: bool
 
     [<JavaScript>]
     member this.Element
@@ -135,17 +123,14 @@ type Resizable =
 
     (****************************************************************
     * Constructors
-    *****************************************************************) 
-
+    *****************************************************************)
     [<JavaScript>]
     [<Name "New_Resizable">]
     static member New (el : Element, conf: ResizableConfiguration): Resizable = 
         let a = new Resizable()
-        a.configuration <- conf
-        a.renderEvent <- new Event<RenderEvent>()
+        a.configuration <- conf        
         a.element <- 
-            el
-            |> On Events.Attach (fun _ _ -> a.Render())
+            el |>! OnAfterRender (fun _  -> (a :> IWidget).Render())
         a
 
     [<JavaScript>]
@@ -155,86 +140,82 @@ type Resizable =
         Resizable.New(el, conf)
 
     (****************************************************************
-    * Render interface
-    *****************************************************************)       
-       
-    [<JavaScript>]
-    member this.OnBeforeRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | RenderEvent.Before  -> f ()
-            | _                   -> ()
-        )
-                    
-    [<JavaScript>]
-    member this.OnAfterRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | RenderEvent.After  -> f ()
-            | _                  -> ()
-        )
+    * INode
+    *****************************************************************)              
+    interface INode with
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = 
+                (this :> IWidget).Render()
+                (this.Element.Dom :> Dom.Node)
+                
+    (****************************************************************
+    * IWidget
+    *****************************************************************)                  
+    interface IWidget with
+        [<JavaScript>]
+        member this.OnBeforeRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnBeforeRender (fun _ -> f ())
+                        
+        [<JavaScript>]
+        member this.OnAfterRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnAfterRender (fun _ -> 
+                (this :> IWidget).Render()
+                f ()
+            )
 
-    [<JavaScript>]
-    member this.Render() =     
-        if not this.IsRendered  then
-            this.renderEvent.Trigger RenderEvent.Before
-            ResizableInternal.New(this.Element, this.configuration)
-            this.renderEvent.Trigger RenderEvent.After
-            this.isRendered <- true
-    
-    [<JavaScript>]
-    member this.IsRendered
-        with get () : bool = this.isRendered
+        [<JavaScript>]
+        member this.Render() =
+            (this.Element :> IWidget).Render()
+            ResizableInternal.New (this.Element.Dom, this.configuration)
+
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = this.Element.Dom
 
 
     (****************************************************************
     * Methods
     *****************************************************************) 
 
-    [<Inline "jQuery($this.element).resizable('destroy')">]
+    [<Inline "jQuery($this.element.el).resizable('destroy')">]
     member this.Destroy() = ()
             
-    [<Inline "jQuery($this.element).resizable('disable')">]
+    [<Inline "jQuery($this.element.el).resizable('disable')">]
     member this.Disable() = ()
 
-    [<Inline "jQuery($this.element).resizable('enable')">]
+    [<Inline "jQuery($this.element.el).resizable('enable')">]
     member this.Enable() = ()
 
-    [<Inline "jQuery($this.element).resizable('widget')">]
+    [<Inline "jQuery($this.element.el).resizable('widget')">]
     member this.Widget() = ()
     
-    [<Inline "jQuery($this.element).resizable('option', $name, $value)">]
+    [<Inline "jQuery($this.element.el).resizable('option', $name, $value)">]
     member this.Option(optionName: string, value: obj) : unit = ()
 
     (****************************************************************
     * Events
     *****************************************************************) 
 
-    [<Inline "jQuery($this.element).resizable({start: function (x,y) {($f(x))(y.start);}})">]
-    member private this.onStart(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).resizable({start: function (x,y) {($f(x))(y.start);}})">]
+    member private this.onStart(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).resizable({resize: function (x,y) {($f(x))(y.resize);}})">]
-    member private this.onResize(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).resizable({resize: function (x,y) {($f(x))(y.resize);}})">]
+    member private this.onResize(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).resizable({stop: function (x,y) {($f(x))(y.stop);}})">]
-    member private this.onStop(f : Events.EventArgs -> Element -> unit) = ()
-
-    [<JavaScript>]
-    member private this.On (f : unit -> unit) =
-        if this.IsRendered then f ()
-        else            
-            this.OnAfterRender(fun () -> f ())
+    [<Inline "jQuery($this.element.el).resizable({stop: function (x,y) {($f(x))(y.stop);}})">]
+    member private this.onStop(f : JQueryEvent -> Element -> unit) = ()
 
     [<JavaScript>]
     member this.OnStart f =
-        this.On (fun () ->  this.onStart f)
+        this |> OnAfterRender(fun _ ->  this.onStart f)
 
     [<JavaScript>]
     member this.OnResize f =
-        this.On (fun () -> this.onResize f)
+        this |> OnAfterRender(fun _ -> this.onResize f)
 
     [<JavaScript>]
     member this.OnStop f =
-        this.On (fun () -> this.onStop f)
+        this |> OnAfterRender(fun _ -> this.onStop f)

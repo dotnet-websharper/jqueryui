@@ -26,10 +26,10 @@ module PositionInternal =
 
     [<JavaScript>]
     let PositionTestCont() =
-        let targetBody = Div [StyleAttribute "width:240px; height:200px; background-color:#999; margin:30px auto;"]
+        let targetBody = Div [Style "width:240px; height:200px; background-color:#999; margin:30px auto;"]
 
         let position1Body = 
-            Div [StyleAttribute "width:50px; height:50px; background-color:#F00;"]
+            Div [Style "width:50px; height:50px; background-color:#F00;"]
         let conf1 = new PositionConfiguration()
         conf1.My <- "center" 
         conf1.At <- "center"
@@ -39,7 +39,7 @@ module PositionInternal =
         let p1 = Position.New(position1Body, conf1)
 
         let position2Body =  
-            Div [StyleAttribute "width:50px; height:50px; background-color:#0F0;"]
+            Div [Style "width:50px; height:50px; background-color:#0F0;"]
         let conf2 = new PositionConfiguration()
         conf2.My <- "left top" 
         conf2.At <- "left top"
@@ -49,7 +49,7 @@ module PositionInternal =
         let p2 = Position.New(position2Body, conf2)
 
         let position3Body = 
-            Div [StyleAttribute "width:50px; height:50px; background-color:#00F;"]
+            Div [Style "width:50px; height:50px; background-color:#00F;"]
         let conf3 = new PositionConfiguration()
         conf3.My <- "right center" 
         conf3.At <- "right bottom"
@@ -59,7 +59,7 @@ module PositionInternal =
         let p3 = Position.New(position3Body, conf3)
 
         let position4Body =
-            Div [StyleAttribute "width:50px; height:50px; background-color:#FF0;"]
+            Div [Style "width:50px; height:50px; background-color:#FF0;"]
         let conf4 = new PositionConfiguration()
         conf4.My <- "left bottom" 
         conf4.At <- "center"
@@ -69,7 +69,7 @@ module PositionInternal =
         let p4 = Position.New (position4Body, conf4)
 
         Document()
-        |> On Events.MouseMove (fun _ ev ->
+        |>! OnMouseMove (fun _ ev ->
             let conf = new PositionConfiguration()
             conf.My <- "left bottom" 
             conf.At <- "center"

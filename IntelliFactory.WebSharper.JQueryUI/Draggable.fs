@@ -44,10 +44,7 @@ type DraggableStackConfiguration =
         {Group = "prouducts"; Min = 50}
 
 [<JavaScriptType>]
-type DraggableConfiguration = 
-
-    [<JavaScriptConstructor>]
-    new () = {}
+type DraggableConfiguration[<JavaScript>]() = 
 
     [<DefaultValue>]
     [<Name "addClasses">]
@@ -185,14 +182,11 @@ type DraggableConfiguration =
 [<JavaScriptType>]    
 module internal DraggableInternal =
     [<Inline "jQuery($el).draggable($conf)">]
-    let internal New (el: Element, conf: DraggableConfiguration) = ()
+    let internal New (el: Dom.Element, conf: DraggableConfiguration) = ()
 
 
 [<JavaScriptType>]
-type Draggable =
-
-    [<JavaScriptConstructor>]
-    new () = {}
+type Draggable[<JavaScript>]() =
     
     [<DefaultValue>]
     val mutable private element : Element
@@ -200,17 +194,10 @@ type Draggable =
     [<DefaultValue>]
     val mutable private configuration : DraggableConfiguration
 
-    [<DefaultValue>]
-    val mutable private renderEvent: Event<RenderEvent>
-
-    [<DefaultValue>]
-    val mutable private isRendered: bool
-
     [<JavaScript>]
     member this.Element
         with get () =
             this.element
-
 
     (****************************************************************
     * Constructors
@@ -221,10 +208,9 @@ type Draggable =
     static member New (el : Element, conf: DraggableConfiguration): Draggable = 
         let a = new Draggable()
         a.configuration <- conf
-        a.renderEvent <- new Event<RenderEvent>()
         a.element <- 
             el
-            |> On Events.Attach (fun _ _ -> a.Render())
+            |>! OnAfterRender (fun _  -> (a :> IWidget).Render())
         a
 
     [<JavaScript>]
@@ -232,59 +218,61 @@ type Draggable =
     static member New (el : Element) : Draggable = 
         let conf = new DraggableConfiguration()
         Draggable.New(el, conf)
-
-    (****************************************************************
-    * Render interface
-    *****************************************************************)       
+      
        
-    [<JavaScript>]
-    member this.OnBeforeRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | RenderEvent.Before  -> f ()
-            | _                         -> ()
-        )
-                    
-    [<JavaScript>]
-    member this.OnAfterRender(f: unit -> unit) : unit=
-        this.renderEvent.Publish
-        |> Event.Iterate (fun re ->
-            match re with
-            | RenderEvent.After  -> f ()
-            | _                        -> ()
-        )
+    (****************************************************************
+    * INode
+    *****************************************************************)              
+    interface INode with
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = 
+                (this :> IWidget).Render()
+                (this.Element.Dom :> Dom.Node)
+                
+    (****************************************************************
+    * IWidget
+    *****************************************************************)                  
+    interface IWidget with
+        [<JavaScript>]
+        member this.OnBeforeRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnBeforeRender (fun _ -> f ())
+                        
+        [<JavaScript>]
+        member this.OnAfterRender(f: unit -> unit) : unit=
+            this.Element
+            |> OnAfterRender (fun _ -> 
+                (this :> IWidget).Render()
+                f ()
+            )
 
-    [<JavaScript>]
-    member this.Render() =     
-        if not this.IsRendered  then
-            this.renderEvent.Trigger RenderEvent.Before
-            DraggableInternal.New(this.Element, this.configuration)
-            this.renderEvent.Trigger RenderEvent.After
-            this.isRendered <- true
-    
-    [<JavaScript>]
-    member this.IsRendered
-        with get () : bool = this.isRendered
+        [<JavaScript>]
+        member this.Render() =
+            (this.Element :> IWidget).Render()
+            DraggableInternal.New (this.Element.Dom, this.configuration)
 
+        [<JavaScript>]                                       
+        member this.Body
+            with get () = this.Element.Dom
 
     (****************************************************************
     * Methods
     *****************************************************************) 
 
-    [<Inline "jQuery($this.element).draggable('destroy')">]
+    [<Inline "jQuery($this.element.el).draggable('destroy')">]
     member this.Destroy() = ()
             
-    [<Inline "jQuery($this.element).draggable('disable')">]
+    [<Inline "jQuery($this.element.el).draggable('disable')">]
     member this.Disable() = ()
 
-    [<Inline "jQuery($this.element).draggable('enable')">]
+    [<Inline "jQuery($this.element.el).draggable('enable')">]
     member this.Enable() = ()
 
-    [<Inline "jQuery($this.element).draggable('widget')">]
+    [<Inline "jQuery($this.element.el).draggable('widget')">]
     member this.Widget() = ()
 
-    [<Inline "jQuery($this.element).draggable('option', $name, $value)">]
+    [<Inline "jQuery($this.element.el).draggable('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
 
@@ -292,30 +280,24 @@ type Draggable =
     * Events
     *****************************************************************) 
 
-    [<Inline "jQuery($this.element).draggable({start: function (x,y) {($f(x))(y.start);}})">]
-    member private this.onStart(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).draggable({start: function (x,y) {($f(x))(y.start);}})">]
+    member private this.onStart(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).draggable({stop: function (x,y) {($f(x))(y.stop);}})">]
-    member private this.onStop(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).draggable({stop: function (x,y) {($f(x))(y.stop);}})">]
+    member private this.onStop(f : JQueryEvent -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element).draggable({drag: function (x,y) {($f(x))(y.drag);}})">]
-    member private this.onDrag(f : Events.EventArgs -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.el).draggable({drag: function (x,y) {($f(x))(y.drag);}})">]
+    member private this.onDrag(f : JQueryEvent -> Element -> unit) = ()
 
-    [<JavaScript>]
-    member private this.On (f : unit -> unit) =
-        if this.IsRendered then f ()
-        else            
-            this.OnAfterRender(fun () -> f ())
 
     [<JavaScript>]
     member this.OnStart f =
-        this.On (fun () ->  this.onStart f)
+        this |> OnAfterRender(fun _ ->  this.onStart f)
 
     [<JavaScript>]
     member this.OnStop f =
-        this.On (fun () -> this.onStop f)
+        this |> OnAfterRender(fun _ -> this.onStop f)
 
     [<JavaScript>]
     member this.OnDrag f =
-        this.On (fun () -> this.onDrag f)
-
+        this |> OnAfterRender(fun _ -> this.onDrag f)

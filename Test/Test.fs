@@ -20,12 +20,12 @@ module Tests =
     open IntelliFactory.WebSharper.JQueryUI
     
     [<JavaScript>]
-    let L x = JavaScript.console.log x
+    let L x = JConsole.Log(x)
 
     [<JavaScript>]
     let B (l: string) f = 
-        Tags.Button [l]
-        |> On Events.Click (fun _ ev ->
+        Tag.Button [Text l]
+        |>! OnClick (fun _ ev ->
             ev.PreventDefault()
             f ()
         )
@@ -34,49 +34,58 @@ module Tests =
     let TestAccordian () =
         let els1 = 
             [
-                "Foo", Div [Tags.Button ["click"]]
-                "Bar", Div ["Second content"]
-                "Baz", Div ["Third content"]
+                "Foo", Div [Tag.Button [Text "click"]]
+                "Bar", Div [Text "Second content"]
+                "Baz", Div [Text "Third content"]
             ]
         let acc1 = Accordion.New(els1)
         // Events
-        acc1.OnBeforeRender <| fun () -> L "Acc1 - Before Render" 
-        acc1.OnAfterRender <| fun () -> L "Acc1 - After Render" 
-        acc1.OnChange <| fun _ _ -> L "Acc1 - Change"        
-        
-        let els2 = 
-            [
-                "Foo", Div [acc1.Element]
-                "Bar", Div ["Second content"]
-                "Baz", Div ["Third content"]
-            ]
+        acc1
+        |> OnBeforeRender (fun _ -> 
+            JConsole.Log "Acc1 - Before Render"
+        )        
+        acc1
+        |> OnAfterRender (fun _ -> 
+            JConsole.Log "Acc1 - After Render" 
+        )
+//        acc1.OnChange (fun _ _ -> 
+//            JConsole.Log "Acc1 - Change"
+//        )
+        acc1.Element
 
-        let acc2 = Accordion.New(els2)
-        // Events
-        acc2.OnBeforeRender <| fun () -> L "Acc2 - Before Render" 
-        acc2.OnAfterRender <| fun () -> L "Acc2 - After Render" 
-        acc2.OnChange <| fun _ _ -> L "Acc2 - Change"    
-                
-        let button =
-            B "Click" <| fun () ->
-                acc2.Activate(2)
-                acc1.Disable()
-        Div [acc2.Element; button]
+//        let els2 = 
+//            [
+//                "Foo", Div [acc1.Element]
+//                "Bar", Div [Text "Second content"]
+//                "Baz", Div [Text "Third content"]
+//            ]
+//        let acc2 = Accordion.New(els2)
+//        // Events
+//        acc2.OnChange (fun _ _ -> 
+//            JConsole.Log "Acc2 - Change"
+//        )
+//                
+//        let button =
+//            B "Click" <| fun () ->
+//                acc2.Activate(2)
+//                acc1.Disable()
+//        Div [acc2.Element; button]
         
     [<JavaScript>]
     let TestAutocomplete () =
         let conf = new AutocompleteConfiguration()
         conf.Source <- [|"Apa"; "Beta"; "Zeta" ; "Zebra"|]
         let a = Autocomplete.New(Input [], conf)
-        a.OnBeforeRender <| fun () -> L "Before Render"
-        a.OnAfterRender <| fun () -> 
-            L "After Render"
+        a |> OnBeforeRender (fun _ -> JConsole.Log "Before Render")
+        a |> OnAfterRender ( fun _ -> 
+            JConsole.Log "After Render"
             a.Search "Z"
+        )
         
-        a.OnChange <| fun _ _ -> L "Change"
-        a.OnClose <| fun _ _ -> L "Close"
-        a.OnSearch <| fun _ _ -> L "Search"
-        a.OnFocus <| fun _ _ -> L "Focus"
+        a.OnChange (fun _ _ -> JConsole.Log "Change")
+        a.OnClose <| fun _ _ -> JConsole.Log "Close"
+        a.OnSearch <| fun _ _ -> JConsole.Log "Search"
+        a.OnFocus <| fun _ _ -> JConsole.Log "Focus"
 
         let bClose = 
             B "Close" <| fun () -> a.Close()         
@@ -92,12 +101,12 @@ module Tests =
     [<JavaScript>]
     let TestButton () =
         let b1 = Button.New ("Click")
-        b1.OnAfterRender(fun () -> L "After Render")
-        b1.OnBeforeRender(fun () -> L "Before Render")
-        b1.OnClick(fun ev -> L "Click")
+        b1 |> OnAfterRender(fun _ -> JConsole.Log "After Render")
+        b1 |> OnBeforeRender(fun _ -> JConsole.Log "Before Render")
+        b1.OnClick(fun ev -> JConsole.Log "Click")
         let b2 = Button.New "Click 2"
         b2.OnClick(fun ev ->
-            b1.OnClick (fun ev -> L "New CB")
+            b1.OnClick (fun ev -> JConsole.Log "New CB")
             if b1.IsEnabled then
                 b1.Disable()
             else
@@ -110,30 +119,30 @@ module Tests =
         let conf = new DatepickerConfiguration()
         conf.NextText <- "NNNNNExt"
         let dp = Datepicker.New(Input [], conf)        
-        dp.OnSelect(fun d -> L d)       
-        dp.OnAfterRender(fun () -> L "Dp After Render")
-        dp.OnBeforeRender(fun () -> L "Dp Before Render")                        
-        dp.Element
+        // dp.OnSelect(fun d -> JConsole.Log d)       
+        dp |> OnAfterRender(fun _ -> JConsole.Log "Dp After Render")
+        dp |> OnBeforeRender(fun _ -> JConsole.Log "Dp Before Render")
+        Div [dp]
 
     [<JavaScript>]
     let TestDialog () =
         let conf =DialogConfiguration()
         conf.Buttons <- "Buttons"
-        let d = Dialog.New(Div ["Dialog"], conf)    
+        let d = Dialog.New(Div [Text "Dialog"], conf)    
         d.OnClose(fun ev ->
-            Native.Window.Alert "close"
+            Window.Alert "close"
         )                  
-        d.OnAfterRender(fun () -> L "dialog: before render")
-        d.OnAfterRender(fun () -> L "dialog: after render")
-        d.OnOpen(fun ev -> L "dialog: open")
-        d.OnClose(fun ev -> L "dialog: close")
-        d.OnResize(fun ev -> L "dialog: resize")
-        d.OnResizeStop(fun ev -> L "dialog: resize stop")
-        d.OnResizeStart(fun ev -> L "dialog: resize start")
-        d.OnFocus(fun ev -> L "dialog: focus")
-        d.OnDrag(fun ev -> L "dialog: drag")
-        d.OnDragStart(fun ev -> L "dialog: drag start")
-        d.OnDragStop(fun ev -> L "dialog: drag stop")
+        d |> OnAfterRender(fun _ -> JConsole.Log "dialog: before render")
+        d |> OnAfterRender(fun _ -> JConsole.Log "dialog: after render")
+        d.OnOpen(fun ev -> JConsole.Log "dialog: open")
+        d.OnClose(fun ev -> JConsole.Log "dialog: close")
+        d.OnResize(fun ev -> JConsole.Log "dialog: resize")
+        d.OnResizeStop(fun ev -> JConsole.Log "dialog: resize stop")
+        d.OnResizeStart(fun ev -> JConsole.Log "dialog: resize start")
+        d.OnFocus(fun ev -> JConsole.Log "dialog: focus")
+        d.OnDrag(fun ev -> JConsole.Log "dialog: drag")
+        d.OnDragStart(fun ev -> JConsole.Log "dialog: drag start")
+        d.OnDragStop(fun ev -> JConsole.Log "dialog: drag stop")
         let bO = Button.New ("open")
         bO.OnClick (fun ev -> d.Open())
         let bC = Button.New "Close"
@@ -148,10 +157,10 @@ module Tests =
     let TestProgressbar () =        
         let conf = ProgressbarConfiguration()
         let p = Progressbar.New(Div [], conf)
-        p.OnBeforeRender(fun () -> L "pb: after render")
-        p.OnAfterRender(fun ()  -> 
+        p |> OnAfterRender(fun _ -> JConsole.Log "pb: after render")
+        p |> OnBeforeRender(fun _  -> 
             p.Value <- 10
-            L "pb: after render"
+            JConsole.Log "pb: after render"
         )
         
         let b = Button.New("inc")
@@ -164,19 +173,19 @@ module Tests =
     [<JavaScript>]
     let TestSlider () =                
         let s = Slider.New()
-        s.OnBeforeRender(fun () -> L "slider: before render")
-        s.OnAfterRender(fun ()  -> 
+        s |> OnBeforeRender(fun _ -> JConsole.Log "slider: before render")
+        s |> OnAfterRender(fun _  -> 
             // s.Value <- 10
-            L "slider: after render"
+            JConsole.Log "slider: after render"
         )
         s.OnChange(fun ev ->
-            L "change"
+            JConsole.Log "change"
             // L (string s.Value)
         )
         let b = Button.New("inc")
         let pan = Div [s.Element; b.Element]
         b.OnClick (fun ev ->          
-            let d = Dialog.New(Div [string s.Value]) 
+            let d = Dialog.New(Div [Text <| string s.Value]) 
             pan.Append(d.Element)
         )        
         pan
@@ -186,21 +195,21 @@ module Tests =
         let conf = new TabsConfiguration()
         let tabs =
             [
-                "Tab 1",  Div [H1 ["Tab 1"]]
-                "Tab 2",  Div [H1 ["Tab 2"]]
-                "Tab 3",  Div [H1 ["Tab 3"]]
+                "Tab 1",  Div [H1 [Text "Tab 1"]]
+                "Tab 2",  Div [H1 [Text "Tab 2"]]
+                "Tab 3",  Div [H1 [Text "Tab 3"]]
             ]
         let t = Tabs.New(tabs, conf)
-        t.OnBeforeRender(fun () -> L "tabs: before render")
-        t.OnAfterRender(fun ()  -> 
+        t |> OnAfterRender(fun _ -> JConsole.Log "tabs: before render")
+        t |> OnAfterRender(fun _  -> 
             // s.Value <- 10
-            L "tabs: after render"            
+            JConsole.Log "tabs: after render"            
         )
 
         let b = Button.New("inc")
         b.OnClick (fun ev ->          
             t.Activate 2
-            t.Add( Div [H1 ["New tab"]], "tab" + (string t.Length))
+            t.Add( Div [H1 [Text "New tab"]], "tab" + (string t.Length))
         )        
         Div [t.Element; b.Element]
     
@@ -208,17 +217,17 @@ module Tests =
     let TestSortable () =
         let list =
             UL [
-                LI ["Item 1"]
-                LI ["Item 2"]
-                LI ["Item 3"]
+                LI [Text "Item 1"]
+                LI [Text "Item 2"]
+                LI [Text "Item 3"]
             ]
         let s = Sortable.New(list, new SortableConfiguration())
-        s.OnBeforeRender (fun () -> L "sortable: before render")
-        s.OnAfterRender( fun () ->
-            L "sortable: after render"
+        s |> OnBeforeRender (fun _ -> JConsole.Log "sortable: before render")
+        s |> OnAfterRender (fun _->
+            JConsole.Log "sortable: after render"
         )
-        s.OnSort( fun _ _ -> L "sort")
-        s.OnChange(fun _ _ -> L "change")
+        s.OnSort( fun _ _ -> JConsole.Log "sort")
+        s.OnChange(fun _ _ -> JConsole.Log "change")
         s.Element
 
 
@@ -226,7 +235,7 @@ module Tests =
 
     [<JavaScript>]
     let TestWidget t w =
-        Div [StyleAttribute "border:solid 1px gray; padding:10px; margin-top: 10px"] -< [
+        Div [Style "border:solid 1px gray; padding:10px; margin-top: 10px"] -< [
             H1 [Text t ]
             w
         ]
