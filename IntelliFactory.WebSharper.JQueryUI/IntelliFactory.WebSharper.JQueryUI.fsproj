@@ -28,8 +28,12 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
+    <DocumentationFile>bin\Release\IntelliFactory.WebSharper.JQueryUI.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IntelliFactory.JavaScript">
+      <HintPath>..\lib\IntelliFactory.JavaScript.dll</HintPath>
+    </Reference>
     <Reference Include="IntelliFactory.WebSharper">
       <HintPath>..\lib\IntelliFactory.WebSharper.dll</HintPath>
     </Reference>
@@ -46,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="../lib/Version.fs" />
     <Compile Include="Settings.fs" />
     <Compile Include="Dependencies.fs" />
     <Compile Include="AssemblyInfo.fs" />

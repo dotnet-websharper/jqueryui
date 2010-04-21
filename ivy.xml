@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ivy-module version="2.0">
-  <info organisation="IntelliFactory" module="if-ws-jqueryui" revision="1.0.12" />
+  <info organisation="IntelliFactory" module="if-ws-jqueryui" revision="1.0.15" />
   <publications>
     <artifact name="IntelliFactory.WebSharper.JQueryUI" type="dll" />
     <artifact name="IntelliFactory.WebSharper.JQueryUI" type="xml" />
   </publications>
   <dependencies>
-    <dependency name="if-ws" rev="1.0.12" />
+    <dependency name="if-ws" rev="1.0.15" />
   </dependencies>
 </ivy-module>
