@@ -28,24 +28,23 @@ module Dependencies =
         let JQueryUIBase =
             match ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQueryUI"] with
             | null ->
-                "http://jquery-ui.googlecode.com/svn/tags/1.8rc3"
+                "http://jquery-ui.googlecode.com/svn/tags/1.8rc3/ui"
             | url ->
                 url
 
-        let RelativeLocation loc = 
-            JQueryUIBase + loc       
+        let JQueryUIBaseCss =
+            match ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQueryUICss"] with
+            | null ->
+                "http://jquery-ui.googlecode.com/svn/tags/1.8rc3/themes/base"
+            | url ->
+                url     
         
         [<AbstractClass>]
         type Module(name: string) =
             interface IResource with            
                 member this.Render(resolver, writer) =
                     let loc =
-                        #if DEBUG
-                        sprintf "/ui/%s.js"  name
-                        #else
-                        sprintf "/ui/minified/%s/%s-min.js" name name
-                        #endif
-                        |> RelativeLocation
+                        sprintf "%s/%s.js" JQueryUIBase name
                     Resource.RenderJavaScript loc writer
 
         [<AbstractClass>]
@@ -53,8 +52,7 @@ module Dependencies =
             interface IResource with
                 member this.Render(resolver, writer) =
                     let loc = 
-                        sprintf "/themes/base/%s.css" name
-                        |> RelativeLocation
+                        sprintf "%s/%s.css" JQueryUIBaseCss name
                     Resource.RenderCss loc writer
 
     open Utils

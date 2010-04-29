@@ -33,6 +33,9 @@
     <DocumentationFile>bin\Release\Test.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IntelliFactory.JavaScript">
+      <HintPath>..\lib\IntelliFactory.JavaScript.dll</HintPath>
+    </Reference>
     <Reference Include="IntelliFactory.WebSharper">
       <HintPath>..\lib\IntelliFactory.WebSharper.dll</HintPath>
     </Reference>

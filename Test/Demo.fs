@@ -24,10 +24,10 @@ module DemoInternal =
     [<JavaScript>]
     let Dialog () =
         let button = Button.New "Open"        
-        let pan = Div [button.Element]
+        let pan = Div [button]
         button.OnClick (fun ev ->            
             let dialog = Dialog.New(H1 [Text "Dialog"])
-            pan.Append(dialog.Element)
+            // pan.Append(dialog.Dom)
             dialog.OnClose(fun ev ->
                 button.Enable()
             )
@@ -44,7 +44,7 @@ module DemoInternal =
                 "Panel 3", H1 [Text "Panel 3"]
             ]
         let accordion = Accordion.New(accElems)
-        accordion.Element
+        Div [accordion]
 
     [<JavaScript>]
     let Slider () =
