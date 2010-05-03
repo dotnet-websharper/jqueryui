@@ -126,6 +126,7 @@
   -->
   <Target Name="AfterBuild">
     <MakeDir Directories="js" />
+    <Copy SourceFiles="../lib/WebSharper.exe" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
     <Exec Command="WebSharper.exe" WorkingDirectory="$(OutputPath)" />
     <ItemGroup>
       <JS Include="$(OutputPath)/*.js" />
