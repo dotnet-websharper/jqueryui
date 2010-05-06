@@ -24,12 +24,6 @@ type DialogConfiguration[<JavaScript>]() =
     //true by default
     val mutable AutoOpen: bool
 
-//        //New version of JQueryUI 1.8 removes bgiframe
-//        [<DefaultValue>]
-//        [<Name "bgiframe">]
-//        //false by default
-//        val mutable Bgiframe: bool
-
     //Buttons' type to be confirmed (string -> (string -> unit) -> unit)
     [<DefaultValue>]
     [<Name "buttons">]
@@ -127,74 +121,22 @@ module internal DialogInternal =
     let Init (el: Dom.Element, conf: DialogConfiguration) = ()
 
 [<JavaScriptType>]
-type Dialog[<JavaScript>]() = 
-  
-    [<DefaultValue>]
-    val mutable private element : Element
-
-    [<DefaultValue>]
-    val mutable private configuration : DialogConfiguration
-
-    [<DefaultValue>]
-    val mutable private renderEvent: Event<Utils.RenderEvent>
-
-    [<DefaultValue>]
-    val mutable private isRendered: bool
-
-    [<JavaScript>]
-    member this.Element
-        with get () =
-            this.element
+type Dialog[<JavaScript>]internal () = 
+    inherit Widget()  
 
     [<JavaScript>]
     static member New (el: Element, conf: DialogConfiguration): Dialog = 
         let d = new Dialog()
-        d.configuration <- conf
-        d.renderEvent <- new Event<RenderEvent>()
-        d.element <- el |>! OnAfterRender (fun _  -> (d :> IWidget).Render())            
+        el
+        |> OnAfterRender(fun el ->
+            DialogInternal.Init(el.Dom, conf)
+        )
+        d.element <- el
         d
 
     [<JavaScript>]
     static member New (el: Element): Dialog = 
         Dialog.New(el, DialogConfiguration())
-
-
-
-    (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = 
-                (this :> IWidget).Render()
-                (this.Element.Dom :> Dom.Node)
-                
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-
-        [<JavaScript>]
-        member this.Render() =
-            (this.Element :> IWidget).Render()
-            DialogInternal.Init(this.Element.Dom, this.configuration)
-
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.Element.Dom
         
     (****************************************************************
     * Methods

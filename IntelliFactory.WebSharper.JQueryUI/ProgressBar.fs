@@ -31,71 +31,25 @@ module internal ProgressbarInternal =
     let Init (el: Dom.Element, conf: ProgressbarConfiguration) = ()
 
 [<JavaScriptType>]
-type Progressbar[<JavaScript>]() = 
+type Progressbar[<JavaScript>]internal () = 
+    inherit Widget()
     
-    [<DefaultValue>]
-    val mutable private element : Element
-
-    [<DefaultValue>]
-    val mutable private configuration : ProgressbarConfiguration
-    
-    [<JavaScript>]
-    member this.Element
-        with get () =
-            this.element
-
     (****************************************************************
     * Constructors
     *****************************************************************)        
     [<JavaScript>]
     static member New (el: Element, conf: ProgressbarConfiguration) =
         let pb = new Progressbar()
-        pb.configuration <- conf
         pb.element <- el
         el
-        |>! OnAfterRender (fun _  -> 
-            (pb :> IWidget).Render()
+        |> OnAfterRender (fun el  -> 
+            ProgressbarInternal.Init(el.Dom, conf)
         )
-        |> ignore
         pb
 
-    (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = 
-                (this :> IWidget).Render()
-                (this.Element.Dom :> Dom.Node)
-                
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-
-        [<JavaScript>]
-        member this.Render() =
-            (this.Element :> IWidget).Render()
-            ProgressbarInternal.Init(this.Element.Dom, this.configuration)
-
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.Element.Dom
-
-
+    [<JavaScript>]
+    static member New (el: Element) =
+        Progressbar.New(el, new ProgressbarConfiguration())
 
     (****************************************************************
     * Methods

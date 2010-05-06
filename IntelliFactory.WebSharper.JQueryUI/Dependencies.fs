@@ -17,18 +17,10 @@ module Dependencies =
     open System.Configuration
 
     module Utils = 
-        let JQueryForUIBase =
-            match ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQuery"] with
-            | null ->
-                "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"
-            | url ->
-                url
-
-
         let JQueryUIBase =
             match ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQueryUI"] with
             | null ->
-                "http://jquery-ui.googlecode.com/svn/tags/1.8rc3/ui"
+                "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1"
             | url ->
                 url
 
@@ -57,12 +49,7 @@ module Dependencies =
 
     open Utils
 
-    type JQueryBase() =
-        interface IResource with
-            member this.Render(resolver, writer) =
-                Resource.RenderJavaScript JQueryForUIBase writer
-
-    and JQueryUIAll() = 
+    type JQueryUIAll() = 
         inherit Module("jquery-ui")
                 
     and AllCss()= 

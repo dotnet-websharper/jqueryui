@@ -82,21 +82,11 @@ type AccordionConfiguration[<JavaScript>]() =
 [<JavaScriptType>]    
 module internal AccordianInternal =
     [<Inline "jQuery($el).accordion($conf)">]
-    let internal New (el: Dom.Element, conf: AccordionConfiguration) = ()
+    let internal Init (el: Dom.Element, conf: AccordionConfiguration) = ()
 
 [<JavaScriptType>]
-type Accordion[<JavaScript>]() =
-    
-    [<DefaultValue>]
-    val mutable private element : Element
-
-    [<DefaultValue>]
-    val mutable private configuration : AccordionConfiguration
-
-    [<JavaScript>]
-    member this.Element
-        with get () =
-            this.element  
+type Accordion[<JavaScript>] internal () =
+    inherit Widget()
     
     (****************************************************************
     * Constructors
@@ -104,7 +94,6 @@ type Accordion[<JavaScript>]() =
     [<JavaScript>]
     static member New (els : List<string * Element>, conf: AccordionConfiguration): Accordion = 
         let a = new Accordion()
-        a.configuration <- conf
         let panel =
             els
             |> List.map (fun (header, el) ->
@@ -115,7 +104,8 @@ type Accordion[<JavaScript>]() =
             )
             |> List.concat
             |> Div
-            |>! OnAfterRender (fun _ ->
+            |>! OnAfterRender (fun el ->
+                AccordianInternal.Init(el.Dom, conf)
                 (a :> IWidget).Render()
             )
         a.element <- panel
@@ -123,43 +113,7 @@ type Accordion[<JavaScript>]() =
     
     [<JavaScript>]
     static member New (els : List<string * Element>): Accordion =
-        Accordion.New(els, new AccordionConfiguration())
-        
-    (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = 
-                (this :> IWidget).Render()
-                this.Element.Dom :> Dom.Node 
-                
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-
-        [<JavaScript>]
-        member this.Render() =
-            (this.Element :> IWidget).Render()
-            AccordianInternal.New(this.Element.Dom, this.configuration)
-
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.Element.Dom
+        Accordion.New(els, new AccordionConfiguration())        
 
     (****************************************************************
     * Methods
@@ -188,7 +142,7 @@ type Accordion[<JavaScript>]() =
     [<Inline "jQuery($this.element.el).accordion({change: function (x,y) {($f(x))(y.changestart);}})">]
     member private this.onChangestart(f : JQueryEvent -> Element -> unit) = ()
 
-    // Adding an event and delayin it if the widget is not yet rendered.
+    // Adding an event and delaying it if the widget is not yet rendered.
     [<JavaScript>]
     member this.OnChange f =      
         this

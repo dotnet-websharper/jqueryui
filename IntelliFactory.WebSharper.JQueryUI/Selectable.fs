@@ -68,74 +68,26 @@ module internal SelectableInternal =
 
 
 [<JavaScriptType>]
-type Selectable[<JavaScript>]() = 
-    
-    [<DefaultValue>]
-    val mutable private element : Element
-
-    [<DefaultValue>]
-    val mutable private configuration : SelectableConfiguration
-
-    [<JavaScript>]
-    member this.Element
-        with get () =
-            this.element
+type Selectable[<JavaScript>] internal () =
+    inherit Widget() 
 
 
     (****************************************************************
     * Constructors
     *****************************************************************) 
     [<JavaScript>]
-    [<Name "New_Selectable">]
     static member New (el : Element, conf: SelectableConfiguration): Selectable = 
-        let a = new Selectable()
-        a.configuration <- conf
+        let a = new Selectable()        
         a.element <- 
-            el |>! OnAfterRender (fun _  -> (a :> IWidget).Render())
+            el |>! OnAfterRender (fun el  -> 
+                SelectableInternal.New(el.Dom, conf)
+            )
         a
 
     [<JavaScript>]
-    [<Name "New_Selectable_Shortcut">]
     static member New (el : Element) : Selectable = 
         let conf = new SelectableConfiguration()
         Selectable.New(el, conf)
-
-    (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = 
-                (this :> IWidget).Render()
-                (this.Element.Dom :> Dom.Node)
-                
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-
-        [<JavaScript>]
-        member this.Render() =
-            (this.Element :> IWidget).Render()
-            SelectableInternal.New (this.Element.Dom, this.configuration)
-
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.Element.Dom
-
 
     (****************************************************************
     * Methods
@@ -159,12 +111,9 @@ type Selectable[<JavaScript>]() =
     [<Inline "jQuery($this.element.el).selectable('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
-
-
     (****************************************************************
     * Events
-    *****************************************************************) 
-
+    *****************************************************************)
     [<Inline "jQuery($this.element.el).selectable({selected: function (x,y) {($f(x))(y.selected);}})">]
     member private this.onSelected(f : JQueryEvent -> Element -> unit) = ()
 

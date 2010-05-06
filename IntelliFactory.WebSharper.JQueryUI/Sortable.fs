@@ -150,89 +150,30 @@ module internal SortableInternal =
 
 
 [<JavaScriptType>]
-type Sortable [<JavaScript>]() = 
-  
-    [<DefaultValue>]
-    val mutable private element : Element
-
-    [<DefaultValue>]
-    val mutable private configuration : SortableConfiguration
-
-    [<DefaultValue>]
-    val mutable private renderEvent: Event<RenderEvent>
-
-    [<DefaultValue>]
-    val mutable private isRendered: bool
-
-    [<JavaScript>]
-    member this.Element
-        with get () =
-            this.element
+type Sortable [<JavaScript>] internal () = 
+    inherit Widget()
 
     (****************************************************************
     * Constructors
-    *****************************************************************) 
-                
+    *****************************************************************)                 
     [<JavaScript>]
-    [<Name "New_Sortable">]
     static member New (el: Element, conf: SortableConfiguration) : Sortable = 
         let s = new Sortable()
-        s.configuration <- conf
-        s.renderEvent <- new Event<RenderEvent>()
         s.element <- 
             el
-            |>! OnAfterRender (fun _  ->
-                (s:> IWidget).Render()   
+            |>! OnAfterRender (fun el  ->
+                SortableInternal.Init(el.Dom, conf)
             )
         s
 
     [<JavaScript>]
-    [<Name "New_Sortable_Shortcut">]
     static member New (el: Element) : Sortable =
         let conf = new SortableConfiguration()
         Sortable.New(el, conf)
 
     (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = 
-                (this :> IWidget).Render()
-                (this.Element.Dom :> Dom.Node)
-                
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-
-        [<JavaScript>]
-        member this.Render() =
-            (this.Element :> IWidget).Render()
-            SortableInternal.Init (this.Element.Dom, this.configuration)
-
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.Element.Dom
-
-
-    (****************************************************************
     * Methods
     *****************************************************************) 
-
     [<Inline "$this.sortable('destroy')">]
     member this.Destroy() = ()
             
@@ -263,7 +204,6 @@ type Sortable [<JavaScript>]() =
     (****************************************************************
     * Events
     *****************************************************************)
-
     [<Inline "jQuery($this.element.el).sortable({sort: function (x,y) {($f(x))(y.start);}})">]
     member private this.onStart(f : JQueryEvent -> Element -> unit) = ()
 

@@ -12,7 +12,7 @@ open IntelliFactory.WebSharper
 [<assembly: AssemblyKeyFile     "//ifbuds01/pub/keys/IntelliFactory.snk">]
 
 [<assembly: WebSharper>]
-[<assembly: Require(typeof<Dependencies.JQueryBase>)>]
+[<assembly: Require(typeof<Resources.JQuery>)>]
 [<assembly: Require(typeof<Dependencies.JQueryUIAll>)>]
 [<assembly: Require(typeof<Dependencies.AllCss>)>]
 do ()

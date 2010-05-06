@@ -186,76 +186,28 @@ module internal DraggableInternal =
 
 
 [<JavaScriptType>]
-type Draggable[<JavaScript>]() =
+type Draggable[<JavaScript>] internal () =
+    inherit Widget ()
     
-    [<DefaultValue>]
-    val mutable private element : Element
-
-    [<DefaultValue>]
-    val mutable private configuration : DraggableConfiguration
-
-    [<JavaScript>]
-    member this.Element
-        with get () =
-            this.element
-
     (****************************************************************
     * Constructors
     *****************************************************************) 
 
     [<JavaScript>]
-    [<Name "New_Draggable">]
     static member New (el : Element, conf: DraggableConfiguration): Draggable = 
         let a = new Draggable()
-        a.configuration <- conf
         a.element <- 
             el
-            |>! OnAfterRender (fun _  -> (a :> IWidget).Render())
+            |>! OnAfterRender (fun el ->
+                DraggableInternal.New(el.Dom, conf)
+            )
         a
 
     [<JavaScript>]
-    [<Name "New_Draggable_Shortcut">]
     static member New (el : Element) : Draggable = 
         let conf = new DraggableConfiguration()
         Draggable.New(el, conf)
-      
-       
-    (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = 
-                (this :> IWidget).Render()
-                (this.Element.Dom :> Dom.Node)
-                
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-
-        [<JavaScript>]
-        member this.Render() =
-            (this.Element :> IWidget).Render()
-            DraggableInternal.New (this.Element.Dom, this.configuration)
-
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.Element.Dom
-
+             
     (****************************************************************
     * Methods
     *****************************************************************) 

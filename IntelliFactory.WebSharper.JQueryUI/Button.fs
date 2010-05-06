@@ -29,7 +29,7 @@ type ButtonIconsConfiguration =
     static member Default = {Primary = "ui-icon-gear"; Secondary = "ui-icon-triangle-1-s" }
 
 [<JavaScriptType>]
-type ButtonConfiguration[<JavaScript>]() = 
+type ButtonConfiguration[<JavaScript>] internal () = 
     
     [<DefaultValue>]
     [<Name "text">]
@@ -48,24 +48,14 @@ type ButtonConfiguration[<JavaScript>]() =
 [<JavaScriptType>]
 module internal ButtonInternal =
     [<Inline "jQuery($el).button($conf)">]
-    let New (el: Dom.Element, conf: ButtonConfiguration) = ()
+    let Init (el: Dom.Element, conf: ButtonConfiguration) = ()
 
 [<JavaScriptType>]
 type Button [<JavaScript>]()= 
-  
-    [<DefaultValue>]
-    val mutable private element : Element
-
-    [<DefaultValue>]
-    val mutable private configuration : ButtonConfiguration
-
+    inherit Widget()
+    
     [<DefaultValue>]
     val mutable private isEnabled: bool
-
-    [<JavaScript>]
-    member this.Element
-        with get () =
-            this.element
 
     [<JavaScript>]
     member this.IsEnabled
@@ -77,7 +67,6 @@ type Button [<JavaScript>]()=
     *****************************************************************)     
     [<JavaScript>]
     static member New (el : Element, conf: ButtonConfiguration): Button = 
-
         el
         |>! OnClick (fun _ ev ->
             ev.PreventDefault()
@@ -85,11 +74,10 @@ type Button [<JavaScript>]()=
         |> ignore
         
         let b = new Button()
-        b.configuration <- conf
         b.isEnabled <- true
         el 
-        |>! OnAfterRender (fun _  -> 
-            (b :> IWidget).Render()
+        |>! OnAfterRender (fun el  -> 
+            ButtonInternal.Init(el.Dom, conf)
         )
         |> ignore
         b.element <- el
@@ -100,48 +88,10 @@ type Button [<JavaScript>]()=
         Button.New(Tag.Button [], conf)
 
     [<JavaScript>]
-    [<Name "New12">]
     static member New (label: string): Button = 
         let conf = new ButtonConfiguration()
         conf.Label <- label
         Button.New(conf)
-        
-    
-    (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = 
-                (this :> IWidget).Render()
-                (this.Element.Dom :> Dom.Node)
-                
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-
-        [<JavaScript>]
-        member this.Render() =
-            (this.Element :> IWidget).Render()
-            ButtonInternal.New(this.Element.Dom, this.configuration)
-
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.Element.Dom
 
     (****************************************************************
     * Methods

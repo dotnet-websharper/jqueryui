@@ -247,49 +247,28 @@ type DatepickerConfiguration[<JavaScript>]() =
     [<Name "yearSuffix">]
     // 1 by default
     val mutable YearSuffix: string             
-         
-//        //beforeShow Event
-//        [<DefaultValue>]
-//        [<Name "beforeShow">]
-//        val mutable BeforeShow: JDate -> string
-//
-//        //beforeShow Event
-//        [<DefaultValue>]
-//        [<Name "beforeShowDay">]
-//        val mutable BeforeShowDay: JDate -> string
+
     
 
 [<JavaScriptType>]
 module internal DatepickerInternal =
     [<Inline "jQuery($el).datepicker($conf)">]
-    let New (el: Dom.Element, conf: DatepickerConfiguration) = ()
+    let Init (el: Dom.Element, conf: DatepickerConfiguration) = ()
 
 [<JavaScriptType>]
-type Datepicker[<JavaScript>]() =
-
-    [<DefaultValue>]
-    val mutable private element : Element
-
-    [<DefaultValue>]
-    val mutable private configuration : DatepickerConfiguration
-
-    [<JavaScript>]
-    member this.Element
-        with get () =
-            this.element
+type Datepicker[<JavaScript>] internal  () =
+    inherit Widget()
 
     (****************************************************************
     * Constructors
     *****************************************************************)
     [<JavaScript>]
     static member New (el: Element, conf: DatepickerConfiguration): Datepicker =
-        let dp = new Datepicker()
-        dp.configuration <- conf
+        let dp = new Datepicker()        
         dp.element <- el
         el
-        |> OnAfterRender (fun _  -> 
-            JConsole.Log("here")                
-            (dp :> IWidget).Render()
+        |> OnAfterRender (fun el  -> 
+            DatepickerInternal.Init(el.Dom, conf)
         )        
         dp
 
@@ -301,42 +280,6 @@ type Datepicker[<JavaScript>]() =
     static member New (): Datepicker = 
         Datepicker.New(Div [], new DatepickerConfiguration())
                        
-    (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = 
-                (this :> IWidget).Render()
-                this.Element.Dom :> Dom.Node                
-
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit =
-            this.Element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-        
-        [<JavaScript>]
-        member this.Render() =
-            (this.Element :> IWidget).Render()
-            DatepickerInternal.New(this.Element.Dom, this.configuration)
-
-        [<JavaScript>]                                       
-        member this.Body
-            with get () =
-                this.Element.Dom
 
     (****************************************************************
     * Methods
@@ -401,162 +344,5 @@ type Datepicker[<JavaScript>]() =
         |> OnBeforeRender (fun _ ->             
             this.onClose f
         )
-
-
-
-//[<JavaScriptType>]
-//type Datepicker[<JavaScript>]() =
-//
-//  
-//    [<DefaultValue>]
-//    val mutable private element : Element
-//
-//    [<DefaultValue>]
-//    val mutable private configuration : DatepickerConfiguration
-//
-//    [<DefaultValue>]
-//    val mutable private renderEvent: Event<Utils.RenderEvent>
-//
-//    [<DefaultValue>]
-//    val mutable private isRendered: bool
-//
-//    [<JavaScript>]
-//    member this.Element
-//        with get () =
-//            this.element
-//    
-//    (****************************************************************
-//    * Constructors
-//    *****************************************************************)
-//    [<JavaScript>]
-//    static member New (el: Element, conf: DatepickerConfiguration): Datepicker = 
-//        let dp = new Datepicker()
-//        dp.configuration <- conf
-//        dp.renderEvent <- new Event<RenderEvent>()
-//        let el =
-//            el
-//            |>! OnAfterRender (fun _  -> dp.Render())
-//        dp.element <- el
-//        dp
-//
-//    [<JavaScript>]
-//    static member New (el:Element): Datepicker = 
-//        Datepicker.New(el, new DatepickerConfiguration())
-//
-//    [<JavaScript>]
-//    [<Name "New0">]
-//    static member New (): Datepicker = 
-//        Datepicker.New(Div [], new DatepickerConfiguration())
-//
-//
-//    (****************************************************************
-//    * INode
-//    *****************************************************************)              
-//    interface INode with
-//        [<JavaScript>]                                       
-//        member this.Body
-//            with get () = (this.Element.Dom :> Dom.Node)
-//                
-//    (****************************************************************
-//    * IWidget
-//    *****************************************************************)                  
-//    interface IWidget with
-//        [<JavaScript>]
-//        member this.OnBeforeRender(f: unit -> unit) : unit=
-//            this.Element
-//            |> OnBeforeRender (fun _ -> f ())
-//                        
-//        [<JavaScript>]
-//        member this.OnAfterRender(f: unit -> unit) : unit=
-//            this.Element
-//            |> OnAfterRender (fun _ -> 
-//                (this :> IWidget).Render()
-//                f ()
-//            )
-//
-//        [<JavaScript>]
-//        member this.Render() =
-//            (this.Element :> IWidget).Render()
-//            DatepickerInternal.New(this.Element.Dom, this.configuration)
-//
-//        [<JavaScript>]                                       
-//        member this.Body
-//            with get () = this.Element.Dom
-//
-//    (****************************************************************
-//    * Methods
-//    *****************************************************************)
-//    [<Inline "jQuery($this.element.el).datepicker('destroy')">]
-//    member this.Destroy() = ()
-//
-//    [<Inline "jQuery($this.element.el).datepicker('disable')">]
-//    member this.Disable () = ()
-//
-//    [<Inline "jQuery($this.element.el).datepicker('enable')">]
-//    member this.Enable () = ()
-//
-//    [<Inline "jQuery($this.element.el).datepicker('option', $name, $value)">]
-//    member this.Option (name: string, value: obj) = ()
-//
-//    [<Inline "jQuery($this.element.el).datepicker('isDisabled')">]
-//    member this.IsDisabled () : bool = Unchecked.defaultof<_>()
-//    
-//    [<Inline "jQuery($this.element.el).datepicker('hide')">]
-//    member this.Hide () = ()
-//
-//    [<Inline "jQuery($this.element.el).datepicker('show')">]
-//    member this.Show () = ()
-//
-//    [<Inline "jQuery($this.element.el).datepicker('getDate')">]
-//    member this.GetDate () : JDate = Unchecked.defaultof<_>()
-//
-//    [<Inline "jQuery($this.element.el).datepicker('setDate', $date)">]
-//    member this.SetDate (date:string) = ()
-//
-//
-//    (****************************************************************
-//    * Events
-//    *****************************************************************) 
-//    [<Inline "jQuery($this.element.el).datepicker({onSelect: function (x,y) {$f(x);}})">]
-//    member private this.onSelect(f : string -> unit) = ()
-//
-//    [<Inline "jQuery($this.element.el).datepicker({onClose: function (x,y) {$f();}})">]
-//    member private this.onClose(f : unit -> unit) = ()
-//
-//    // beforeShow
-//    // beforeShowDay function(date)
-//    // onChangeMonthYear function(year, month, inst)
-//    // onClose function(dateText, inst)
-//    // onSelect function(dateText, inst)
-//
-//    // Adding an event and delayin it if the widget is not yet rendered.
-//    [<JavaScript>]
-//    member private this.OnBefore (f : unit -> unit) : unit =
-//        if this.IsRendered then 
-//            f ()
-//        else            
-//            this.OnBeforeRender(fun () -> f ())
-//
-//    [<JavaScript>]
-//    member private this.OnAfter (f : unit -> unit) : unit =
-//        if this.IsRendered then 
-//            f ()
-//        else            
-//            this.OnAfterRender(fun () -> f ())
-//
-//    // Adding an event and delayin it if the widget is not yet rendered.
-//    [<JavaScript>]
-//    member this.OnSelect(f : JDate -> unit) : unit =
-//        this.OnBefore(fun () -> 
-//            this.onSelect <| fun s -> f (JDate(s))
-//        )
-//
-//    // Adding an event and delayin it if the widget is not yet rendered.
-//    [<JavaScript>]
-//    member this.OnClose(f : unit -> unit) : unit  =
-//        this.OnBefore(fun () ->             
-//            this.onClose f
-//        )
-
      
 

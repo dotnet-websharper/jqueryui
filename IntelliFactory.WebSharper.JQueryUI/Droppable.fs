@@ -68,18 +68,8 @@ module internal DroppableInternal =
     let internal New (el: Dom.Element, conf: DroppableConfiguration) = ()
 
 [<JavaScriptType>]
-type Droppable[<JavaScript>]() =
-
-    [<DefaultValue>]
-    val mutable private element : Element
-
-    [<DefaultValue>]
-    val mutable private configuration : DroppableConfiguration
-
-    [<JavaScript>]
-    member this.Element
-        with get () =
-            this.element
+type Droppable[<JavaScript>] internal () =
+    inherit Widget()
 
     (****************************************************************
     * Constructors
@@ -88,55 +78,17 @@ type Droppable[<JavaScript>]() =
     [<Name "New_Droppable">]
     static member New (el : Element, conf: DroppableConfiguration): Droppable = 
         let a = new Droppable()
-        a.configuration <- conf
         a.element <- 
             el
-            |>! OnAfterRender (fun _  -> (a :> IWidget).Render())
+            |>! OnAfterRender (fun el  -> 
+                DroppableInternal.New(el.Dom, conf)
+            )
         a
 
     [<JavaScript>]
-    [<Name "New_Droppable_Shortcut">]
     static member New (el : Element) : Droppable = 
         let conf = new DroppableConfiguration()
         Droppable.New(el, conf)
-
-
-    (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = 
-                (this :> IWidget).Render()
-                (this.Element.Dom :> Dom.Node)
-                
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-
-        [<JavaScript>]
-        member this.Render() =
-            (this.Element :> IWidget).Render()
-            DroppableInternal.New (this.Element.Dom, this.configuration)
-
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.Element.Dom
-
 
     (****************************************************************
     * Methods
@@ -176,7 +128,6 @@ type Droppable[<JavaScript>]() =
 
     [<Inline "jQuery($this.element.el).droppable({drop: function (x,y) {($f(x))(y.drop);}})">]
     member private this.onDrop(f : JQueryEvent -> Element -> unit) = ()
-
 
     [<JavaScript>]
     member this.OnActivate f =

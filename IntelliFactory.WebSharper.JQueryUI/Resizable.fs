@@ -107,79 +107,29 @@ module internal ResizableInternal =
     let internal New (el: Dom.Element, conf: ResizableConfiguration) = ()
 
 [<JavaScriptType>]
-type Resizable[<JavaScript>]() = 
-    
-    [<DefaultValue>]
-    val mutable private element : Element
-
-    [<DefaultValue>]
-    val mutable private configuration : ResizableConfiguration
-
-    [<JavaScript>]
-    member this.Element
-        with get () =
-            this.element
-
+type Resizable[<JavaScript>] internal () = 
+    inherit Widget()   
 
     (****************************************************************
     * Constructors
     *****************************************************************)
     [<JavaScript>]
-    [<Name "New_Resizable">]
     static member New (el : Element, conf: ResizableConfiguration): Resizable = 
         let a = new Resizable()
-        a.configuration <- conf        
         a.element <- 
-            el |>! OnAfterRender (fun _  -> (a :> IWidget).Render())
+            el |>! OnAfterRender (fun el  -> 
+                ResizableInternal.New(el.Dom, conf)                    
+            )
         a
 
     [<JavaScript>]
-    [<Name "New_Resizable_Shortcut">]
     static member New (el : Element) : Resizable = 
         let conf = new ResizableConfiguration()
         Resizable.New(el, conf)
 
     (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = 
-                (this :> IWidget).Render()
-                (this.Element.Dom :> Dom.Node)
-                
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-
-        [<JavaScript>]
-        member this.Render() =
-            (this.Element :> IWidget).Render()
-            ResizableInternal.New (this.Element.Dom, this.configuration)
-
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.Element.Dom
-
-
-    (****************************************************************
     * Methods
     *****************************************************************) 
-
     [<Inline "jQuery($this.element.el).resizable('destroy')">]
     member this.Destroy() = ()
             
@@ -198,7 +148,6 @@ type Resizable[<JavaScript>]() =
     (****************************************************************
     * Events
     *****************************************************************) 
-
     [<Inline "jQuery($this.element.el).resizable({start: function (x,y) {($f(x))(y.start);}})">]
     member private this.onStart(f : JQueryEvent -> Element -> unit) = ()
 

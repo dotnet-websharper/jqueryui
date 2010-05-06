@@ -16,7 +16,7 @@ open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
     
 [<JavaScriptType>]
-type SliderConfiguration[<JavaScript>]() = 
+type SliderConfiguration[<JavaScript>] internal() = 
 
     [<DefaultValue>]
     [<Name "animate">]
@@ -64,71 +64,25 @@ module internal SliderInternal =
     let Init(el: Dom.Element, conf: SliderConfiguration) = ()
     
 [<JavaScriptType>]
-type Slider[<JavaScript>]() = 
-    
-    [<DefaultValue>]
-    val mutable private element : Element
-
-    [<DefaultValue>]
-    val mutable private configuration : SliderConfiguration
-
-    [<JavaScript>]
-    member this.Element
-        with get () =
-            this.element
-            
+type Slider[<JavaScript>] internal () =     
+    inherit Widget()
+                        
     (****************************************************************
     * Constructors
     *****************************************************************) 
     [<JavaScript>]
-    [<Name "New1">]
     static member New (conf: SliderConfiguration): Slider =         
         let s = new Slider()
-        s.configuration <- conf
         s.element <- 
             Div []
-            |>! OnAfterRender (fun _  -> (s :> IWidget).Render())
+            |>! OnAfterRender (fun el  -> 
+                SliderInternal.Init(el.Dom, conf)
+            )
         s
     
     [<JavaScript>]
     static member New (): Slider =
         Slider.New (new SliderConfiguration())
-
-    (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = 
-                (this :> IWidget).Render()
-                (this.Element.Dom :> Dom.Node)
-                
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-
-        [<JavaScript>]
-        member this.Render() =
-            (this.Element :> IWidget).Render()
-            SliderInternal.Init(this.Element.Dom, this.configuration)
-
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.Element.Dom
 
     (****************************************************************
     * Methods
@@ -158,13 +112,6 @@ type Slider[<JavaScript>]() =
             this.getValue()
         and set (v: int) =
             this.setValue v
-
-//    [<JavaScript>]
-//    member this.Values
-//        with get () =
-//            this.getValue()
-//        and set (vs : int []) =
-//            this.setValue vs
 
     (****************************************************************
     * Events

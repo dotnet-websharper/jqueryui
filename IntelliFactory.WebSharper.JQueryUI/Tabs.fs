@@ -122,24 +122,13 @@ module internal TabsInternal =
     let Init(el: Dom.Element, conf: TabsConfiguration) = ()    
 
 [<JavaScriptType>]
-type Tabs[<JavaScript>]() = 
-    
-    [<DefaultValue>]
-    val mutable private element : Element
-
-    [<DefaultValue>]
-    val mutable private configuration : TabsConfiguration
-
-    [<JavaScript>]
-    member this.Element
-        with get () =
-            this.element
+type Tabs[<JavaScript>] internal () = 
+    inherit Widget()
 
     (****************************************************************
     * Constructors
     *****************************************************************)        
     [<JavaScript>]
-    [<Name "New2">]
     static member New (els : List<string * Element>, conf: TabsConfiguration): Tabs =        
         let el = 
             let itemPanels =
@@ -154,47 +143,17 @@ type Tabs[<JavaScript>]() =
             Div <| ul :: (List.map snd itemPanels)
         
         let tabs = new Tabs ()
-        tabs.configuration <- conf
         tabs.element <-
             el 
-            |>! OnAfterRender (fun _  -> (tabs :> IWidget).Render())     
+            |>! OnAfterRender (fun el -> 
+                TabsInternal.Init(el.Dom, conf)
+            )     
         tabs
+    
+    [<JavaScript>]
+    static member New (els : List<string * Element>): Tabs =
+        Tabs.New(els, new TabsConfiguration())
 
-    (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = 
-                (this :> IWidget).Render()
-                (this.Element.Dom :> Dom.Node)
-                
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-
-        [<JavaScript>]
-        member this.Render() =
-            (this.Element :> IWidget).Render()
-            TabsInternal.Init(this.Element.Dom, this.configuration)
-
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.Element.Dom
 
     (****************************************************************
     * Methods
@@ -246,14 +205,14 @@ type Tabs[<JavaScript>]() =
     member this.Add(el: Element, label: string, ix: int) =
         let id = NewId()
         let tab = Div [Id id ] -< [el]
-        this.Element.Append tab
+        this.element.Append tab
         this.add("#" + id, label, ix)
 
     [<JavaScript>]
     member this.Add(el: Element, label: string) =
         let id = NewId()
         let tab = Div [Id id ] -< [el]
-        this.Element.Append tab
+        this.element.Append tab
         this.add("#" + id, label, this.Length)
 
     (****************************************************************

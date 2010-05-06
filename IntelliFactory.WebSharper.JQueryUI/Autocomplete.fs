@@ -36,21 +36,11 @@ type AutocompleteConfiguration[<JavaScript>]() =
 [<JavaScriptType>]
 module internal AutocompleteInternal =
     [<Inline "jQuery($el).autocomplete($conf)">]
-    let New (el: Dom.Element, conf: AutocompleteConfiguration) = ()    
+    let Init (el: Dom.Element, conf: AutocompleteConfiguration) = ()    
 
 [<JavaScriptType>]
-type Autocomplete[<JavaScript>]() = 
-  
-    [<DefaultValue>]
-    val mutable private element : Element
-
-    [<DefaultValue>]
-    val mutable private configuration : AutocompleteConfiguration
-
-    [<JavaScript>]
-    member this.Element
-        with get () =
-            this.element
+type Autocomplete[<JavaScript>] internal () =
+    inherit Widget()
 
     (****************************************************************
     * Constructors
@@ -58,50 +48,12 @@ type Autocomplete[<JavaScript>]() =
     [<JavaScript>]
     static member New (el : Element, conf: AutocompleteConfiguration): Autocomplete = 
         let a = new Autocomplete()
-        a.configuration <- conf
         el 
-        |> OnAfterRender (fun _  -> 
-            (a :> IWidget).Render()
+        |> OnAfterRender (fun el  ->             
+            AutocompleteInternal.Init(el.Dom, conf)
         )
         a.element <- el
         a
-
-    (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = 
-                (this :> IWidget).Render()
-                this.Element.Dom :> Dom.Node 
-                
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-
-        [<JavaScript>]
-        member this.Render() =
-            (this.Element :> IWidget).Render()
-            AutocompleteInternal.New(this.Element.Dom, this.configuration)
-
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.Element.Dom
-
 
     (****************************************************************
     * Methods

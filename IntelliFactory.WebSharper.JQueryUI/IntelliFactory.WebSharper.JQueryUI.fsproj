@@ -50,8 +50,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="../Version.fs" />
-    <Compile Include="Settings.fs" />
+    <Compile Include="../Version.fs">
+      <Link>Version.fs</Link>
+    </Compile>
+    <Compile Include="Utils.fs" />
     <Compile Include="Dependencies.fs" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Accordion.fs" />

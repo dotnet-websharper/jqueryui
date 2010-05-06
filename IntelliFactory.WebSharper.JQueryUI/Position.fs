@@ -22,7 +22,7 @@ open Utils
 
 [<JavaScriptType>]
 type Target = 
-    | Element of Element
+    | Element of Dom.Element
     | Event of JQueryEvent
     | Id of string
     [<JavaScript>]
@@ -100,17 +100,8 @@ module internal PositionInternal =
     let internal New (el: Dom.Element, conf: PositionConfiguration) = ()
 
 [<JavaScriptType>]
-type Position [<JavaScript>]() =        
-    [<DefaultValue>]
-    val mutable private element : Element
-
-    [<DefaultValue>]
-    val mutable private configuration : PositionConfiguration
-
-    [<JavaScript>]
-    member this.Element
-        with get () =
-            this.element
+type Position [<JavaScript>] internal () = 
+    inherit Widget()
 
     (****************************************************************
     * Constructors
@@ -118,11 +109,10 @@ type Position [<JavaScript>]() =
     [<JavaScript>]
     static member New (el : Element, conf: PositionConfiguration): Position = 
         let a = new Position()
-        a.configuration <- conf
         a.element <- 
             el
-            |>! OnAfterRender (fun _  -> 
-                (a :> IWidget).Render()
+            |>! OnAfterRender (fun el  ->                 
+                PositionInternal.New(el.Dom, conf)
             )
         a
 
@@ -131,38 +121,3 @@ type Position [<JavaScript>]() =
         let conf = new PositionConfiguration()
         Position.New(el, conf)
 
-    (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]                                       
-        member this.Body
-            with get () =                 
-                (this :> IWidget).Render()
-                (this.Element.Dom :> Dom.Node)
-                
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.Element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-
-        [<JavaScript>]
-        member this.Render() =
-            (this.Element :> IWidget).Render()
-            PositionInternal.New (this.Element.Dom, this.configuration)
-
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.Element.Dom
