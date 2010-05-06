@@ -58,8 +58,11 @@ module DemoInternal =
                 Label [Text "Selected Value: "]
                 selVal
             ]
-            slider.Element
-        ]
+            ]
+            -< 
+            [
+                slider
+            ]
 
     [<JavaScript>]
     let Date () =
@@ -83,7 +86,7 @@ module DemoInternal =
             ]
         let tabsConf = new TabsConfiguration()
         let tabs = Tabs.New(tabElems, new TabsConfiguration())
-        Div [Style "width:500px"] -< [tabs.Element]
+        Div [Style "width:500px"] -< [tabs]
 
 [<JavaScriptType>]
 type Demo() = 
