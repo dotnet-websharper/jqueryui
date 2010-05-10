@@ -37,6 +37,8 @@ type Progressbar[<JavaScript>]internal () =
     (****************************************************************
     * Constructors
     *****************************************************************)        
+    /// Creates a new progressbar given an element and a 
+    /// configuration object.
     [<JavaScript>]
     static member New (el: Element, conf: ProgressbarConfiguration) =
         let pb = new Progressbar()
@@ -47,31 +49,53 @@ type Progressbar[<JavaScript>]internal () =
         )
         pb
 
+    /// Creates a new progressbar given an element using
+    /// the default configuration.
     [<JavaScript>]
     static member New (el: Element) =
         Progressbar.New(el, new ProgressbarConfiguration())
 
+
+    /// Creates a new progressbar based on an
+    /// empty Div element and the given a configuration object.
+    [<JavaScript>]
+    static member New ( conf: ProgressbarConfiguration) =
+        Progressbar.New(Div [], conf)
+
+    /// Creates a new progressbar based on an empty Div element
+    /// and the default configuration.
+    [<JavaScript>]
+    static member New () =
+        Progressbar.New(Div [], new ProgressbarConfiguration())
+
     (****************************************************************
     * Methods
     *****************************************************************) 
+    /// Removes the progressbar functionality completely.
     [<Inline "jQuery($this.element.el).progressbar('destroy')">]
     member this.Destroy() = ()
 
+    /// Disables the progressbar functionality.
     [<Inline "jQuery($this.element.el).progressbar('disable')">]
     member this.Disable () = ()
 
+    /// Enables the progressbar functionality.
     [<Inline "jQuery($this.element.el).progressbar('enable')">]
     member this.Enable () = ()
 
+    /// Sets a progressbar option.
     [<Inline "jQuery($this.element.el).progressbar('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
+    /// Sets the value of the progressbar.
     [<Inline "jQuery($this.element.el).progressbar('value', $v)">]
     member private this.setValue (v: int) = ()
 
+    /// Gets the value of the progressbar.
     [<Inline "jQuery($this.element.el).progressbar('value')">]
     member private this.getValue () = 0
 
+    /// Gets or sets the value of the progressbar.
     [<JavaScript>]
     member this.Value
         with get () =
@@ -85,7 +109,7 @@ type Progressbar[<JavaScript>]internal () =
     [<Inline "jQuery($this.element.el).accordion({change: function (x,y) {$f(x);}})">]
     member private this.onChange(f : JQueryEvent -> unit) = ()
 
-    // Adding an event and delayin it if the widget is not yet rendered.
+    // Event triggered when the value of the progressbar changes.
     [<JavaScript>]
     member this.OnChange(f : JQueryEvent -> unit) =
         this |> OnAfterRender(fun _ ->

@@ -263,6 +263,7 @@ type Datepicker[<JavaScript>] internal  () =
     * Constructors
     *****************************************************************)
     [<JavaScript>]
+    /// Creates a new datepicker given an element and a configuration object.
     static member New (el: Element, conf: DatepickerConfiguration): Datepicker =
         let dp = new Datepicker()        
         dp.element <- el
@@ -272,10 +273,20 @@ type Datepicker[<JavaScript>] internal  () =
         )        
         dp
 
+    /// Creates a new datepicker given an element, using the default 
+    /// configuration.
     [<JavaScript>]
     static member New (el:Element): Datepicker = 
         Datepicker.New(el, new DatepickerConfiguration())
-
+    
+    /// Creates a new datepicker using an empty Div element and
+    /// the given configuration object.
+    [<JavaScript>]
+    static member New (conf: DatepickerConfiguration): Datepicker = 
+        Datepicker.New(Div [], conf)        
+    
+    /// Creates a new datepicker using an empty Div element and
+    /// the default configuration.
     [<JavaScript>]
     static member New (): Datepicker = 
         Datepicker.New(Div [], new DatepickerConfiguration())
@@ -284,30 +295,39 @@ type Datepicker[<JavaScript>] internal  () =
     (****************************************************************
     * Methods
     *****************************************************************)
+    /// Destroys the datepicker functionality.
     [<Inline "jQuery($this.element.el).datepicker('destroy')">]
     member this.Destroy() = ()
 
+    /// Disables the datepicker functionality.
     [<Inline "jQuery($this.element.el).datepicker('disable')">]
     member this.Disable () = ()
 
+    /// Enables the datepicker functionality.
     [<Inline "jQuery($this.element.el).datepicker('enable')">]
     member this.Enable () = ()
 
+    /// Set a datepicker option.
     [<Inline "jQuery($this.element.el).datepicker('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
+    /// Returns true or false wether the datepicker is disabled.
     [<Inline "jQuery($this.element.el).datepicker('isDisabled')">]
     member this.IsDisabled () : bool = Unchecked.defaultof<_>()
     
+    /// Hides the datepicker.
     [<Inline "jQuery($this.element.el).datepicker('hide')">]
     member this.Hide () = ()
 
+    /// Shows the datepicker.
     [<Inline "jQuery($this.element.el).datepicker('show')">]
     member this.Show () = ()
 
+    /// Get the currently selected date of the datepicker.
     [<Inline "jQuery($this.element.el).datepicker('getDate')">]
     member this.GetDate () : JDate = Unchecked.defaultof<_>()
 
+    /// Sets the selected date.
     [<Inline "jQuery($this.element.el).datepicker('setDate', $date)">]
     member this.SetDate (date:string) = ()
 
@@ -325,11 +345,9 @@ type Datepicker[<JavaScript>] internal  () =
     // beforeShowDay function(date)
     // onChangeMonthYear function(year, month, inst)
     // onClose function(dateText, inst)
-    // onSelect function(dateText, inst)
-
     // Adding an event and delayin it if the widget is not yet rendered.
 
-    // Adding an event and delayin it if the widget is not yet rendered.
+    /// Triggered when a date is selected.
     [<JavaScript>]
     member this.OnSelect(f : JDate -> unit) : unit =
         this 
@@ -337,7 +355,7 @@ type Datepicker[<JavaScript>] internal  () =
             this.onSelect <| fun s -> f (JDate(s))
         )
 
-    // Adding an event and delayin it if the widget is not yet rendered.
+    /// Triggered when the datepicker is closed.
     [<JavaScript>]
     member this.OnClose(f : unit -> unit) : unit  =
         this

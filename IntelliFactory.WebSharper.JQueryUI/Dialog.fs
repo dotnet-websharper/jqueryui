@@ -124,6 +124,8 @@ module internal DialogInternal =
 type Dialog[<JavaScript>]internal () = 
     inherit Widget()  
 
+    /// Create a new dialog using the given element
+    /// and configuration object.
     [<JavaScript>]
     static member New (el: Element, conf: DialogConfiguration): Dialog = 
         let d = new Dialog()
@@ -134,6 +136,8 @@ type Dialog[<JavaScript>]internal () =
         d.element <- el
         d
 
+    /// Creates a new dialog given an element using
+    /// default configuration settings.            
     [<JavaScript>]
     static member New (el: Element): Dialog = 
         Dialog.New(el, DialogConfiguration())
@@ -141,27 +145,35 @@ type Dialog[<JavaScript>]internal () =
     (****************************************************************
     * Methods
     *****************************************************************)        
+    /// Remove the dialog functionality.
     [<Inline "jQuery($this.element.el).dialog('destroy')">]
     member this.Destroy() = ()
 
+    /// Disables the dialog.
     [<Inline "jQuery($this.element.el).dialog('disable')">]
     member this.Disable () = ()
 
+    /// Enables the dialog.
     [<Inline "jQuery($this.element.el).dialog('enable')">]
     member this.Enable () = ()
 
+    /// Sets dialog option.
     [<Inline "jQuery($this.element.el).dialog('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
+    /// Close dialog.
     [<Inline "jQuery($this.element.el).dialog('close')">]
     member this.Close () = ()
 
+    /// Returns whether the dialog is open or not.
     [<Inline "jQuery($this.element.el).dialog('isOpen')">]
     member this.IsOpen () = false
 
+    /// Move the dialog to the top of the dialogs stack.
     [<Inline "jQuery($this.element.el).dialog('moveToTop')">]
     member this.MoveToTop () = ()
 
+    /// Open the dialog.
     [<Inline "jQuery($this.element.el).dialog('open')">]
     member this.Open () = ()
             
@@ -199,42 +211,54 @@ type Dialog[<JavaScript>]internal () =
     member private this.onClose(f : JQueryEvent -> unit) = ()
  
     
+    /// Triggered before the dialog is closed.
     [<JavaScript>]
     member this.OnBeforeClose(f : JQueryEvent -> unit) = 
         this |> OnAfterRender (fun _ -> this.onBeforeClose f)
 
+    /// Triggered before the dialog is opened.
     [<JavaScript>]
     member this.OnOpen (f : JQueryEvent -> unit) = 
         this |> OnAfterRender (fun _  -> this.onOpen f)
 
+    /// Triggered before the dialog gains focus.
     [<JavaScript>]
     member this.OnFocus (f : JQueryEvent -> unit) = 
         this |> OnAfterRender (fun _  -> this.onFocus f)
 
+    /// Triggered at the beginning of the dialog being dragged
     [<JavaScript>]
     member this.OnDragStart (f : JQueryEvent -> unit) = 
         this |> OnAfterRender (fun _ -> this.onDragStart f)
 
+    
+    /// Triggered when the dialog is dragged.
     [<JavaScript>]
     member this.OnDrag (f : JQueryEvent -> unit) = 
         this |> OnAfterRender (fun _ -> this.onDrag f)
 
+    
+    /// Triggered after the dialog has been dragged.
     [<JavaScript>]
     member this.OnDragStop (f : JQueryEvent -> unit) = 
         this |> OnAfterRender (fun _ -> this.onDragStop f)
 
+    /// Triggered before the dialog is being resized.
     [<JavaScript>]
     member this.OnResizeStart (f : JQueryEvent -> unit) = 
         this |> OnAfterRender (fun _ -> this.onResizeStart f)
-
+    
+    /// Triggered when the dialog is being resized.
     [<JavaScript>]
     member this.OnResize (f : JQueryEvent -> unit) = 
         this |> OnAfterRender (fun _ -> this.onResize f)
 
+    /// Triggered after the dialog has been resized.
     [<JavaScript>]
     member this.OnResizeStop (f : JQueryEvent -> unit) = 
         this |> OnAfterRender (fun _ -> this.onResizeStop f)
 
+    /// Triggered when the dialog is closed.
     [<JavaScript>]
     member this.OnClose (f : JQueryEvent -> unit) = 
         this |> OnAfterRender (fun _ -> this.onClose f)

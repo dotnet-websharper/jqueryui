@@ -58,6 +58,7 @@ type Button [<JavaScript>]()=
     val mutable private isEnabled: bool
 
     [<JavaScript>]
+    /// Returns wether button is enabled or not.
     member this.IsEnabled
         with get () =
             this.isEnabled
@@ -65,6 +66,7 @@ type Button [<JavaScript>]()=
     (****************************************************************
     * Constructors
     *****************************************************************)     
+    /// Creates a new button given an element and a configuration object.
     [<JavaScript>]
     static member New (el : Element, conf: ButtonConfiguration): Button = 
         el
@@ -83,10 +85,13 @@ type Button [<JavaScript>]()=
         b.element <- el
         b
 
+    /// Creates a new button given a configuration object.
     [<JavaScript>]
     static member New (conf: ButtonConfiguration): Button = 
         Button.New(Tag.Button [], conf)
 
+    /// Creates a new button with the given label and
+    /// using the default configuration object.
     [<JavaScript>]
     static member New (label: string): Button = 
         let conf = new ButtonConfiguration()
@@ -96,12 +101,15 @@ type Button [<JavaScript>]()=
     (****************************************************************
     * Methods
     *****************************************************************)
+    
+    /// Removes the button functionality completely. 
     [<Inline "jQuery($this.element.el).button('destroy')">]
     member this.Destroy() = ()
 
     [<Inline "jQuery($this.element.el).button('disable')">]
     member private this.disable () = ()
 
+    /// Disables the button.
     [<JavaScript>]
     member this.Disable() =
         this.isEnabled <- false
@@ -110,20 +118,27 @@ type Button [<JavaScript>]()=
     [<Inline "jQuery($this.element.el).button('enable')">]
     member private this.enable () = ()
 
+    /// Enables the button.
     [<JavaScript>]
     member this.Enable() =
         this.isEnabled <- true
         this.enable()
 
+    /// Set any button option.
     [<Inline "jQuery($this.element.el).button('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
+    /// Refreshes the visual state of the button. 
+    /// Useful for updating button state after the native element's checked or disabled state 
+    /// is changed programatically.
     [<Inline "jQuery($this.element.el).button('refresh')">]
     member this.Refresh (index: int) = ()
 
     (****************************************************************
     * Events
     *****************************************************************)
+    
+    /// Triggered when the button is clicked.
     [<JavaScript>]
     member this.OnClick (f : JQueryEvent -> unit) : unit =
         this.element

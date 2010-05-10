@@ -70,6 +70,7 @@ type Slider[<JavaScript>] internal () =
     (****************************************************************
     * Constructors
     *****************************************************************) 
+    /// Creates a new slider given a configuration object.
     [<JavaScript>]
     static member New (conf: SliderConfiguration): Slider =         
         let s = new Slider()
@@ -80,6 +81,8 @@ type Slider[<JavaScript>] internal () =
             )
         s
     
+    /// Creates a new slider using the default configuration
+    /// settings.
     [<JavaScript>]
     static member New (): Slider =
         Slider.New (new SliderConfiguration())
@@ -87,15 +90,19 @@ type Slider[<JavaScript>] internal () =
     (****************************************************************
     * Methods
     *****************************************************************) 
+    /// Removes the slider functionality completly.
     [<Inline "jQuery($this.element.el).slider('destroy')">]
     member this.Destroy() = ()
 
+    /// Disables the slider functionality.
     [<Inline "jQuery($this.element.el).slider('disable')">]
     member this.Disable () = ()
 
+    /// Enables the slider functionality.
     [<Inline "jQuery($this.element.el).slider('enable')">]
     member this.Enable () = ()
 
+    /// Sets a slider option.
     [<Inline "jQuery($this.element.el).slider('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
@@ -105,7 +112,7 @@ type Slider[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.el).slider('value')">]
     member private this.getValue () = 0
 
-
+    /// Gets or sets the slider value.
     [<JavaScript>]
     member this.Value
         with get () =
@@ -116,34 +123,39 @@ type Slider[<JavaScript>] internal () =
     (****************************************************************
     * Events
     *****************************************************************)
+    
     [<Inline "jQuery($this.element.el).slider({start: function (x,y) {$f(x);}})">]
     member private this.onStart(f : JQueryEvent -> unit) = ()
 
+    
     [<Inline "jQuery($this.element.el).slider({change: function (x,y) {$f(x);}})">]
     member private this.onChange(f : JQueryEvent -> unit) = ()
 
+    
     [<Inline "jQuery($this.element.el).slider({slide: function (x,y) {$f(x);}})">]
     member private this.onSlide(f : JQueryEvent -> unit) = ()
 
+    
     [<Inline "jQuery($this.element.el).slider({stop: function (x,y) {$f(x);}})">]
     member private this.onStop(f : JQueryEvent -> unit) = ()
 
-    [<JavaScript>]
-    member private this.OnAfter (f : unit -> unit) : unit =
-        this |> OnAfterRender(fun _ -> f ())
 
+    /// Event triggered when the user starts sliding.
     [<JavaScript>]
     member this.OnStart(f : JQueryEvent -> unit) =
         this |> OnAfterRender (fun _ -> this.onStart f)
 
+    /// Event triggered when the slider changes.
     [<JavaScript>]
     member this.OnChange(f : JQueryEvent -> unit) =
         this |> OnAfterRender (fun _ -> this.onChange f)
 
+    /// Event triggered on every mouse move during slide.
     [<JavaScript>]
     member this.OnSlide(f : JQueryEvent -> unit) =
         this |> OnAfterRender (fun _ -> this.onSlide f)
 
+    /// Event triggered when the user stops sliding.
     [<JavaScript>]
     member this.OnStop(f : JQueryEvent -> unit) =
         this |> OnAfterRender (fun _ -> this.onStop f)

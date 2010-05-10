@@ -187,7 +187,7 @@ module Tests =
 
         let b = Button.New("inc")
         b.OnClick (fun ev ->          
-            t.Activate 2
+            t.Select 2
             t.Add( Div [H1 [Text "New tab"]], "tab" + (string t.Length))
         )        
         Div [t] -< [b]

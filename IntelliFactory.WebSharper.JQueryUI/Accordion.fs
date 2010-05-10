@@ -91,6 +91,8 @@ type Accordion[<JavaScript>] internal () =
     (****************************************************************
     * Constructors
     *****************************************************************)        
+    /// Create an accordion with title and content panels according to the
+    /// given list of name and value pairs.    
     [<JavaScript>]
     static member New (els : List<string * Element>, conf: AccordionConfiguration): Accordion = 
         let a = new Accordion()
@@ -111,6 +113,7 @@ type Accordion[<JavaScript>] internal () =
         a.element <- panel
         a            
     
+    /// Create an accordion with default configuration settings.
     [<JavaScript>]
     static member New (els : List<string * Element>): Accordion =
         Accordion.New(els, new AccordionConfiguration())        
@@ -118,18 +121,25 @@ type Accordion[<JavaScript>] internal () =
     (****************************************************************
     * Methods
     *****************************************************************) 
+    /// Remove the accordion functionality completely. 
+    /// This will return the element back to its pre-init state.
     [<Inline "jQuery($this.element.el).accordion('destroy')">]
     member this.Destroy() = ()
 
+    /// Disable the accordion.
     [<Inline "jQuery($this.element.el).accordion('disable')">]
     member this.Disable () = ()
 
+    /// Enables the accordion.
     [<Inline "jQuery($this.element.el).accordion('enable')">]
     member this.Enable () = ()
 
+    /// Gets or sets any accordion option.
     [<Inline "jQuery($this.element.el).accordion('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
+    /// Activate a content part of the accordion with the 
+    /// corresponding zero-based index.    
     [<Inline "jQuery($this.element.el).accordion('activate', $index)">]
     member this.Activate (index: int) = ()
 
@@ -142,7 +152,10 @@ type Accordion[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.el).accordion({change: function (x,y) {($f(x))(y.changestart);}})">]
     member private this.onChangestart(f : JQueryEvent -> Element -> unit) = ()
 
-    // Adding an event and delaying it if the widget is not yet rendered.
+    /// Event triggered every time the accordion changes. 
+    /// If the accordion is animated, the event will be triggered 
+    /// upon completion of the animation; otherwise, 
+    /// it is triggered immediately.    
     [<JavaScript>]
     member this.OnChange f =      
         this
@@ -150,8 +163,10 @@ type Accordion[<JavaScript>] internal () =
             this.onChange f
         )
 
+    
+    /// Event triggered every time the accordion starts to change. 
     [<JavaScript>]
-    member this.OnChangestart f =
+    member this.OnChangeStart f =
         this
         |> OnAfterRender (fun _ ->
             this.onChangestart f

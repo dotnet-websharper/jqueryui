@@ -156,6 +156,8 @@ type Sortable [<JavaScript>] internal () =
     (****************************************************************
     * Constructors
     *****************************************************************)                 
+    /// Creates a new sortable object given an element and a
+    /// configuration object.
     [<JavaScript>]
     static member New (el: Element, conf: SortableConfiguration) : Sortable = 
         let s = new Sortable()
@@ -165,7 +167,9 @@ type Sortable [<JavaScript>] internal () =
                 SortableInternal.Init(el.Dom, conf)
             )
         s
-
+    
+    /// Creates a new sortable given an element using
+    /// the default configuration settings.
     [<JavaScript>]
     static member New (el: Element) : Sortable =
         let conf = new SortableConfiguration()
@@ -174,30 +178,42 @@ type Sortable [<JavaScript>] internal () =
     (****************************************************************
     * Methods
     *****************************************************************) 
+    /// Removes the sortable functionality.
     [<Inline "$this.sortable('destroy')">]
     member this.Destroy() = ()
             
+    /// Disables the sortable functionality.
     [<Inline "$this.sortable('disable')">]
     member this.Disable() = ()
 
+    /// Enables the sortable functionality.
     [<Inline "$this.sortable('enable')">]
     member this.Enable() = ()
 
+    /// Sets sortable option.
     [<Inline "$this.sortable('option', $optionName, $value)">]
     member this.Option(optionName: string, value: obj) : unit = ()
 
+    /// Serializes the sortable's item id's into a form/ajax submittable string.
     [<Inline "$this.sortable('serialize', $options)">]
     member this.Serialize(options: obj) : unit = ()
 
+    /// Serializes the sortable's item id's into an array of string.
     [<Inline "$this.sortable('toArray')">]
     member this.ToArray() = ()
 
+    /// Refreshes the sortable items. Custom trigger the 
+    /// reloading of all sortable items, causing new items to be recognized.
     [<Inline "$this.sortable('refresh')">]
     member this.Refresh() = ()
 
+    /// Refresh the cached positions of the sortables' items.
     [<Inline "$this.sortable('refreshPositions')">]
     member this.RefreshPositions() = ()
 
+    /// Cancels a change in the current sortable and reverts it back to 
+    /// how it was before the current sort started. Useful in the stop 
+    /// and receive callback functions. 
     [<Inline "$this.sortable('cancel')">]
     member this.Cancel() = ()
 
@@ -240,46 +256,57 @@ type Sortable [<JavaScript>] internal () =
     [<Inline "jQuery($this.element.el).sortable({deactivate: function (x,y) {($f(x))(y.deactivate);}})">]
     member private this.onDeactivate(f : JQueryEvent -> Element -> unit) = ()
 
+    /// Event triggered triggered when sorting starts.
     [<JavaScript>]
     member this.OnStart(f : JQueryEvent -> Element -> unit) =
         this |> OnAfterRender(fun _ ->  this.onStart f)
 
+    /// Event triggered during sorting.
     [<JavaScript>]
     member this.OnSort f = 
         this |> OnAfterRender(fun _ -> this.onSort f)
 
+    /// Event triggered during sorting, but only when the DOM position has changed.
     [<JavaScript>]
     member this.OnChange f = 
         this |> OnAfterRender(fun _ -> this.onChange f)
 
+    /// Event triggered when sorting stops, but when the placeholder/helper is still available.
     [<JavaScript>]
     member this.OnBeforeStop f = 
         this |> OnAfterRender(fun _ -> this.onBeforeStop f)
 
+    /// Event triggered when sorting has stopped.
     [<JavaScript>]
     member this.OnStop f = 
         this |> OnAfterRender(fun _ -> this.onStop f)
 
+    /// Event triggered when the user stopped sorting and the DOM position has changed.
     [<JavaScript>]
     member this.OnUpdate f = 
         this |> OnAfterRender(fun _ -> this.onUpdate f)
 
+    /// Event triggered when a connected sortable list has received an item from another list.
     [<JavaScript>]
     member this.OnReceive f = 
         this |> OnAfterRender(fun _ -> this.onReceive f)
     
+    /// Event triggered when a sortable item has been dragged out from the list and into another.
     [<JavaScript>]
     member this.OnRemove f = 
         this |> OnAfterRender(fun _ -> this.onRemove f)
 
+    /// Event triggered when a sortable item is moved into a connected list.
     [<JavaScript>]
     member this.OnOver f = 
         this |> OnAfterRender(fun _ -> this.onOut f)
 
+    /// Event triggered when using connected lists, every connected list on drag start receives it.
     [<JavaScript>]
     member this.OnActivate f = 
         this |> OnAfterRender(fun _ -> this.onActivate f)
 
+    // Event triggered when sorting was stopped, is propagated to all possible connected lists.
     [<JavaScript>]
     member this.OnDeactivate f = 
         this |> OnAfterRender(fun _ -> this.onDeactivate f)

@@ -113,6 +113,8 @@ type Resizable[<JavaScript>] internal () =
     (****************************************************************
     * Constructors
     *****************************************************************)
+    /// Creates a new resizable object given an element and a
+    /// configuration object.
     [<JavaScript>]
     static member New (el : Element, conf: ResizableConfiguration): Resizable = 
         let a = new Resizable()
@@ -122,6 +124,8 @@ type Resizable[<JavaScript>] internal () =
             )
         a
 
+    /// Creates a new resizable object using the default
+    /// configuration object.
     [<JavaScript>]
     static member New (el : Element) : Resizable = 
         let conf = new ResizableConfiguration()
@@ -130,18 +134,19 @@ type Resizable[<JavaScript>] internal () =
     (****************************************************************
     * Methods
     *****************************************************************) 
+    /// Removes resizable functionality.
     [<Inline "jQuery($this.element.el).resizable('destroy')">]
     member this.Destroy() = ()
             
+    /// Disables resizable functionality.
     [<Inline "jQuery($this.element.el).resizable('disable')">]
     member this.Disable() = ()
 
+    /// Enables resizable functionality.
     [<Inline "jQuery($this.element.el).resizable('enable')">]
     member this.Enable() = ()
 
-    [<Inline "jQuery($this.element.el).resizable('widget')">]
-    member this.Widget() = ()
-    
+    /// Removes resizable functionality.
     [<Inline "jQuery($this.element.el).resizable('option', $name, $value)">]
     member this.Option(optionName: string, value: obj) : unit = ()
 
@@ -157,14 +162,17 @@ type Resizable[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.el).resizable({stop: function (x,y) {($f(x))(y.stop);}})">]
     member private this.onStop(f : JQueryEvent -> Element -> unit) = ()
 
+    /// Event triggered at the start of a resize operation.
     [<JavaScript>]
     member this.OnStart f =
         this |> OnAfterRender(fun _ ->  this.onStart f)
 
+    /// Event triggered during resizing.
     [<JavaScript>]
     member this.OnResize f =
         this |> OnAfterRender(fun _ -> this.onResize f)
 
+    /// Event triggered at the end of a resize operation.
     [<JavaScript>]
     member this.OnStop f =
         this |> OnAfterRender(fun _ -> this.onStop f)

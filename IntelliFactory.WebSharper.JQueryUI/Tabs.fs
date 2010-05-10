@@ -128,6 +128,8 @@ type Tabs[<JavaScript>] internal () =
     (****************************************************************
     * Constructors
     *****************************************************************)        
+    /// Creates a new tabs object with panels and titles fromt the given
+    /// list of name and element pairs and configuration settings object.
     [<JavaScript>]
     static member New (els : List<string * Element>, conf: TabsConfiguration): Tabs =        
         let el = 
@@ -150,6 +152,7 @@ type Tabs[<JavaScript>] internal () =
             )     
         tabs
     
+    /// Creates a new tabs object using the default configuration.
     [<JavaScript>]
     static member New (els : List<string * Element>): Tabs =
         Tabs.New(els, new TabsConfiguration())
@@ -158,49 +161,59 @@ type Tabs[<JavaScript>] internal () =
     (****************************************************************
     * Methods
     *****************************************************************) 
+    /// Removes the tabs functionality completely.
     [<Inline "jQuery($this.element.el).tabs('destroy')">]
     member this.Destroy() = ()
 
+    /// Disables the tabs functionality.
     [<Inline "jQuery($this.element.el).tabs('disable')">]
     member this.Disable () = ()
 
+    /// Enables the tabs functionality.
     [<Inline "jQuery($this.element.el).tabs('enable')">]
     member this.Enable () = ()
 
+    /// Sets a tabs option.
     [<Inline "jQuery($this.element.el).tabs('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
-
-    [<Inline "jQuery($this.element.el).tabs('activate', $index)">]
-    member this.Activate (index: int) = ()
-
+        
     [<Inline "jQuery($this.element.el).tabs('add', $url, $label, $index)">]
     member private this.add (url:string, label:string, index: int) = ()
 
     [<Inline "jQuery($this.element.el).tabs('length')">]
     member private this.getLength () = 0
 
+    /// Removes the tab with the given index.
     [<Inline "jQuery($this.element.el).tabs('remove', $index)">]
     member this.Remove (index: int) = ()    
 
+    /// Selects the tab with the given index.
     [<Inline "jQuery($this.element.el).tabs('select', $index)">]
     member this.Select (index: int) = ()
 
+    /// Reloads the content of an Ajax tab.
     [<Inline "jQuery($this.element.el).tabs('load', $index)">]
     member this.Load (index: int) = ()
 
+    /// Changes the url from which an Ajax (remote) tab will be loaded.
     [<Inline "jQuery($this.element.el).tabs('url', $index)">]
     member this.Url (index: int) = ()
-
-    [<Inline "jQuery($this.element.el).tabs('abort')">]
-    member this.Abort () = ()
     
+    /// Sets up an automatic rotation through tabs of a tab pane. 
+    /// The second argument is an amount of time in milliseconds until the next 
+    /// tab in the cycle gets activated. Use 0 or null to stop the rotation. 
+    /// The third controls whether or not to continue the rotation after a tab has been 
+    /// selected by a user.
     [<Inline "jQuery($this.element.el).tabs('rotate', $secs, $loop)">]
     member this.Rotate (secs: int, loop: bool) = ()
     
+    /// Retrieve the number of tabs of the first matched tab pane.
     [<JavaScript>]
     member this.Length
         with get () = this.getLength()
 
+    /// Add a new tab with the given element and label
+    /// inserted at the specified index.
     [<JavaScript>]
     member this.Add(el: Element, label: string, ix: int) =
         let id = NewId()
@@ -208,6 +221,7 @@ type Tabs[<JavaScript>] internal () =
         this.element.Append tab
         this.add("#" + id, label, ix)
 
+    /// Add a new tab with the given element and label.
     [<JavaScript>]
     member this.Add(el: Element, label: string) =
         let id = NewId()
@@ -240,33 +254,40 @@ type Tabs[<JavaScript>] internal () =
     member private this.onDisable(f : JQueryEvent -> unit) = ()
 
 
+    /// Event triggered when a tab is selcted.
     [<JavaScript>]
     member this.OnSelect f = 
         this |> OnAfterRender(fun _ -> 
             this.onSelect f
         )
 
+    /// Event triggered when a tab is loaded.
     [<JavaScript>]
     member this.OnLoad f = 
         this |> OnAfterRender(fun _ -> 
             this.onLoad f
         )
+    
+    /// Event triggered when a tab is showed.
     [<JavaScript>]
     member this.OnShow f = 
         this |> OnAfterRender(fun _  -> 
             this.onShow f
         )
 
+    /// Event triggered when a tab is added.
     [<JavaScript>]
     member this.OnAdd f = 
         this |> OnAfterRender(fun _  -> 
             this.onAdd f
         )
+    /// Event triggered when a tab is enabled.
     [<JavaScript>]
     member this.OnEnable f = 
         this |> OnAfterRender(fun _  -> 
             this.onEnable f
         )
+    /// Event triggered when a tab is disabled.
     [<JavaScript>]
     member this.OnDisable f = 
         this |> OnAfterRender(fun _  -> 

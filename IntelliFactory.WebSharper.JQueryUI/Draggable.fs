@@ -192,7 +192,8 @@ type Draggable[<JavaScript>] internal () =
     (****************************************************************
     * Constructors
     *****************************************************************) 
-
+    /// Creates a new draggabel object given an element and a
+    /// configuration settings object.
     [<JavaScript>]
     static member New (el : Element, conf: DraggableConfiguration): Draggable = 
         let a = new Draggable()
@@ -203,6 +204,8 @@ type Draggable[<JavaScript>] internal () =
             )
         a
 
+    /// Creates a new draggable using the default
+    /// configuration settings.
     [<JavaScript>]
     static member New (el : Element) : Draggable = 
         let conf = new DraggableConfiguration()
@@ -211,19 +214,19 @@ type Draggable[<JavaScript>] internal () =
     (****************************************************************
     * Methods
     *****************************************************************) 
-
+    /// Removes draggable functionality completely.    
     [<Inline "jQuery($this.element.el).draggable('destroy')">]
     member this.Destroy() = ()
             
+    /// Disables the draggable functionality.
     [<Inline "jQuery($this.element.el).draggable('disable')">]
     member this.Disable() = ()
 
+    /// Enables the draggable functionality.
     [<Inline "jQuery($this.element.el).draggable('enable')">]
     member this.Enable() = ()
-
-    [<Inline "jQuery($this.element.el).draggable('widget')">]
-    member this.Widget() = ()
-
+   
+    /// Sets a draggable option.
     [<Inline "jQuery($this.element.el).draggable('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
@@ -241,15 +244,17 @@ type Draggable[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.el).draggable({drag: function (x,y) {($f(x))(y.drag);}})">]
     member private this.onDrag(f : JQueryEvent -> Element -> unit) = ()
 
-
+    /// Event triggered when dragging starts.
     [<JavaScript>]
     member this.OnStart f =
         this |> OnAfterRender(fun _ ->  this.onStart f)
-
+    
+    /// Event triggered when dragging stops.
     [<JavaScript>]
     member this.OnStop f =
         this |> OnAfterRender(fun _ -> this.onStop f)
 
+    /// Event triggered during dragging.
     [<JavaScript>]
     member this.OnDrag f =
         this |> OnAfterRender(fun _ -> this.onDrag f)

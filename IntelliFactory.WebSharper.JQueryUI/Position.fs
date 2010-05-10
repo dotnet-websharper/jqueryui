@@ -106,6 +106,8 @@ type Position [<JavaScript>] internal () =
     (****************************************************************
     * Constructors
     *****************************************************************)
+    /// Creates a new position object given an element and a 
+    /// configuration object.
     [<JavaScript>]
     static member New (el : Element, conf: PositionConfiguration): Position = 
         let a = new Position()
@@ -116,8 +118,9 @@ type Position [<JavaScript>] internal () =
             )
         a
 
+    /// Creates a new position object given an element
+    /// using the default configuration.
     [<JavaScript>]
     static member New (el : Element) : Position = 
         let conf = new PositionConfiguration()
         Position.New(el, conf)
-

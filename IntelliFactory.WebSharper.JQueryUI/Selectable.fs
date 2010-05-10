@@ -75,6 +75,8 @@ type Selectable[<JavaScript>] internal () =
     (****************************************************************
     * Constructors
     *****************************************************************) 
+    /// Creates a new selectable object given an element and 
+    /// a configuration object.
     [<JavaScript>]
     static member New (el : Element, conf: SelectableConfiguration): Selectable = 
         let a = new Selectable()        
@@ -84,6 +86,8 @@ type Selectable[<JavaScript>] internal () =
             )
         a
 
+    /// Creates a new selectable object using the default
+    /// configuration.
     [<JavaScript>]
     static member New (el : Element) : Selectable = 
         let conf = new SelectableConfiguration()
@@ -92,22 +96,25 @@ type Selectable[<JavaScript>] internal () =
     (****************************************************************
     * Methods
     *****************************************************************) 
-
+    /// Removes the selectable functionality.
     [<Inline "jQuery($this.element.el).selectable('destroy')">]
     member this.Destroy() = ()
-   
+    
+    /// Disables the selectable functionality.
     [<Inline "jQuery($this.element.el).selectable('disable')">]
     member this.Disable() = ()
 
+    /// Enables the selectable functionality.
     [<Inline "jQuery($this.element.el).selectable('enable')">]
     member this.Enable() = ()
 
+    /// Refreshes the position and size of each selectee element. 
+    /// This method can be used to manually recalculate the position 
+    // and size of each selectee element.
     [<Inline "jQuery($this.element.el).selectable('refresh')">]
     member this.Refresh() = ()
 
-    [<Inline "jQuery($this.element.el).selectable('widget')">]
-    member this.Widget() = ()
-
+    /// Sets selectable option.
     [<Inline "jQuery($this.element.el).selectable('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
@@ -133,26 +140,36 @@ type Selectable[<JavaScript>] internal () =
     member private this.onUnselecting(f : JQueryEvent -> Element -> unit) = ()
 
 
+    /// Event triggered at the end of the select operation, 
+    /// on each element added to the selection.
     [<JavaScript>]
     member this.OnSelected(f : JQueryEvent -> Element -> unit) =
         this |> OnAfterRender(fun _ ->  this.onSelected f)
 
+    /// Event triggered during the select operation, 
+    /// on each element added to the selection.
     [<JavaScript>]
     member this.OnSelecting(f : JQueryEvent -> Element -> unit) =
         this |> OnAfterRender(fun _ -> this.onSelecting f)
 
+    /// Event triggered at the beginning of the select operation.
     [<JavaScript>]
     member this.OnStart(f : JQueryEvent -> Element -> unit) =
         this |> OnAfterRender(fun _ -> this.onStart f)
 
+    /// Event triggered at the end of the select operation.
     [<JavaScript>]
     member this.OnStop(f : JQueryEvent -> Element -> unit) =
         this |> OnAfterRender(fun _ -> this.onStop f)
 
+    /// Event is triggered at the end of the select operation, 
+    /// on each element removed from the selection.
     [<JavaScript>]
     member this.OnUnselected(f : JQueryEvent -> Element -> unit) =
         this |> OnAfterRender(fun _ ->  this.onUnselected f)
 
+    /// Event triggered during the select operation, 
+    /// on each element removed from the selection.
     [<JavaScript>]
     member this.OnUnselecting(f : JQueryEvent -> Element -> unit) =
         this |> OnAfterRender(fun _ -> this.onUnselecting f)
