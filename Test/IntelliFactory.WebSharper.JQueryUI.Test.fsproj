@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Test</RootNamespace>
     <AssemblyName>IntelliFactory.WebSharper.JQueryUI.Test</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <Name>IntelliFactory.WebSharper.JQueryUI.Test</Name>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -49,10 +49,6 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Test.fs" />
     <Compile Include="Demo.fs" />
-    <Compile Include="ResizableTest.fs" />
-    <Compile Include="SelectableTest.fs" />
-    <Compile Include="SortableTest.fs" />
-    <Compile Include="PositionTest.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IntelliFactory.WebSharper.JQueryUI\IntelliFactory.WebSharper.JQueryUI.fsproj">
