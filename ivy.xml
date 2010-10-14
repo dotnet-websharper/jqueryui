@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ivy-module version="2.0">
+  <info organisation="IntelliFactory" module="if-ws-jquery-ui" revision="2.0.7" />
+  <configurations>
+    <conf name="Release" />
+    <conf name="Debug" extends="Release" />
+    <conf name="Test" extends="Debug" />
+  </configurations>
+  <publications>
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" type="dll" conf="Release" />
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" type="dll.js" conf="Release" />
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" type="dll.dep" conf="Release" />
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" type="xml" conf="Release" />
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" type="doc.zip" conf="Release" />
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" type="pdb" conf="Debug" />
+  </publications>
+  
+  <dependencies>
+    <dependency name="if-ws" rev="2.0.6" />
+    <dependency name="if-ws-ecma" rev="2.0.6" />
+    <dependency name="if-ws-html" rev="2.0.7" />
+    <dependency name="if-ws-jquery" rev="2.0.6" />
+  </dependencies>
+</ivy-module>
