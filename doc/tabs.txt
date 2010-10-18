@@ -1,0 +1,20 @@
+## Tabs
+
+In the example, the widgets above are displayed using the Tabs
+control.  Each widget is displayed on a a separate tab panel.
+
+    #fsharp
+    [<JavaScript>]
+    let Main () =
+	let tabElems =
+	    [
+		"Dialog", Dialog ()
+		"Accordion", Accordion ()
+		"Datepicker", Date ()
+		"Slider", Slider ()
+	    ]
+	let tabsConf = new TabsConfiguration()
+	let tabs = Tabs.New(tabElems, new TabsConfiguration())
+	Div [StyleAttribute "width:500px"] -< [tabs]
+
+![jqui-tabs.png](jqui-tabs.png)\

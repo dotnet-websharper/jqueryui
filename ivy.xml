@@ -13,6 +13,7 @@
     <artifact name="IntelliFactory.WebSharper.JQueryUI" type="xml" conf="Release" />
     <artifact name="IntelliFactory.WebSharper.JQueryUI" type="doc.zip" conf="Release" />
     <artifact name="IntelliFactory.WebSharper.JQueryUI" type="pdb" conf="Debug" />
+    <artifact name="IntelliFactory.WebSharper.JQueryUI.Doc" type="zip" conf="Release" />
   </publications>
   
   <dependencies>

@@ -1,0 +1,29 @@
+## Dialog
+
+An example of how you can use the `Dialog` and `Button` widgets:
+
+    #fsharp
+    [<JavaScript>]
+    let Dialog () =
+        let button = Button.New "Open"        
+        let pan = Div [button]
+        button.OnClick (fun ev ->            
+            let dialog = Dialog.New(H1 [Text "Dialog"])
+            pan.Append(dialog)
+            dialog.OnClose(fun ev ->
+                button.Enable()
+            )
+            button.Disable()
+        )
+        pan
+
+
+The button is created using the `New` constructor with a string
+argument specifying the label.  To add an event handler for the click
+for the button you use the `button.OnClick` function.  Here a new
+`Dialog` object is created and the button is disabled. To enable the
+button again when the dialog closes you use the OnClose function for
+the dialog.
+
+![jqui-buttonDialogOpen.png](jqui-buttonDialogOpen.png)\
+

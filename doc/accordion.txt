@@ -1,0 +1,20 @@
+## Accordion
+
+The following example shows how to wrap elements inside an Accordion
+widget.
+
+    #fsharp
+    [<JavaScript>]
+    let Accordion () =
+        let accElems =
+            [
+                "Panel 1", H1 [Text "Panel 1"]
+                "Panel 2", H1 [Text "Panel 2"]
+                "Panel 3", H1 [Text "Panel 3"]
+            ]
+        let accordion = Accordion.New(accElems)
+        Div [accordion]
+
+Result:
+
+![jqui-accordion.png](jqui-accordion.png)\

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<book xmlns="http://docbook.org/ns/docbook" version="5.0"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="http://www.docbook.org/xml/5.0/xsd/docbook.xsd">
+  <title>jQueryUI Extensions for WebSharper</title>
+  <xi:include href="Usage.docbook" />
+  <xi:include href="Events.docbook" />
+  <xi:include href="Initialization.docbook" />
+  <xi:include href="Examples.docbook" />
+  <xi:include href="Accordion.docbook" />
+  <xi:include href="Datepicker.docbook" />
+  <xi:include href="Dialog.docbook" />
+  <xi:include href="Slider.docbook" />
+  <xi:include href="Tabs.docbook" />
+</book>

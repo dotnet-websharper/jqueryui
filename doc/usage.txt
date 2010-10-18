@@ -1,0 +1,41 @@
+## Usage
+
+The original library, jQuery UI, works by doing a jQuery selection on
+an element and calling the relevant widget constructor as an instance
+member, for example:
+
+    #javascript
+    $("#datepicker").datepicker();
+
+In the jQuery UI binding for WebSharper™ widgets like `Datepicker` are
+represented as types.  To create the corresponding `Datepicker` widget
+with WebSharper™ you write:
+
+    #fsharp
+    let datePicker = Datepicker.New()
+
+The `datePicker` object now contains the available methods.  For
+example, to call the `getDate` methods you use:
+
+    #fsharp
+    let date = datePicker.GetDate()
+
+### Resource Dependencies
+Using the JQuery UI WebSharper™ extension within a WebControl will automatically
+include the required JavaScript and Css resources.
+
+You may override the location of the fetched resources by modifying the `app settings`
+in in your `web.config` file.
+
+There are two configurable values: One for the root folder of the JavaScript files and
+another one for the root folder of the Css files. Here is an example of how to override 
+both settings.
+
+	#xml
+	<appSettings>
+		<add key="IntelliFactory.WebSharper.JQueryUI" value="scripts/jquery-ui" />
+		<add key="IntelliFactory.WebSharper.JQueryUICss" value="css/jquery-ui" />
+	</appSettings>	
+	
+If you want to serve the resource files locally you need to make sure to you use the same
+naming conventions as used by the online repository.	
