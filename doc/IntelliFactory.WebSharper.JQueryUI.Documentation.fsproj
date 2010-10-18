@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ProjectGuid>{27d58ce2-0f6b-4840-9347-924db69174fa}</ProjectGuid>
     <Name>IntelliFactory.WebSharper.JQuery.Doc</Name>
-    <AssemblyName>IntelliFactory.WebSharper.JQueryUI.Doc</AssemblyName>
+    <AssemblyName>IntelliFactory.WebSharper.JQueryUI.Documentation</AssemblyName>
     <RootNamespace>$(Name)</RootNamespace>
   </PropertyGroup>
   <Import Project="$(INTELLIFACTORY)/build/IntelliFactory.Docbook.targets" />
@@ -19,10 +19,5 @@
     <Content Include="Constructors.txt" />
     <Content Include="Initialization.txt" />
     <Content Include="Examples.txt" />
-    <Content Include="Accordion.txt" />
-    <Content Include="Datepicker.txt" />
-    <Content Include="Dialog.txt" />
-    <Content Include="Slider.txt" />
-    <Content Include="Tabs.txt" />
   </ItemGroup>
 </Project>

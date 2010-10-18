@@ -1,4 +1,4 @@
-## Usage
+# Usage
 
 The original library, jQuery UI, works by doing a jQuery selection on
 an element and calling the relevant widget constructor as an instance

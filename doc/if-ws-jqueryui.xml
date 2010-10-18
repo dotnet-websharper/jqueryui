@@ -8,9 +8,4 @@
   <xi:include href="Events.docbook" />
   <xi:include href="Initialization.docbook" />
   <xi:include href="Examples.docbook" />
-  <xi:include href="Accordion.docbook" />
-  <xi:include href="Datepicker.docbook" />
-  <xi:include href="Dialog.docbook" />
-  <xi:include href="Slider.docbook" />
-  <xi:include href="Tabs.docbook" />
 </book>
