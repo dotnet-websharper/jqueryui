@@ -120,6 +120,8 @@ module internal DialogInternal =
     let Init (el: Dom.Element, conf: DialogConfiguration) = ()
 
 
+[<Resources.JQueryUIAllJS>]
+[<Resources.JQueryUIAllCss>]
 type Dialog[<JavaScript>]internal () = 
     inherit Pagelet()  
 

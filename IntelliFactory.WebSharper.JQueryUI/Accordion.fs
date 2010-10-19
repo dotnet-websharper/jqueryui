@@ -79,7 +79,8 @@ module internal AccordianInternal =
     [<Inline "jQuery($el).accordion($conf)">]
     let internal Init (el: Dom.Element, conf: AccordionConfiguration) = ()
 
-
+[<Resources.JQueryUIAllJS>]
+[<Resources.JQueryUIAllCss>]
 type Accordion[<JavaScript>] internal () =
     inherit Pagelet()    
     

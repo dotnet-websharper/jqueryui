@@ -37,6 +37,8 @@ module internal AutocompleteInternal =
     let Init (el: Dom.Element, conf: AutocompleteConfiguration) = ()    
 
 
+[<Resources.JQueryUIAllJS>]
+[<Resources.JQueryUIAllCss>]
 type Autocomplete[<JavaScript>] internal () =
     
     [<DefaultValue>]

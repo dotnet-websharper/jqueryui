@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{27d58ce2-0f6b-4840-9347-924db69174fa}</ProjectGuid>
-    <Name>IntelliFactory.WebSharper.JQuery.Doc</Name>
+    <Name>IntelliFactory.WebSharper.JQueryUI.Documentation</Name>
     <AssemblyName>IntelliFactory.WebSharper.JQueryUI.Documentation</AssemblyName>
     <RootNamespace>$(Name)</RootNamespace>
   </PropertyGroup>
@@ -13,11 +13,8 @@
     <None Include="jqui-datepicker.png" />
     <None Include="jqui-slider.png" />
     <None Include="jqui-tabs.png" />
-    <Content Include="if-ws-jqueryui.xml" />
+    <Content Include="IntelliFactory.WebSharper.JQueryUI.xml" />
     <Content Include="Usage.txt" />
-    <Content Include="Events.txt" />
-    <Content Include="Constructors.txt" />
-    <Content Include="Initialization.txt" />
     <Content Include="Examples.txt" />
   </ItemGroup>
 </Project>

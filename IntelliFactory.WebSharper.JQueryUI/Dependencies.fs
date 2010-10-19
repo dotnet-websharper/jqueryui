@@ -12,52 +12,55 @@
 namespace IntelliFactory.WebSharper.JQueryUI
 
 /// Contains YUI resource descriptors and their dependency information.
-module Dependencies =
+module Resources =
     open IntelliFactory.WebSharper
-    open System.Configuration
-
-    module Utils = 
-
-        let Foo = ()
         
-        (*
-        let JQueryUIBase =
-            match ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQueryUI"] with
-            | null ->
-                "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1"
-            | url ->
-                url
+    let JQueryUIBase =            
+        match null with // ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQueryUI"] with
+        | null ->
+            "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1"
+        | url ->
+            url
 
-        let JQueryUIBaseCss =
-            match ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQueryUICss"] with
-            | null ->
-                "http://jquery-ui.googlecode.com/svn/tags/1.8rc3/themes/base"
-            | url ->
-                url     
+    let JQueryUIBaseCss =
+        match null with // ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQueryUICss"] with
+        | null ->
+            "http://jquery-ui.googlecode.com/svn/tags/1.8rc3/themes/base"
+        | url ->
+            url     
         
-        [<AbstractClass>]
-        type Module(name: string) =
+        
+    type ModuleResource = {Name: string}
+        with
             interface IResource with            
-                member this.Render(resolver, writer) =
+                member this.Id = this.Name
+                member this.Dependencies = Seq.empty
+                member this.Render context writer =
                     let loc =
-                        sprintf "%s/%s.js" JQueryUIBase name
-                    Resource.RenderJavaScript loc writer
-
-        [<AbstractClass>]
-        type ModuleCss(name: string) =
+                        sprintf "%s/%s.js" JQueryUIBase this.Name
+                    Resources.RenderJavaScript loc writer
+        
+    type ModuleCssResource = {Name: string}
+        with
             interface IResource with
-                member this.Render(resolver, writer) =
-                    let loc = 
-                        sprintf "%s/%s.css" JQueryUIBaseCss name
-                    Resource.RenderCss loc writer
+                member this.Id = this.Name
+                member this.Dependencies = Seq.empty
+                member this.Render context writer =
+                    let loc = sprintf "%s/%s.css" JQueryUIBaseCss this.Name
+                    Resources.RenderCss loc writer
 
-    open Utils
+    type JQueryUIAllJS() =          
+        inherit Attributes.RequireAttribute()
+            override this.Resource ={Name = "jquery-ui"} :> IResource
 
-    type JQueryUIAll() = 
-        inherit Module("jquery-ui")
-                
-    and AllCss()= 
-        inherit ModuleCss("jquery.ui.all")
+    type JQueryUIAllCss() =
+        inherit Attributes.RequireAttribute()
+        override this.Resource = {Name = "jquery.ui.all"} :> IResource
 
-
-        *)
+//    open Utils
+//
+//    type JQueryUIAll() = 
+//        inherit Module("jquery-ui")
+//                
+//    and AllCss()= 
+//        inherit ModuleCss("jquery.ui.all")
