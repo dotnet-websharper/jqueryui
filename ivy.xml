@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ivy-module version="2.0">
-  <info organisation="IntelliFactory" module="if-ws-jquery-ui" revision="2.0.9" />
+  <info organisation="IntelliFactory" module="if-ws-jqueryui" revision="2.0.9" />
   <configurations>
     <conf name="build" />
     <conf name="default" />
@@ -19,9 +19,9 @@
   
   <dependencies>
     <dependency name="if-ws" rev="2.0.9" conf="build->compiler" />
-    <dependency name="if-ws" rev="2.0.9" conf="default->default" />    
-    <dependency name="if-ws-ecma" rev="2.0.9" />
-    <dependency name="if-ws-html" rev="2.0.9" />
-    <dependency name="if-ws-jquery" rev="2.0.9" />
+    <dependency name="if-ws" rev="2.0.9" conf="default" />    
+    <dependency name="if-ws-ecma" conf="default" rev="2.0.9" />
+    <dependency name="if-ws-html" conf="default" rev="2.0.9" />
+    <dependency name="if-ws-jquery" conf="default" rev="2.0.9" />
   </dependencies>
 </ivy-module>

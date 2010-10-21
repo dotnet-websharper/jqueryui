@@ -14,16 +14,17 @@ namespace IntelliFactory.WebSharper.JQueryUI
 /// Contains YUI resource descriptors and their dependency information.
 module Resources =
     open IntelliFactory.WebSharper
-        
+    open System.Configuration
+            
     let JQueryUIBase =            
-        match null with // ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQueryUI"] with
+        match ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQueryUI"] with
         | null ->
             "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1"
         | url ->
             url
 
     let JQueryUIBaseCss =
-        match null with // ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQueryUICss"] with
+        match ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQueryUICss"] with
         | null ->
             "http://jquery-ui.googlecode.com/svn/tags/1.8rc3/themes/base"
         | url ->
@@ -56,11 +57,3 @@ module Resources =
     type JQueryUIAllCss() =
         inherit Attributes.RequireAttribute()
         override this.Resource = {Name = "jquery.ui.all"} :> IResource
-
-//    open Utils
-//
-//    type JQueryUIAll() = 
-//        inherit Module("jquery-ui")
-//                
-//    and AllCss()= 
-//        inherit ModuleCss("jquery.ui.all")

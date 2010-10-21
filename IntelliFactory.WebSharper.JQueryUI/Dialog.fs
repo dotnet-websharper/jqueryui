@@ -15,7 +15,6 @@ namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
-
 type DialogConfiguration[<JavaScript>]() = 
 
     [<DefaultValue>]
