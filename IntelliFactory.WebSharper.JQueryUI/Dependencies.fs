@@ -31,29 +31,29 @@ module Resources =
             url     
         
         
-    type ModuleResource = {Name: string}
+    type ModuleResource = {Js: string}
         with
             interface IResource with            
-                member this.Id = this.Name
+                member this.Id = this.Js
                 member this.Dependencies = Seq.empty
                 member this.Render context writer =
                     let loc =
-                        sprintf "%s/%s.js" JQueryUIBase this.Name
+                        sprintf "%s/%s.js" JQueryUIBase this.Js
                     Resources.RenderJavaScript loc writer
         
-    type ModuleCssResource = {Name: string}
+    type ModuleCssResource = {Css: string}
         with
             interface IResource with
-                member this.Id = this.Name
+                member this.Id = this.Css
                 member this.Dependencies = Seq.empty
                 member this.Render context writer =
-                    let loc = sprintf "%s/%s.css" JQueryUIBaseCss this.Name
+                    let loc = sprintf "%s/%s.css" JQueryUIBaseCss this.Css
                     Resources.RenderCss loc writer
 
     type JQueryUIAllJS() =          
         inherit Attributes.RequireAttribute()
-            override this.Resource ={Name = "jquery-ui"} :> IResource
+            override this.Resource ={Js = "jquery-ui"} :> IResource
 
     type JQueryUIAllCss() =
         inherit Attributes.RequireAttribute()
-        override this.Resource = {Name = "jquery.ui.all"} :> IResource
+        override this.Resource = {Css = "jquery.ui.all"} :> IResource
