@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ivy-module version="2.0">
-  <info organisation="IntelliFactory" module="if-ws-jqueryui" revision="2.0.9" />
+  <info organisation="IntelliFactory" module="if-ws-jqueryui" revision="2.0" />
   <configurations>
     <conf name="build" />
     <conf name="default" />
-    <conf name="debug" extends="default" />
-    <conf name="doc" />
   </configurations>
   <publications>
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" type="dll" conf="default" />
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" type="dll.js" conf="default" />
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" type="dll.dep" conf="default" />
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" type="xml" conf="default" />
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" type="pdb" conf="debug" />
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" type="api.zip" conf="doc" />    
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" type="Documentation.zip" conf="doc" />
-  </publications>
-  
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="dll" type="bin" conf="default" />
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="dll.js" type="bin" conf="default" />
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="dll.dep" type="bin" conf="default" />
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="xml" type="doc" conf="default" />
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="pdb" type="debug" conf="default" />
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="api.zip" type="doc" conf="default" />    
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="Documentation.zip" type="doc" conf="default" />
+  </publications>  
   <dependencies>
-    <dependency name="if-ws" rev="2.0.9" conf="build->compiler" />
-    <dependency name="if-ws" rev="2.0.9" conf="default" />    
-    <dependency name="if-ws-ecma" conf="default" rev="2.0.9" />
-    <dependency name="if-ws-html" conf="default" rev="2.0.9" />
-    <dependency name="if-ws-jquery" conf="default" rev="2.0.9" />
+    <dependency name="if-ws" rev="latest.integration" conf="build->compiler" />
+    <dependency name="if-ws" rev="latest.integration" conf="default->default" />    
+    <dependency name="if-ws-ecma" conf="default" rev="latest.integration" />
+    <dependency name="if-ws-html" conf="default" rev="latest.integration" />
+    <dependency name="if-ws-jquery" conf="default" rev="latest.integration" />
   </dependencies>
 </ivy-module>
