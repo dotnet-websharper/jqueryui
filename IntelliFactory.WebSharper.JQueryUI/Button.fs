@@ -9,31 +9,31 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-//JQueryUI Wrapping: (version Stable 1.8rc1) 
+//JQueryUI Wrapping: (version Stable 1.8rc1)
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 open IntelliFactory.WebSharper.Html.Events
 
-type ButtonIconsConfiguration = 
+type ButtonIconsConfiguration =
     {
         [<Name "primary">]
         Primary: string
-        
+
         [<Name "Secondary">]
-        Secondary: string      
+        Secondary: string
     }
     [<JavaScript>]
     static member Default = {Primary = "ui-icon-gear"; Secondary = "ui-icon-triangle-1-s" }
 
 
-type ButtonConfiguration[<JavaScript>] () = 
-    
+type ButtonConfiguration[<JavaScript>] () =
+
     [<DefaultValue>]
     [<Name "disabled">]
-    val mutable Disabled: bool    
-    
+    val mutable Disabled: bool
+
     [<DefaultValue>]
     [<Name "text">]
     val mutable Text: bool
@@ -52,11 +52,10 @@ module internal ButtonInternal =
     [<Inline "jQuery($el).button($conf)">]
     let Init (el: Dom.Element, conf: ButtonConfiguration) = ()
 
-[<Resources.JQueryUIAllJS>]
-[<Resources.JQueryUIAllCss>]
-type Button [<JavaScript>]()= 
+[<Require(typeof<Resources.JQueryUI>)>]
+type Button [<JavaScript>]()=
     inherit Pagelet()
-    
+
     [<DefaultValue>]
     val mutable private isEnabled: bool
 
@@ -65,18 +64,18 @@ type Button [<JavaScript>]()=
     member this.IsEnabled
         with get () =
             this.isEnabled
-    
+
     (****************************************************************
     * Constructors
-    *****************************************************************)     
+    *****************************************************************)
     /// Creates a new button given an element and a configuration object.
     [<JavaScript>]
     [<Name "New1">]
-    static member New (el : Element, conf: ButtonConfiguration): Button =         
+    static member New (el : Element, conf: ButtonConfiguration): Button =
         let b = new Button()
         b.isEnabled <- true
-        el 
-        |> OnAfterRender (fun el  -> 
+        el
+        |> OnAfterRender (fun el  ->
             ButtonInternal.Init(el.Body, conf)
         )
         |> ignore
@@ -86,14 +85,14 @@ type Button [<JavaScript>]()=
     /// Creates a new button given a configuration object.
     [<JavaScript>]
     [<Name "New2">]
-    static member New (conf: ButtonConfiguration): Button =         
+    static member New (conf: ButtonConfiguration): Button =
         Button.New(IntelliFactory.WebSharper.Html.Default.Button [], conf)
 
     /// Creates a new button with the given label and
     /// using the default configuration object.
     [<JavaScript>]
     [<Name "New3">]
-    static member New (label: string): Button = 
+    static member New (label: string): Button =
         let conf = new ButtonConfiguration()
         conf.Label <- label
         Button.New(conf)
@@ -101,8 +100,8 @@ type Button [<JavaScript>]()=
     (****************************************************************
     * Methods
     *****************************************************************)
-    
-    /// Removes the button functionality completely. 
+
+    /// Removes the button functionality completely.
     [<Inline "jQuery($this.element.Body).button('destroy')">]
     member this.Destroy() = ()
 
@@ -128,8 +127,8 @@ type Button [<JavaScript>]()=
     [<Inline "jQuery($this.element.Body).button('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
-    /// Refreshes the visual state of the button. 
-    /// Useful for updating button state after the native element's checked or disabled state 
+    /// Refreshes the visual state of the button.
+    /// Useful for updating button state after the native element's checked or disabled state
     /// is changed programatically.
     [<Inline "jQuery($this.element.Body).button('refresh')">]
     member this.Refresh (index: int) = ()
@@ -137,7 +136,7 @@ type Button [<JavaScript>]()=
     (****************************************************************
     * Events
     *****************************************************************)
-    
+
     /// Triggered when the button is clicked.
     [<JavaScript>]
     member this.OnClick (f : Events.MouseEvent -> unit) : unit =
@@ -147,7 +146,7 @@ type Button [<JavaScript>]()=
             if this.isEnabled then
                 f ev
         )
-        
+
 
 
 

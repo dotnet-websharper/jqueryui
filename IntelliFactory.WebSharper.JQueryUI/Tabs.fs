@@ -9,7 +9,7 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-//JQueryUI Wrapping: (version Stable 1.8rc1) 
+//JQueryUI Wrapping: (version Stable 1.8rc1)
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
@@ -17,7 +17,7 @@ open IntelliFactory.WebSharper.Html
 
 
 
-type TabsAjaxOptionsConfiguration = 
+type TabsAjaxOptionsConfiguration =
     {
     [<Name "ajaxOptions">]
     async: bool
@@ -27,7 +27,7 @@ type TabsAjaxOptionsConfiguration =
     static member Default = {async = false}
 
 
-type TabsCookieConfiguration = 
+type TabsCookieConfiguration =
     {
     [<Name "cookie">]
     expires: int
@@ -37,7 +37,7 @@ type TabsCookieConfiguration =
     static member Default = {expires = 30}
 
 
-type TabsFxConfiguration = 
+type TabsFxConfiguration =
     {
     [<Name "fx">]
     opacity: string
@@ -46,8 +46,8 @@ type TabsFxConfiguration =
     static member Dafault = {opacity = "toggle"}
 
 
-type TabsConfiguration[<JavaScript>]() = 
-    
+type TabsConfiguration[<JavaScript>]() =
+
     [<DefaultValue>]
     [<Name "ajaxOptions">]
     //null by default
@@ -83,7 +83,7 @@ type TabsConfiguration[<JavaScript>]() =
     //"click" by default
     val mutable Event: string
 
-    //Option, Array? 
+    //Option, Array?
     [<DefaultValue>]
     [<Name "fx">]
     //null by default
@@ -114,55 +114,54 @@ type TabsConfiguration[<JavaScript>]() =
     //"<li><a href="#{href}"><span>#{label}</span></a></li>" by default
     val mutable TabTemplate: string
 
-    
+
 
 module internal TabsInternal =
     [<Inline "jQuery($el).tabs($conf)">]
-    let Init(el: Dom.Element, conf: TabsConfiguration) = ()    
+    let Init(el: Dom.Element, conf: TabsConfiguration) = ()
 
 
-[<Resources.JQueryUIAllJS>]
-[<Resources.JQueryUIAllCss>]
-type Tabs[<JavaScript>] internal () = 
+[<Require(typeof<Resources.JQueryUI>)>]
+type Tabs[<JavaScript>] internal () =
     inherit Pagelet()
 
     (****************************************************************
     * Constructors
-    *****************************************************************)        
+    *****************************************************************)
     /// Creates a new tabs object with panels and titles fromt the given
     /// list of name and element pairs and configuration settings object.
     [<JavaScript>]
     [<Name "New1">]
-    static member New (els : List<string * Element>, conf: TabsConfiguration): Tabs =        
-        let el = 
+    static member New (els : List<string * Element>, conf: TabsConfiguration): Tabs =
+        let el =
             let itemPanels =
                 els
                 |> List.map (fun (label, panel) ->
                    let id = NewId()
-                   let item = 
+                   let item =
                     LI [
                         A [
                             Attr.HRef ("#" + id)
                             Text label
                         ]
-                        panel                            
-                    ] 
+                        panel
+                    ]
                    let tab = Div [Attr.Id id] -< [panel]
                    (item :> IPagelet, tab :> IPagelet)
                 )
-            let ul = 
-                UL <| Seq.map fst itemPanels 
+            let ul =
+                UL <| Seq.map fst itemPanels
             Div [ul] -< (List.map snd itemPanels)
-        
+
         let tabs = new Tabs ()
         tabs.element <-
-            el 
-            |>! OnAfterRender (fun el -> 
+            el
+            |>! OnAfterRender (fun el ->
                 TabsInternal.Init(el.Body, conf)
-            )  
+            )
         tabs
-    
-    
+
+
 
     /// Creates a new tabs object using the default configuration.
     [<JavaScript>]
@@ -173,7 +172,7 @@ type Tabs[<JavaScript>] internal () =
 
     (****************************************************************
     * Methods
-    *****************************************************************) 
+    *****************************************************************)
     /// Removes the tabs functionality completely.
     [<Inline "jQuery($this.element.Body).tabs('destroy')">]
     member this.Destroy() = ()
@@ -189,7 +188,7 @@ type Tabs[<JavaScript>] internal () =
     /// Sets a tabs option.
     [<Inline "jQuery($this.element.Body).tabs('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
-        
+
     [<Inline "jQuery($this.element.Body).tabs('add', $url, $label, $index)">]
     member private this.add (url:string, label:string, index: int) = ()
 
@@ -198,7 +197,7 @@ type Tabs[<JavaScript>] internal () =
 
     /// Removes the tab with the given index.
     [<Inline "jQuery($this.element.Body).tabs('remove', $index)">]
-    member this.Remove (index: int) = ()    
+    member this.Remove (index: int) = ()
 
     /// Selects the tab with the given index.
     [<Inline "jQuery($this.element.Body).tabs('select', $index)">]
@@ -211,15 +210,15 @@ type Tabs[<JavaScript>] internal () =
     /// Changes the url from which an Ajax (remote) tab will be loaded.
     [<Inline "jQuery($this.element.Body).tabs('url', $index)">]
     member this.Url (index: int) = ()
-    
-    /// Sets up an automatic rotation through tabs of a tab pane. 
-    /// The second argument is an amount of time in milliseconds until the next 
-    /// tab in the cycle gets activated. Use 0 or null to stop the rotation. 
-    /// The third controls whether or not to continue the rotation after a tab has been 
+
+    /// Sets up an automatic rotation through tabs of a tab pane.
+    /// The second argument is an amount of time in milliseconds until the next
+    /// tab in the cycle gets activated. Use 0 or null to stop the rotation.
+    /// The third controls whether or not to continue the rotation after a tab has been
     /// selected by a user.
     [<Inline "jQuery($this.element.Body).tabs('rotate', $secs, $loop)">]
     member this.Rotate (secs: int, loop: bool) = ()
-    
+
     /// Retrieve the number of tabs of the first matched tab pane.
     [<JavaScript>]
     member this.Length
@@ -269,40 +268,40 @@ type Tabs[<JavaScript>] internal () =
 
     /// Event triggered when a tab is selcted.
     [<JavaScript>]
-    member this.OnSelect f = 
-        this |> OnAfterRender(fun _ -> 
+    member this.OnSelect f =
+        this |> OnAfterRender(fun _ ->
             this.onSelect f
         )
 
     /// Event triggered when a tab is loaded.
     [<JavaScript>]
-    member this.OnLoad f = 
-        this |> OnAfterRender(fun _ -> 
+    member this.OnLoad f =
+        this |> OnAfterRender(fun _ ->
             this.onLoad f
         )
-    
+
     /// Event triggered when a tab is showed.
     [<JavaScript>]
-    member this.OnShow f = 
-        this |> OnAfterRender(fun _  -> 
+    member this.OnShow f =
+        this |> OnAfterRender(fun _  ->
             this.onShow f
         )
 
     /// Event triggered when a tab is added.
     [<JavaScript>]
-    member this.OnAdd f = 
-        this |> OnAfterRender(fun _  -> 
+    member this.OnAdd f =
+        this |> OnAfterRender(fun _  ->
             this.onAdd f
         )
     /// Event triggered when a tab is enabled.
     [<JavaScript>]
-    member this.OnEnable f = 
-        this |> OnAfterRender(fun _  -> 
+    member this.OnEnable f =
+        this |> OnAfterRender(fun _  ->
             this.onEnable f
         )
     /// Event triggered when a tab is disabled.
     [<JavaScript>]
-    member this.OnDisable f = 
-        this |> OnAfterRender(fun _  -> 
+    member this.OnDisable f =
+        this |> OnAfterRender(fun _  ->
             this.onDisable f
         )

@@ -15,28 +15,24 @@ open IntelliFactory.WebSharper.Html
 
 [<AutoOpen>]
 module Utils =
-    [<JavaScript>]
-    let (|>!) x f = f x; x
 
-    [<Inline "console.log($x)">]    
-    let Log x = ()
+    [<Inline "console.log($x)">]
+    let internal Log x = ()
 
-//// [<AbstractClass>]
-type Pagelet[<JavaScript>]() =
-               
-    [<DefaultValue>]
-    val mutable internal element : Element
-                        
-    (****************************************************************
-    * IPagelet
-    *****************************************************************)                  
-    interface IPagelet with
-        
-        [<JavaScript>]
-        member this.Render() = 
-            Log "GO"           
-            (this.element :> IPagelet).Render()
+    type Pagelet[<JavaScript>]() =
 
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.element.Body :> _
+        [<DefaultValue>]
+        val mutable internal element : Element
+
+        (****************************************************************
+        * IPagelet
+        *****************************************************************)
+        interface IPagelet with
+
+            [<JavaScript>]
+            member this.Render() =
+                (this.element :> IPagelet).Render()
+
+            [<JavaScript>]
+            member this.Body
+                with get () = this.element.Body :> _

@@ -9,14 +9,14 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-//JQueryUI Wrapping: (version Stable 1.8rc1) 
+//JQueryUI Wrapping: (version Stable 1.8rc1)
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
 
-type AxisConfiguration = 
+type AxisConfiguration =
     | [<Name "X">] X
     | [<Name "Y">] Y
 
@@ -25,7 +25,7 @@ type ToleranceConfiguration =
     | [<Name "Pointer">] Pointer
 
 
-type SortableConfiguration[<JavaScript>]() = 
+type SortableConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
     [<Name "appendTo">]
@@ -140,32 +140,31 @@ type SortableConfiguration[<JavaScript>]() =
 
 
 
-module internal SortableInternal =    
+module internal SortableInternal =
     [<Inline "jQuery($el).sortable($conf)">]
     let Init (el: Dom.Element, conf: SortableConfiguration) = ()
 
 
-[<Resources.JQueryUIAllJS>]
-[<Resources.JQueryUIAllCss>]
-type Sortable [<JavaScript>] internal () = 
+[<Require(typeof<Resources.JQueryUI>)>]
+type Sortable [<JavaScript>] internal () =
     inherit Pagelet()
 
     (****************************************************************
     * Constructors
-    *****************************************************************)                 
+    *****************************************************************)
     /// Creates a new sortable object given an element and a
     /// configuration object.
     [<JavaScript>]
     [<Name "New1">]
-    static member New (el: Element, conf: SortableConfiguration) : Sortable = 
+    static member New (el: Element, conf: SortableConfiguration) : Sortable =
         let s = new Sortable()
-        s.element <- 
+        s.element <-
             el
             |>! OnAfterRender (fun el  ->
                 SortableInternal.Init(el.Body, conf)
             )
         s
-    
+
     /// Creates a new sortable given an element using
     /// the default configuration settings.
     [<JavaScript>]
@@ -176,11 +175,11 @@ type Sortable [<JavaScript>] internal () =
 
     (****************************************************************
     * Methods
-    *****************************************************************) 
+    *****************************************************************)
     /// Removes the sortable functionality.
     [<Inline "$this.sortable('destroy')">]
     member this.Destroy() = ()
-            
+
     /// Disables the sortable functionality.
     [<Inline "$this.sortable('disable')">]
     member this.Disable() = ()
@@ -201,7 +200,7 @@ type Sortable [<JavaScript>] internal () =
     [<Inline "$this.sortable('toArray')">]
     member this.ToArray() = [||]
 
-    /// Refreshes the sortable items. Custom trigger the 
+    /// Refreshes the sortable items. Custom trigger the
     /// reloading of all sortable items, causing new items to be recognized.
     [<Inline "$this.sortable('refresh')">]
     member this.Refresh() = ()
@@ -210,9 +209,9 @@ type Sortable [<JavaScript>] internal () =
     [<Inline "$this.sortable('refreshPositions')">]
     member this.RefreshPositions() = ()
 
-    /// Cancels a change in the current sortable and reverts it back to 
-    /// how it was before the current sort started. Useful in the stop 
-    /// and receive callback functions. 
+    /// Cancels a change in the current sortable and reverts it back to
+    /// how it was before the current sort started. Useful in the stop
+    /// and receive callback functions.
     [<Inline "$this.sortable('cancel')">]
     member this.Cancel() = ()
 
@@ -262,50 +261,50 @@ type Sortable [<JavaScript>] internal () =
 
     /// Event triggered during sorting.
     [<JavaScript>]
-    member this.OnSort f = 
+    member this.OnSort f =
         this |> OnAfterRender(fun _ -> this.onSort f)
 
     /// Event triggered during sorting, but only when the DOM position has changed.
     [<JavaScript>]
-    member this.OnChange f = 
+    member this.OnChange f =
         this |> OnAfterRender(fun _ -> this.onChange f)
 
     /// Event triggered when sorting stops, but when the placeholder/helper is still available.
     [<JavaScript>]
-    member this.OnBeforeStop f = 
+    member this.OnBeforeStop f =
         this |> OnAfterRender(fun _ -> this.onBeforeStop f)
 
     /// Event triggered when sorting has stopped.
     [<JavaScript>]
-    member this.OnStop f = 
+    member this.OnStop f =
         this |> OnAfterRender(fun _ -> this.onStop f)
 
     /// Event triggered when the user stopped sorting and the DOM position has changed.
     [<JavaScript>]
-    member this.OnUpdate f = 
+    member this.OnUpdate f =
         this |> OnAfterRender(fun _ -> this.onUpdate f)
 
     /// Event triggered when a connected sortable list has received an item from another list.
     [<JavaScript>]
-    member this.OnReceive f = 
+    member this.OnReceive f =
         this |> OnAfterRender(fun _ -> this.onReceive f)
-    
+
     /// Event triggered when a sortable item has been dragged out from the list and into another.
     [<JavaScript>]
-    member this.OnRemove f = 
+    member this.OnRemove f =
         this |> OnAfterRender(fun _ -> this.onRemove f)
 
     /// Event triggered when a sortable item is moved into a connected list.
     [<JavaScript>]
-    member this.OnOver f = 
+    member this.OnOver f =
         this |> OnAfterRender(fun _ -> this.onOut f)
 
     /// Event triggered when using connected lists, every connected list on drag start receives it.
     [<JavaScript>]
-    member this.OnActivate f = 
+    member this.OnActivate f =
         this |> OnAfterRender(fun _ -> this.onActivate f)
 
     // Event triggered when sorting was stopped, is propagated to all possible connected lists.
     [<JavaScript>]
-    member this.OnDeactivate f = 
+    member this.OnDeactivate f =
         this |> OnAfterRender(fun _ -> this.onDeactivate f)

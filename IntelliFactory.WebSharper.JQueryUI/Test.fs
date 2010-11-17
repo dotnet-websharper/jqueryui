@@ -9,68 +9,68 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-//JQueryUI Wrapping: (version Stable 1.8rc1) 
+//JQueryUI Wrapping: (version Stable 1.8rc1)
 namespace IntelliFactory.WebSharper.JQueryUI
 
 module internal Test =
-    
+
     open IntelliFactory.WebSharper
     open IntelliFactory.WebSharper.Html
 
     [<JavaScript>]
     let TestAccordian () =
-        let els1 = 
+        let els1 =
             [
                 "Foo", Div [Button [Text "click"]]
                 "Bar", Div [Text "Second content"]
                 "Baz", Div [Text "Third content"]
             ]
-        let acc1 = Accordion.New(els1)        
+        let acc1 = Accordion.New(els1)
         // Events
         acc1
-        |> OnBeforeRender (fun _ -> 
+        |> OnBeforeRender (fun _ ->
             Log "Acc1 - Before Render"
-        )        
+        )
         acc1
-        |> OnAfterRender (fun _ -> 
-            Log "Acc1 - After Render"             
+        |> OnAfterRender (fun _ ->
+            Log "Acc1 - After Render"
         )
         acc1.OnChange (fun _ _ ->
             Log "Acc1 - Change"
         )
-        let els2 = 
+        let els2 =
             [
                 "Foo", Div [acc1]
                 "Bar", Div [Text "Second content"]
                 "Baz", Div [Text "Third content"]
             ]
         let acc2 = Accordion.New(els2)
-        
+
         // Events
-        acc2.OnChange (fun _ _ -> 
+        acc2.OnChange (fun _ _ ->
             Log "Acc2 - Change"
-        )                
+        )
         let button = JQueryUI.Button.New("Click")
-        button.OnClick (fun _ ->            
+        button.OnClick (fun _ ->
             acc2.Activate(2)
             acc1.Disable()
         )
         let button = JQueryUI.Button.New "Click"
         button.OnClick (fun _ ->
-            acc2.Activate 1            
-        )        
+            acc2.Activate 1
+        )
         Div [acc2] -< [button]
-        
+
     [<JavaScript>]
     let TestAutocomplete () =
         let conf = new AutocompleteConfiguration()
         conf.Source <- [|"Apa"; "Beta"; "Zeta" ; "Zebra"|]
         let a = Autocomplete.New(Input [], conf)
         a |> OnBeforeRender (fun _ -> Log "Before Render")
-        a |> OnAfterRender ( fun _ -> 
+        a |> OnAfterRender ( fun _ ->
             Log "After Render"
             a.Search "Z"
-        )        
+        )
         a.OnChange (fun _ _ -> Log "Change")
         a.OnClose <| fun _ _ -> Log "Close"
         a.OnSearch <| fun _ _ -> Log "Search"
@@ -78,9 +78,9 @@ module internal Test =
 
         let bClose = JQueryUI.Button.New "Close"
         bClose.OnClick (fun _ -> a.Close())
-        
+
         let bDestroy = JQueryUI.Button.New "Destroy"
-        bClose.OnClick (fun _ -> a.Destroy())           
+        bClose.OnClick (fun _ -> a.Destroy())
 
         Div [a] -< [
             bClose
@@ -115,10 +115,10 @@ module internal Test =
 //    let TestDialog () =
 //        let conf = DialogConfiguration()
 //        conf.Buttons <- "Buttons"
-//        let d = Dialog.New(Div [Text "Dialog"], conf)    
+//        let d = Dialog.New(Div [Text "Dialog"], conf)
 //        d.OnClose(fun ev ->
 //            Log "close"
-//        )                  
+//        )
 //        d |> OnAfterRender(fun _ -> Log "dialog: before render")
 //        d |> OnAfterRender(fun _ -> Log "dialog: after render")
 //        d.OnOpen(fun ev -> Log "dialog: open")
@@ -140,13 +140,13 @@ module internal Test =
 //        ]
 //
 //    [<JavaScript>]
-//    let TestProgressbar () =        
+//    let TestProgressbar () =
 //        let conf = ProgressbarConfiguration()
 //        let p = Progressbar.New(Div [], conf)
-//        p |> OnAfterRender(fun _  -> 
+//        p |> OnAfterRender(fun _  ->
 //            p.Value <- 30
 //        )
-//        
+//
 //        let b = JQueryUI.Button.New("inc")
 //        b.OnClick (fun ev ->
 //            p.Value <- p.Value + 10
@@ -155,10 +155,10 @@ module internal Test =
 //
 //
 //    [<JavaScript>]
-//    let TestSlider () =                
+//    let TestSlider () =
 //        let s = Slider.New()
 //        s |> OnBeforeRender(fun _ -> Log "slider: before render")
-//        s |> OnAfterRender(fun _  -> 
+//        s |> OnAfterRender(fun _  ->
 //            Log "slider: after render"
 //        )
 //        s.OnChange(fun ev ->
@@ -166,14 +166,14 @@ module internal Test =
 //        )
 //        let b = JQueryUI.Button.New("inc")
 //        let pan = Div [s ; b]
-//        b.OnClick (fun ev ->          
-//            let d = Dialog.New(Div [Text <| string s.Value]) 
+//        b.OnClick (fun ev ->
+//            let d = Dialog.New(Div [Text <| string s.Value])
 //            pan.Append(d)
-//        )        
+//        )
 //        pan
 //
 //    [<JavaScript>]
-//    let TestTabs () =    
+//    let TestTabs () =
 //        let conf = new TabsConfiguration()
 //        let tabs =
 //            [
@@ -183,14 +183,14 @@ module internal Test =
 //            ]
 //        let t = Tabs.New(tabs, conf)
 //        t |> OnAfterRender(fun _ ->  Log "Aa" )
-//        
-//        
+//
+//
 //
 //        let b = JQueryUI.Button.New("inc")
-//        b.OnClick (fun ev ->          
+//        b.OnClick (fun ev ->
 //            t.Select 2
 //            t.Add( Div [H1 [Text "New tab"]], "tab" + (string t.Length))
-//        )        
+//        )
 //        Div [t ; b]
 //
 ////    [<JavaScript>]
@@ -215,18 +215,18 @@ module internal Test =
 //
 //    [<JavaScript>]
 //    let TestPosition() =
-//        let position1Body = 
+//        let position1Body =
 //            Div [Attr.Style "width:50px; height:50px; background-color:#F00;"]
-//        let targetBody = 
+//        let targetBody =
 //            Div [Attr.Style "width:240px; height:200px; background-color:#999; margin:30px auto;"; Text "hej"]
 //            |>! OnAfterRender (fun el ->
 //                let conf1 = new PositionConfiguration()
-//                conf1.My <- "center" 
+//                conf1.My <- "center"
 //                conf1.At <- "center"
 //                conf1.Of <- Target.Element el.Body
 //                conf1.Collision <- "fit"
 //                conf1.offset <- "10 -10"
-//                let p1 = Position.New(position1Body, conf1)                
+//                let p1 = Position.New(position1Body, conf1)
 //                ()
 //            )
 //        Div [
@@ -234,20 +234,20 @@ module internal Test =
 //            targetBody
 //        ]
 //
-////        let position2Body =  
+////        let position2Body =
 ////            Div [Style "width:50px; height:50px; background-color:#0F0;"]
 ////        let conf2 = new PositionConfiguration()
-////        conf2.My <- "left top" 
+////        conf2.My <- "left top"
 ////        conf2.At <- "left top"
 ////        conf2.Of <- Target.Element targetBody.Dom
 ////        conf2.Collision <- "fit"
 ////        conf2.offset <- "10 -10"
 ////        let p2 = Position.New(position2Body, conf2)
 ////
-////        let position3Body = 
+////        let position3Body =
 ////            Div [Style "width:50px; height:50px; background-color:#00F;"]
 ////        let conf3 = new PositionConfiguration()
-////        conf3.My <- "right center" 
+////        conf3.My <- "right center"
 ////        conf3.At <- "right bottom"
 ////        conf3.Of <- Target.Element targetBody.Dom
 ////        conf3.Collision <- "fit"
@@ -257,7 +257,7 @@ module internal Test =
 ////        let position4Body =
 ////            Div [Style "width:50px; height:50px; background-color:#FF0;"]
 ////        let conf4 = new PositionConfiguration()
-////        conf4.My <- "left bottom" 
+////        conf4.My <- "left bottom"
 ////        conf4.At <- "center"
 ////        conf4.Of <- Target.Element targetBody.Dom
 ////        conf4.Collision <- "fit"
@@ -267,7 +267,7 @@ module internal Test =
 ////        Document()
 ////        |>! OnMouseMove (fun _ ev ->
 ////            let conf = new PositionConfiguration()
-////            conf.My <- "left bottom" 
+////            conf.My <- "left bottom"
 ////            conf.At <- "center"
 ////            conf.Of <- Target.Event ev
 ////            conf.Collision <- "fit"
@@ -278,30 +278,30 @@ module internal Test =
 ////            targetBody
 ////            ]
 ////            -< [p1; p2; p3; p4 ]
-//        
+//
 //    [<JavaScript>]
 //    let TestResizable () =
 //        let img = Div [Attr.Src "http://www.look4design.co.uk/l4design/companies/light-iq/image14.jpg" ]
 //        let resizable = Resizable.New img
-//        resizable.OnStart  (fun _ _ -> Log("Started!")) 
+//        resizable.OnStart  (fun _ _ -> Log("Started!"))
 //        resizable.OnResize (fun _ _ -> Log("Resized!"))
 //        resizable.OnStop   (fun _ _ -> Log("Stopped!"))
 //        let drag = Draggable.New (Div [resizable])
-//        Div [drag]            
-//    
-//    
+//        Div [drag]
+//
+//
     [<JavaScript>]
     let Tests () =
         let tab =
             [
                 "Accordion", TestAccordian ()
-                "Autocomplete", TestAutocomplete ()     
-                "Button", TestButton () 
-                "Datepicker", TestDatepicker ()    
+                "Autocomplete", TestAutocomplete ()
+                "Button", TestButton ()
+                "Datepicker", TestDatepicker ()
 //                "Dialog", TestDialog ()
 //                "Progressbar", TestProgressbar ()
 //                "Slider", TestSlider ()
-//                "Tabs", TestTabs ()                
+//                "Tabs", TestTabs ()
 //                "Sortable", TestSortable ()
 //                "Position", TestPosition ()
 //                "Resizable",  TestResizable ()
@@ -311,5 +311,4 @@ module internal Test =
 
     [<JavaScript>]
     let Main() = Tests ()
-        
-        
+

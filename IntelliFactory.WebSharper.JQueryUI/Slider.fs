@@ -9,14 +9,14 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-//JQueryUI Wrapping: (version Stable 1.8rc1) 
+//JQueryUI Wrapping: (version Stable 1.8rc1)
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
-    
 
-type SliderConfiguration[<JavaScript>] () = 
+
+type SliderConfiguration[<JavaScript>] () =
 
     [<DefaultValue>]
     [<Name "animate">]
@@ -62,28 +62,27 @@ type SliderConfiguration[<JavaScript>] () =
 module internal SliderInternal =
     [<Inline "jQuery($el).slider($conf)">]
     let Init(el: Dom.Element, conf: SliderConfiguration) = ()
-    
 
-[<Resources.JQueryUIAllJS>]
-[<Resources.JQueryUIAllCss>]
-type Slider[<JavaScript>] internal () =     
+
+[<Require(typeof<Resources.JQueryUI>)>]
+type Slider[<JavaScript>] internal () =
     inherit Pagelet()
-                        
+
     (****************************************************************
     * Constructors
-    *****************************************************************) 
+    *****************************************************************)
     /// Creates a new slider given a configuration object.
     [<JavaScript>]
     [<Name "New1">]
-    static member New (conf: SliderConfiguration): Slider =         
+    static member New (conf: SliderConfiguration): Slider =
         let s = new Slider()
-        s.element <- 
+        s.element <-
             Div []
-            |>! OnAfterRender (fun el  -> 
+            |>! OnAfterRender (fun el  ->
                 SliderInternal.Init(el.Body, conf)
             )
         s
-    
+
     /// Creates a new slider using the default configuration
     /// settings.
     [<JavaScript>]
@@ -93,7 +92,7 @@ type Slider[<JavaScript>] internal () =
 
     (****************************************************************
     * Methods
-    *****************************************************************) 
+    *****************************************************************)
     /// Removes the slider functionality completly.
     [<Inline "jQuery($this.element.Body).slider('destroy')">]
     member this.Destroy() = ()
@@ -127,19 +126,19 @@ type Slider[<JavaScript>] internal () =
     (****************************************************************
     * Events
     *****************************************************************)
-    
+
     [<Inline "jQuery($this.element.Body).slider({start: function (x,y) {$f(x);}})">]
     member private this.onStart(f : JQuery.Event -> unit) = ()
 
-    
+
     [<Inline "jQuery($this.element.Body).slider({change: function (x,y) {$f(x);}})">]
     member private this.onChange(f : JQuery.Event -> unit) = ()
 
-    
+
     [<Inline "jQuery($this.element.Body).slider({slide: function (x,y) {$f(x);}})">]
     member private this.onSlide(f : JQuery.Event -> unit) = ()
 
-    
+
     [<Inline "jQuery($this.element.Body).slider({stop: function (x,y) {$f(x);}})">]
     member private this.onStop(f : JQuery.Event -> unit) = ()
 
@@ -165,9 +164,9 @@ type Slider[<JavaScript>] internal () =
         this |> OnAfterRender (fun _ -> this.onStop f)
 
 
-                  
 
 
-    
+
+
 
 

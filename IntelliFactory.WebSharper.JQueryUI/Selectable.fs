@@ -9,19 +9,19 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-//JQueryUI Wrapping: (version Stable 1.8rc1) 
+//JQueryUI Wrapping: (version Stable 1.8rc1)
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
 
-type ToleranceOfSelectable =     
+type ToleranceOfSelectable =
     | [<Name "fit">] Fit
     | [<Name "touch">] Touch
 
 
-type SelectableConfiguration[<JavaScript>]() = 
+type SelectableConfiguration[<JavaScript>]() =
 
 
     [<DefaultValue>]
@@ -60,29 +60,28 @@ type SelectableConfiguration[<JavaScript>]() =
     val mutable Tolerance: ToleranceOfSelectable
 
 
-    
+
 module internal SelectableInternal =
     [<Inline "jQuery($el).selectable($conf)">]
     let internal New (el: Dom.Element, conf: SelectableConfiguration) = ()
 
 
-[<Resources.JQueryUIAllJS>]
-[<Resources.JQueryUIAllCss>]
+[<Require(typeof<Resources.JQueryUI>)>]
 type Selectable[<JavaScript>] internal () =
-    inherit Pagelet() 
+    inherit Pagelet()
 
 
     (****************************************************************
     * Constructors
-    *****************************************************************) 
-    /// Creates a new selectable object given an element and 
+    *****************************************************************)
+    /// Creates a new selectable object given an element and
     /// a configuration object.
     [<JavaScript>]
     [<Name "New1">]
-    static member New (el : Element, conf: SelectableConfiguration): Selectable = 
-        let a = new Selectable()        
-        a.element <- 
-            el |>! OnAfterRender (fun el  -> 
+    static member New (el : Element, conf: SelectableConfiguration): Selectable =
+        let a = new Selectable()
+        a.element <-
+            el |>! OnAfterRender (fun el  ->
                 SelectableInternal.New(el.Body, conf)
             )
         a
@@ -91,17 +90,17 @@ type Selectable[<JavaScript>] internal () =
     /// configuration.
     [<JavaScript>]
     [<Name "New2">]
-    static member New (el : Element) : Selectable = 
+    static member New (el : Element) : Selectable =
         let conf = new SelectableConfiguration()
         Selectable.New(el, conf)
 
     (****************************************************************
     * Methods
-    *****************************************************************) 
+    *****************************************************************)
     /// Removes the selectable functionality.
     [<Inline "jQuery($this.element.Body).selectable('destroy')">]
     member this.Destroy() = ()
-    
+
     /// Disables the selectable functionality.
     [<Inline "jQuery($this.element.Body).selectable('disable')">]
     member this.Disable() = ()
@@ -110,8 +109,8 @@ type Selectable[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).selectable('enable')">]
     member this.Enable() = ()
 
-    /// Refreshes the position and size of each selectee element. 
-    /// This method can be used to manually recalculate the position 
+    /// Refreshes the position and size of each selectee element.
+    /// This method can be used to manually recalculate the position
     // and size of each selectee element.
     [<Inline "jQuery($this.element.Body).selectable('refresh')">]
     member this.Refresh() = ()
@@ -142,13 +141,13 @@ type Selectable[<JavaScript>] internal () =
     member private this.onUnselecting(f : JQuery.Event -> Element -> unit) = ()
 
 
-    /// Event triggered at the end of the select operation, 
+    /// Event triggered at the end of the select operation,
     /// on each element added to the selection.
     [<JavaScript>]
     member this.OnSelected(f : JQuery.Event -> Element -> unit) =
         this |> OnAfterRender(fun _ ->  this.onSelected f)
 
-    /// Event triggered during the select operation, 
+    /// Event triggered during the select operation,
     /// on each element added to the selection.
     [<JavaScript>]
     member this.OnSelecting(f : JQuery.Event -> Element -> unit) =
@@ -164,13 +163,13 @@ type Selectable[<JavaScript>] internal () =
     member this.OnStop(f : JQuery.Event -> Element -> unit) =
         this |> OnAfterRender(fun _ -> this.onStop f)
 
-    /// Event is triggered at the end of the select operation, 
+    /// Event is triggered at the end of the select operation,
     /// on each element removed from the selection.
     [<JavaScript>]
     member this.OnUnselected(f : JQuery.Event -> Element -> unit) =
         this |> OnAfterRender(fun _ ->  this.onUnselected f)
 
-    /// Event triggered during the select operation, 
+    /// Event triggered during the select operation,
     /// on each element removed from the selection.
     [<JavaScript>]
     member this.OnUnselecting(f : JQuery.Event -> Element -> unit) =

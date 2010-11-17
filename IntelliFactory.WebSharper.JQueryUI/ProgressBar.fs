@@ -9,7 +9,7 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-//JQueryUI Wrapping: (version Stable 1.8rc1) 
+//JQueryUI Wrapping: (version Stable 1.8rc1)
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
@@ -17,28 +17,27 @@ open IntelliFactory.WebSharper.Html
 
 
 type ProgressbarConfiguration[<JavaScript>]() =
-    
+
     [<DefaultValue>]
     [<Name "value">]
     //0 by default
     val mutable Value: int
 
 
-    
+
 module internal ProgressbarInternal =
     [<Inline "jQuery($el).progressbar($conf)">]
     let Init (el: Dom.Element, conf: ProgressbarConfiguration) = ()
 
 
-[<Resources.JQueryUIAllJS>]
-[<Resources.JQueryUIAllCss>]
-type Progressbar[<JavaScript>]internal () = 
+[<Require(typeof<Resources.JQueryUI>)>]
+type Progressbar[<JavaScript>]internal () =
     inherit Pagelet()
-    
+
     (****************************************************************
     * Constructors
-    *****************************************************************)        
-    /// Creates a new progressbar given an element and a 
+    *****************************************************************)
+    /// Creates a new progressbar given an element and a
     /// configuration object.
     [<JavaScript>]
     [<Name "New1">]
@@ -46,7 +45,7 @@ type Progressbar[<JavaScript>]internal () =
         let pb = new Progressbar()
         pb.element <- el
         el
-        |> OnAfterRender (fun el  -> 
+        |> OnAfterRender (fun el  ->
             ProgressbarInternal.Init(el.Body, conf)
         )
         pb
@@ -75,7 +74,7 @@ type Progressbar[<JavaScript>]internal () =
 
     (****************************************************************
     * Methods
-    *****************************************************************) 
+    *****************************************************************)
     /// Removes the progressbar functionality completely.
     [<Inline "jQuery($this.element.Body).progressbar('destroy')">]
     member this.Destroy() = ()

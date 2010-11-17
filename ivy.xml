@@ -11,12 +11,13 @@
     <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="dll.dep" type="bin" conf="default" />
     <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="xml" type="doc" conf="default" />
     <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="pdb" type="debug" conf="default" />
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="api.zip" type="doc" conf="default" />    
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="api.zip" type="doc" conf="default" />
     <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="Documentation.zip" type="doc" conf="default" />
-  </publications>  
+  </publications>
   <dependencies>
     <dependency name="if-ws" rev="latest.integration" conf="build->compiler" />
-    <dependency name="if-ws" rev="latest.integration" conf="default->default" />    
+    <dependency name="if-ws" rev="latest.integration" conf="default->default" />
+    <dependency name="if-ws-proxy-core" rev="latest.integration" conf="default->default" />
     <dependency name="if-ws-ecma" conf="default" rev="latest.integration" />
     <dependency name="if-ws-html" conf="default" rev="latest.integration" />
     <dependency name="if-ws-jquery" conf="default" rev="latest.integration" />

@@ -9,14 +9,14 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-//JQueryUI Wrapping: (version Stable 1.8rc1) 
+//JQueryUI Wrapping: (version Stable 1.8rc1)
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
-    
 
-type ResizableConfiguration[<JavaScript>]() = 
+
+type ResizableConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
     [<Name "alsoResize">]
@@ -100,16 +100,15 @@ type ResizableConfiguration[<JavaScript>]() =
     [<Name "minWidth">]
     val mutable MinWidth: int
 
-    
+
 module internal ResizableInternal =
     [<Inline "jQuery($el).resizable($conf)">]
     let internal New (el: Dom.Element, conf: ResizableConfiguration) = ()
 
 
-[<Resources.JQueryUIAllJS>]
-[<Resources.JQueryUIAllCss>]
-type Resizable[<JavaScript>] internal () = 
-    inherit Pagelet()   
+[<Require(typeof<Resources.JQueryUI>)>]
+type Resizable[<JavaScript>] internal () =
+    inherit Pagelet()
 
     (****************************************************************
     * Constructors
@@ -118,11 +117,11 @@ type Resizable[<JavaScript>] internal () =
     /// configuration object.
     [<JavaScript>]
     [<Name "New1">]
-    static member New (el : Element, conf: ResizableConfiguration): Resizable = 
+    static member New (el : Element, conf: ResizableConfiguration): Resizable =
         let a = new Resizable()
-        a.element <- 
-            el |>! OnAfterRender (fun el  -> 
-                ResizableInternal.New(el.Body, conf)                    
+        a.element <-
+            el |>! OnAfterRender (fun el  ->
+                ResizableInternal.New(el.Body, conf)
             )
         a
 
@@ -130,17 +129,17 @@ type Resizable[<JavaScript>] internal () =
     /// configuration object.
     [<JavaScript>]
     [<Name "New2">]
-    static member New (el : Element) : Resizable = 
+    static member New (el : Element) : Resizable =
         let conf = new ResizableConfiguration()
         Resizable.New(el, conf)
 
     (****************************************************************
     * Methods
-    *****************************************************************) 
+    *****************************************************************)
     /// Removes resizable functionality.
     [<Inline "jQuery($this.element.Body).resizable('destroy')">]
     member this.Destroy() = ()
-            
+
     /// Disables resizable functionality.
     [<Inline "jQuery($this.element.Body).resizable('disable')">]
     member this.Disable() = ()
@@ -155,7 +154,7 @@ type Resizable[<JavaScript>] internal () =
 
     (****************************************************************
     * Events
-    *****************************************************************) 
+    *****************************************************************)
     [<Inline "jQuery($this.element.Body).resizable({start: function (x,y) {($f(x))(y.start);}})">]
     member private this.onStart(f : JQuery.Event -> Element -> unit) = ()
 
