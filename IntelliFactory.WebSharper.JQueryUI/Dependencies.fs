@@ -23,7 +23,9 @@ module Resources =
         | url   -> url
 
     let private jQueryUIBaseCss = jQueryUIBase + "/themes/base"
+    
 
+    
     /// A resource that renders jQuery UI CSS and JavaScript files.
     type JQueryUI() =
         interface Resources.IResource with
@@ -32,3 +34,4 @@ module Resources =
             member this.Render context =
                 Resources.RenderJavaScript (jQueryUIBase + "/jquery-ui.min.js")
                 @ Resources.RenderCss (jQueryUIBaseCss + "/jquery.ui.all.css")
+

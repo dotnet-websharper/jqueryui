@@ -37,6 +37,7 @@
   </PropertyGroup>
   <Import Project="$(IfIvyLibDir)/IntelliFactory.WebSharper.targets" Condition="Exists('$(IfIvyLibDir)/IntelliFactory.WebSharper.targets')" />
   <ItemGroup>
+    <Compile Include="Annotations.fs" />
     <Compile Include="Utils.fs" />
     <Compile Include="Dependencies.fs" />
     <Compile Include="Accordion.fs" />

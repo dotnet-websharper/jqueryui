@@ -18,6 +18,7 @@
     <dependency name="if-ws" rev="latest.integration" conf="build->compiler" />
     <dependency name="if-ws" rev="latest.integration" conf="default->default" />
     <dependency name="if-ws-proxy-core" rev="latest.integration" conf="default->default" />
+    <dependency name="if-ws-proxy-core" rev="latest.integration" conf="default->default" />
     <dependency name="if-ws-ecma" conf="default" rev="latest.integration" />
     <dependency name="if-ws-html" conf="default" rev="latest.integration" />
     <dependency name="if-ws-jquery" conf="default" rev="latest.integration" />
