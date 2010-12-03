@@ -66,7 +66,7 @@ module internal SelectableInternal =
     let internal New (el: Dom.Element, conf: SelectableConfiguration) = ()
 
 
-[<Require(typeof<Resources.JQueryUI>)>]
+[<Require(typeof<Dependencies.JQueryUI>)>]
 type Selectable[<JavaScript>] internal () =
     inherit Pagelet()
 

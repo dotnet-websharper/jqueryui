@@ -121,7 +121,7 @@ module internal TabsInternal =
     let Init(el: Dom.Element, conf: TabsConfiguration) = ()
 
 
-[<Require(typeof<Resources.JQueryUI>)>]
+[<Require(typeof<Dependencies.JQueryUI>)>]
 type Tabs[<JavaScript>] internal () =
     inherit Pagelet()
 

@@ -52,7 +52,7 @@ module internal ButtonInternal =
     [<Inline "jQuery($el).button($conf)">]
     let Init (el: Dom.Element, conf: ButtonConfiguration) = ()
 
-[<Require(typeof<Resources.JQueryUI>)>]
+[<Require(typeof<Dependencies.JQueryUI>)>]
 type Button [<JavaScript>]()=
     inherit Pagelet()
 

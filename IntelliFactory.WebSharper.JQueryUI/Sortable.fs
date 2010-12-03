@@ -145,7 +145,7 @@ module internal SortableInternal =
     let Init (el: Dom.Element, conf: SortableConfiguration) = ()
 
 
-[<Require(typeof<Resources.JQueryUI>)>]
+[<Require(typeof<Dependencies.JQueryUI>)>]
 type Sortable [<JavaScript>] internal () =
     inherit Pagelet()
 

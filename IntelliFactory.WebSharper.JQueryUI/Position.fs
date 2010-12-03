@@ -97,7 +97,7 @@ module internal PositionInternal =
     [<Inline "jQuery($el).position($conf)">]
     let internal New (el: Dom.Element, conf: PositionConfiguration) = ()
 
-[<Require(typeof<Resources.JQueryUI>)>]
+[<Require(typeof<Dependencies.JQueryUI>)>]
 type Position [<JavaScript>] internal () =
     inherit Pagelet()
 

@@ -64,7 +64,7 @@ module internal SliderInternal =
     let Init(el: Dom.Element, conf: SliderConfiguration) = ()
 
 
-[<Require(typeof<Resources.JQueryUI>)>]
+[<Require(typeof<Dependencies.JQueryUI>)>]
 type Slider[<JavaScript>] internal () =
     inherit Pagelet()
 

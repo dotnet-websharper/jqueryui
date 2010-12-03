@@ -185,7 +185,7 @@ module internal DraggableInternal =
 
 
 
-[<Require(typeof<Resources.JQueryUI>)>]
+[<Require(typeof<Dependencies.JQueryUI>)>]
 type Draggable[<JavaScript>] internal () =
     inherit Pagelet ()
 

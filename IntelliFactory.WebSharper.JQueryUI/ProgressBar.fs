@@ -30,7 +30,7 @@ module internal ProgressbarInternal =
     let Init (el: Dom.Element, conf: ProgressbarConfiguration) = ()
 
 
-[<Require(typeof<Resources.JQueryUI>)>]
+[<Require(typeof<Dependencies.JQueryUI>)>]
 type Progressbar[<JavaScript>]internal () =
     inherit Pagelet()
 

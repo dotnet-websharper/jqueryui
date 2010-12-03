@@ -106,7 +106,7 @@ module internal ResizableInternal =
     let internal New (el: Dom.Element, conf: ResizableConfiguration) = ()
 
 
-[<Require(typeof<Resources.JQueryUI>)>]
+[<Require(typeof<Dependencies.JQueryUI>)>]
 type Resizable[<JavaScript>] internal () =
     inherit Pagelet()
 
