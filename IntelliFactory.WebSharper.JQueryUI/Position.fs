@@ -18,13 +18,12 @@ open IntelliFactory.WebSharper.Html
 //
 //module Position =
 
-
 type Target =
     | Element of Dom.Element
     | Event of JQuery.Event
     | Id of string
+
     [<JavaScript>]
-    [<Name "toString">]
     override this.ToString() =
         match this with
         | Element el -> unbox<string> (box el)
