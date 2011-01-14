@@ -9,12 +9,14 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-namespace IntelliFactory.WebSharper.JQueryUI
+module IntelliFactory.WebSharper.JQueryUI.Dependencies
 
-open IntelliFactory.WebSharper
+module R = IntelliFactory.WebSharper.Resources
 
-module Dependencies =
-    [<Sealed>]
-    type JQueryUI() =
-        inherit Resources.BaseResource("http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1", "/jquery-ui.min.js", "/jquery.ui.all.css")
+[<Sealed>]
+type JQueryUI() =
+    inherit R.BaseResource(
+        "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1",
+        "/jquery-ui.min.js",
+        "/themes/base/jquery-ui.css")
 
