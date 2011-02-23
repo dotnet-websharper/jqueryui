@@ -252,7 +252,8 @@ module internal DatepickerInternal =
     [<Inline "jQuery($el).datepicker($conf)">]
     let Init (el: Dom.Element, conf: DatepickerConfiguration) = ()
 
-[<Require(typeof<Dependencies.JQueryUI>)>]
+[<Require(typeof<Dependencies.JQueryUIJs>)>]
+[<Require(typeof<Dependencies.JQueryUICss>)>]
 type Datepicker[<JavaScript>] internal  () =
     inherit Pagelet()
 

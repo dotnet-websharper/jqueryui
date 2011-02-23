@@ -67,7 +67,8 @@ module internal DroppableInternal =
     let internal New (el: Dom.Element, conf: DroppableConfiguration) = ()
 
 
-[<Require(typeof<Dependencies.JQueryUI>)>]
+[<Require(typeof<Dependencies.JQueryUIJs>)>]
+[<Require(typeof<Dependencies.JQueryUICss>)>]
 type Droppable[<JavaScript>] internal () =
     inherit Pagelet()
 

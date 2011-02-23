@@ -119,7 +119,8 @@ module internal DialogInternal =
     let Init (el: Dom.Element, conf: DialogConfiguration) = ()
 
 
-[<Require(typeof<Dependencies.JQueryUI>)>]
+[<Require(typeof<Dependencies.JQueryUIJs>)>]
+[<Require(typeof<Dependencies.JQueryUICss>)>]
 type Dialog[<JavaScript>]internal () =
     inherit Pagelet()
 
