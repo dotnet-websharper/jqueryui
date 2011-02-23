@@ -71,5 +71,6 @@
     <Reference Include="IntelliFactory.WebSharper.Dom" />
     <Reference Include="IntelliFactory.WebSharper.JQuery" />
     <Reference Include="IntelliFactory.WebSharper.Html" />
+    <Reference Include="IntelliFactory.WebSharper.Ecma" />
   </ItemGroup>
 </Project>

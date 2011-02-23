@@ -21,5 +21,6 @@
     <dependency name="if-ws-ecma" conf="default" rev="latest.integration" />
     <dependency name="if-ws-html" conf="default" rev="latest.integration" />
     <dependency name="if-ws-jquery" conf="default" rev="latest.integration" />
+    <dependency name="if-ws-web" conf="default" rev="latest.integration" />
   </dependencies>
 </ivy-module>

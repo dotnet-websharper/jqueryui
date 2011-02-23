@@ -82,6 +82,19 @@ type Button [<JavaScript>]()=
         b.element <- el
         b
 
+    /// Creates a new button given an element and a configuration object.
+    [<JavaScript>]
+    [<Name "New3">]
+    static member New (genEl : unit -> Element, conf: ButtonConfiguration) : Button =
+        let button = new Button()
+        button.isEnabled <- true
+        button.element <-
+            genEl ()
+            |>! OnAfterRender (fun el  ->
+                ButtonInternal.Init(el.Body, conf)
+            )
+        button
+
     /// Creates a new button given a configuration object.
     [<JavaScript>]
     [<Name "New2">]

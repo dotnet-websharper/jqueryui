@@ -46,6 +46,14 @@ type TabsFxConfiguration =
     static member Dafault = {opacity = "toggle"}
 
 
+type TabsInfo =
+    {
+        options : string []
+        tab : Dom.Node
+        panel : Dom.Node
+        index : int
+    }
+
 type TabsConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
@@ -244,8 +252,8 @@ type Tabs[<JavaScript>] internal () =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Body).tabs({select: function (x,y) {$f(x);}})">]
-    member private this.onSelect(f : JQuery.Event -> unit) = ()
+    [<Inline "jQuery($this.element.Body).tabs({select: function (x,y) {($f(x))(y);}})">]
+    member private this.onSelect(f : JQuery.Event -> TabsInfo -> unit) = ()
 
     [<Inline "jQuery($this.element.Body).tabs({load: function (x,y) {$f(x);}})">]
     member private this.onLoad(f : JQuery.Event -> unit) = ()
