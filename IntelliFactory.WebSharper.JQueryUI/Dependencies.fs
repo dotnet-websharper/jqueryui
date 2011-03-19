@@ -9,48 +9,21 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-namespace IntelliFactory.WebSharper.JQueryUI
+module IntelliFactory.WebSharper.JQueryUI.Dependencies
 
-/// Contains YUI resource descriptors and their dependency information.
-module Dependencies =
-    open IntelliFactory.WebSharper
-    open System.Configuration
+module R = IntelliFactory.WebSharper.Resources
 
-    module Utils = 
-        let JQueryUIBase =
-            match ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQueryUI"] with
-            | null ->
-                "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1"
-            | url ->
-                url
 
-        let JQueryUIBaseCss =
-            match ConfigurationManager.AppSettings.["IntelliFactory.WebSharper.JQueryUICss"] with
-            | null ->
-                "http://jquery-ui.googlecode.com/svn/tags/1.8rc3/themes/base"
-            | url ->
-                url     
-        
-        [<AbstractClass>]
-        type Module(name: string) =
-            interface IResource with            
-                member this.Render(resolver, writer) =
-                    let loc =
-                        sprintf "%s/%s.js" JQueryUIBase name
-                    Resource.RenderJavaScript loc writer
+[<Sealed>]
+type JQueryUIJs() =
+    inherit R.BaseResource(
+        "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/",
+        "/jquery-ui.min.js")
 
-        [<AbstractClass>]
-        type ModuleCss(name: string) =
-            interface IResource with
-                member this.Render(resolver, writer) =
-                    let loc = 
-                        sprintf "%s/%s.css" JQueryUIBaseCss name
-                    Resource.RenderCss loc writer
+[<Sealed>]
+type JQueryUICss() =
+    inherit R.BaseResource(
+        "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base",
+        "/jquery.ui.all.css")
 
-    open Utils
 
-    type JQueryUIAll() = 
-        inherit Module("jquery-ui")
-                
-    and AllCss()= 
-        inherit ModuleCss("jquery.ui.all")

@@ -9,23 +9,22 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-//JQueryUI Wrapping: (version Stable 1.8rc1) 
+//JQueryUI Wrapping: (version Stable 1.8rc1)
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
-open Utils
-    
-[<JavaScriptType>]
-type ToleranceOfDroppable =     
-    | [<Constant "fit">] Fit
-    | [<Constant "intersect">] Intersect
-    | [<Constant "pointer">] Pointer
-    | [<Constant "touch">] Touch
 
 
-[<JavaScriptType>]
-type DroppableConfiguration[<JavaScript>]() = 
+type ToleranceOfDroppable =
+    | [<Name "fit">] Fit
+    | [<Name "intersect">] Intersect
+    | [<Name "pointer">] Pointer
+    | [<Name "touch">] Touch
+
+
+
+type DroppableConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
     [<Name "accept">]
@@ -62,80 +61,84 @@ type DroppableConfiguration[<JavaScript>]() =
     val mutable Tolerance: ToleranceOfDroppable
 
 
-[<JavaScriptType>]    
+
 module internal DroppableInternal =
     [<Inline "jQuery($el).droppable($conf)">]
     let internal New (el: Dom.Element, conf: DroppableConfiguration) = ()
 
-[<JavaScriptType>]
+
+[<Require(typeof<Dependencies.JQueryUIJs>)>]
+[<Require(typeof<Dependencies.JQueryUICss>)>]
 type Droppable[<JavaScript>] internal () =
-    inherit Widget()
+    inherit Pagelet()
 
     (****************************************************************
     * Constructors
-    *****************************************************************) 
+    *****************************************************************)
     /// Creates a new droppable object from the given object and a
     /// configuration object.
     [<JavaScript>]
-    static member New (el : Element, conf: DroppableConfiguration): Droppable = 
+    [<Name "New1">]
+    static member New (el : Element, conf: DroppableConfiguration): Droppable =
         let a = new Droppable()
-        a.element <- 
+        a.element <-
             el
-            |>! OnAfterRender (fun el  -> 
-                DroppableInternal.New(el.Dom, conf)
+            |>! OnAfterRender (fun el  ->
+                DroppableInternal.New(el.Body, conf)
             )
         a
 
     /// Creates a new droppable object using the
     /// default configuration.
     [<JavaScript>]
-    static member New (el : Element) : Droppable = 
+    [<Name "New2">]
+    static member New (el : Element) : Droppable =
         let conf = new DroppableConfiguration()
         Droppable.New(el, conf)
 
     (****************************************************************
     * Methods
-    *****************************************************************) 
+    *****************************************************************)
     /// Removes droppable functionality completely.
-    [<Inline "jQuery($this.element.el).droppable('destroy')">]
+    [<Inline "jQuery($this.element.Body).droppable('destroy')">]
     member this.Destroy() = ()
-            
+
     /// Disables droppable functionality.
-    [<Inline "jQuery($this.element.el).droppable('disable')">]
+    [<Inline "jQuery($this.element.Body).droppable('disable')">]
     member this.Disable() = ()
 
     /// Enables droppable functionality.
-    [<Inline "jQuery($this.element.el).droppable('enable')">]
+    [<Inline "jQuery($this.element.Body).droppable('enable')">]
     member this.Enable() = ()
 
-    
+
     /// Sets droppable option.
-    [<Inline "jQuery($this.element.el).droppable('option', $name, $value)">]
+    [<Inline "jQuery($this.element.Body).droppable('option', $optionName, $value)">]
     member this.Option(optionName: string, value: obj) : unit = ()
 
 
     (****************************************************************
     * Events
-    *****************************************************************) 
+    *****************************************************************)
     /// Event triggered any time an accepted draggable starts dragging.
-    [<Inline "jQuery($this.element.el).droppable({activate: function (x,y) {($f(x))(y.activate);}})">]
-    member private this.onActivate(f : JQueryEvent -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).droppable({activate: function (x,y) {($f(x))(y.activate);}})">]
+    member private this.onActivate(f : JQuery.Event -> Element -> unit) = ()
 
     /// Event triggered any time an accepted draggable stops dragging.
-    [<Inline "jQuery($this.element.el).droppable({deactivate: function (x,y) {($f(x))(y.deactivate);}})">]
-    member private this.onDeactivate(f : JQueryEvent -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).droppable({deactivate: function (x,y) {($f(x))(y.deactivate);}})">]
+    member private this.onDeactivate(f : JQuery.Event -> Element -> unit) = ()
 
     /// Event is triggered when an accepted draggable is dragged 'over' (within the tolerance of) this droppable.
-    [<Inline "jQuery($this.element.el).droppable({over: function (x,y) {($f(x))(y.over);}})">]
-    member private this.onOver(f : JQueryEvent -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).droppable({over: function (x,y) {($f(x))(y.over);}})">]
+    member private this.onOver(f : JQuery.Event -> Element -> unit) = ()
 
     /// Event triggered when an accepted draggable is dragged out (within the tolerance of) this droppable.
-    [<Inline "jQuery($this.element.el).droppable({out: function (x,y) {($f(x))(y.out);}})">]
-    member private this.onOut(f : JQueryEvent -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).droppable({out: function (x,y) {($f(x))(y.out);}})">]
+    member private this.onOut(f : JQuery.Event -> Element -> unit) = ()
 
-    /// Event triggered when an accepted draggable is dropped 'over' (within the tolerance of) this droppable.     
-    [<Inline "jQuery($this.element.el).droppable({drop: function (x,y) {($f(x))(y.drop);}})">]
-    member private this.onDrop(f : JQueryEvent -> Element -> unit) = ()
+    /// Event triggered when an accepted draggable is dropped 'over' (within the tolerance of) this droppable.
+    [<Inline "jQuery($this.element.Body).droppable({drop: function (x,y) {($f(x))(y.drop);}})">]
+    member private this.onDrop(f : JQuery.Event -> Element -> unit) = ()
 
     /// Event triggered any time an accepted draggable stops dragging.
     [<JavaScript>]
@@ -152,15 +155,15 @@ type Droppable[<JavaScript>] internal () =
     member this.OnOver f =
         this |> OnAfterRender(fun _ -> this.onOver f)
 
-    
+
     /// Event triggered when an accepted draggable is dragged out (within the tolerance of) this droppable.
     [<JavaScript>]
     member this.OnOut f =
         this |> OnAfterRender(fun _ -> this.onOut f)
 
-    
-    /// Event triggered when an accepted draggable is dropped 'over' 
-    /// (within the tolerance of) this droppable.     
+
+    /// Event triggered when an accepted draggable is dropped 'over'
+    /// (within the tolerance of) this droppable.
     [<JavaScript>]
     member this.OnDrop f =
         this |> OnAfterRender(fun _ -> this.onDrop f)

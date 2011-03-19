@@ -13,50 +13,26 @@ namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
-[<JavaScriptType>]
+[<AutoOpen>]
 module Utils =
-    
-    
-    [<JavaScriptType>]
-    type RenderEvent =
-        | Before
-        | After
 
-[<AbstractClass>]
-[<JavaScriptType>]
-type Widget[<JavaScript>]() =
-               
-    [<DefaultValue>]
-    val mutable internal element : Element
-                
-    (****************************************************************
-    * INode
-    *****************************************************************)              
-    interface INode with
-        [<JavaScript>]
-        member this.Body
-            with get () = this.element.Dom :> Dom.Node
-                                
-    (****************************************************************
-    * IWidget
-    *****************************************************************)                  
-    interface IWidget with
-        [<JavaScript>]
-        member this.OnBeforeRender(f: unit -> unit) : unit=
-            this.element
-            |> OnBeforeRender (fun _ -> f ())
-                        
-        [<JavaScript>]
-        member this.OnAfterRender(f: unit -> unit) : unit=
-            this.element
-            |> OnAfterRender (fun _ -> 
-                (this :> IWidget).Render()
-                f ()
-            )
-        [<JavaScript>]
-        member this.Render() =
-            (this.element :> IWidget).Render()
+    [<Inline "console.log($x)">]
+    let internal Log x = ()
 
-        [<JavaScript>]                                       
-        member this.Body
-            with get () = this.element.Dom
+    type Pagelet[<JavaScript>]() =
+
+        [<DefaultValue>]
+        val mutable internal element : Element
+
+        (****************************************************************
+        * IPagelet
+        *****************************************************************)
+        interface IPagelet with
+
+            [<JavaScript>]
+            member this.Render() =
+                (this.element :> IPagelet).Render()
+
+            [<JavaScript>]
+            member this.Body
+                with get () = this.element.Body :> _

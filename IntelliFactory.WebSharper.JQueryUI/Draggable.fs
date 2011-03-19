@@ -9,15 +9,14 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-//JQueryUI Wrapping: (version Stable 1.8rc1) 
+//JQueryUI Wrapping: (version Stable 1.8rc1)
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
-open Utils
 
-[<JavaScriptType>]
-type DraggablecursorAtConfiguration = 
+
+type DraggablecursorAtConfiguration =
     {
         [<Name "top">]
         Top: int
@@ -26,11 +25,11 @@ type DraggablecursorAtConfiguration =
         Left: int
     }
     [<JavaScript>]
-    static member Default = 
+    static member Default =
         {Top = 1; Left = 1}
 
-[<JavaScriptType>]
-type DraggableStackConfiguration = 
+
+type DraggableStackConfiguration =
     {
         [<Name "group">]
         Group: string
@@ -40,82 +39,82 @@ type DraggableStackConfiguration =
     }
 
     [<JavaScript>]
-    static member Default = 
+    static member Default =
         {Group = "prouducts"; Min = 50}
 
-[<JavaScriptType>]
-type DraggableConfiguration[<JavaScript>]() = 
+
+type DraggableConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
     [<Name "addClasses">]
     //true by default
-    val mutable AddClasses: bool 
-    
+    val mutable AddClasses: bool
+
     [<DefaultValue>]
     [<Name "appendTo">]
     //"parent" by default, string of Element
     val mutable AppendTo: string
-    
+
     [<DefaultValue>]
     [<Name "axis">]
     //"" by default, string of int
     val mutable Axis: string
-    
+
     [<DefaultValue>]
     [<Name "cancel">]
     //"" by default, string of Element
     val mutable Cancel: string
-    
+
     [<DefaultValue>]
     [<Name "connectToSortable">]
     //"" by default, string of Element
     val mutable ConnectToSortable: string
-    
+
     [<DefaultValue>]
     [<Name "containment">]
     //"" by default, string of Element
     val mutable Containment: string
-    
+
     [<DefaultValue>]
     [<Name "cursor">]
     //"auto" by default
     val mutable Cursor: string
-    
+
     [<DefaultValue>]
     [<Name "cursorAt">]
     //"top=1, left=1" by default
     val mutable CursorAt: DraggablecursorAtConfiguration
-    
+
     [<DefaultValue>]
     [<Name "delay">]
     //0 by default
     val mutable Delay: int
-    
+
     [<DefaultValue>]
     [<Name "distance">]
     //1 by default
     val mutable Distance: int
-    
+
     [<DefaultValue>]
     [<Name "grid">]
     //0 by default
     val mutable Grid: array<int>
-    
+
     [<DefaultValue>]
     [<Name "handle">]
     //"" by default, string of Element
     val mutable Handle: string
-    
+
     [<DefaultValue>]
     [<Name "helper">]
     //"original" by default
     val mutable Helper: string
-    
+
     [<DefaultValue>]
     [<Name "iframeFix">]
     //false by default
     val mutable IframeFix: bool
-    
+
     [<DefaultValue>]
     [<Name "opacity">]
     val mutable Opacity: float
@@ -179,76 +178,80 @@ type DraggableConfiguration[<JavaScript>]() =
     //2700 by default
     val mutable ZIndex: int
 
-[<JavaScriptType>]    
+
 module internal DraggableInternal =
     [<Inline "jQuery($el).draggable($conf)">]
     let internal New (el: Dom.Element, conf: DraggableConfiguration) = ()
 
 
-[<JavaScriptType>]
+
+[<Require(typeof<Dependencies.JQueryUIJs>)>]
+[<Require(typeof<Dependencies.JQueryUICss>)>]
 type Draggable[<JavaScript>] internal () =
-    inherit Widget ()
-    
+    inherit Pagelet ()
+
     (****************************************************************
     * Constructors
-    *****************************************************************) 
+    *****************************************************************)
     /// Creates a new draggabel object given an element and a
     /// configuration settings object.
     [<JavaScript>]
-    static member New (el : Element, conf: DraggableConfiguration): Draggable = 
+    [<Name "New1">]
+    static member New (el : Element, conf: DraggableConfiguration): Draggable =
         let a = new Draggable()
-        a.element <- 
+        a.element <-
             el
             |>! OnAfterRender (fun el ->
-                DraggableInternal.New(el.Dom, conf)
+                DraggableInternal.New(el.Body, conf)
             )
         a
 
     /// Creates a new draggable using the default
     /// configuration settings.
     [<JavaScript>]
-    static member New (el : Element) : Draggable = 
+    [<Name "New2">]
+    static member New (el : Element) : Draggable =
         let conf = new DraggableConfiguration()
         Draggable.New(el, conf)
-             
+
     (****************************************************************
     * Methods
-    *****************************************************************) 
-    /// Removes draggable functionality completely.    
-    [<Inline "jQuery($this.element.el).draggable('destroy')">]
+    *****************************************************************)
+    /// Removes draggable functionality completely.
+    [<Inline "jQuery($this.element.Body).draggable('destroy')">]
     member this.Destroy() = ()
-            
+
     /// Disables the draggable functionality.
-    [<Inline "jQuery($this.element.el).draggable('disable')">]
+    [<Inline "jQuery($this.element.Body).draggable('disable')">]
     member this.Disable() = ()
 
     /// Enables the draggable functionality.
-    [<Inline "jQuery($this.element.el).draggable('enable')">]
+    [<Inline "jQuery($this.element.Body).draggable('enable')">]
     member this.Enable() = ()
-   
+
     /// Sets a draggable option.
-    [<Inline "jQuery($this.element.el).draggable('option', $name, $value)">]
+    [<Inline "jQuery($this.element.Body).draggable('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
 
     (****************************************************************
     * Events
-    *****************************************************************) 
+    *****************************************************************)
 
-    [<Inline "jQuery($this.element.el).draggable({start: function (x,y) {($f(x))(y.start);}})">]
-    member private this.onStart(f : JQueryEvent -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).draggable({start: function (x,y) {($f(x))(y.start);}})">]
+    member private this.onStart(f : JQuery.Event -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element.el).draggable({stop: function (x,y) {($f(x))(y.stop);}})">]
-    member private this.onStop(f : JQueryEvent -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).draggable({stop: function (x,y) {($f(x))(y.stop);}})">]
+    member private this.onStop(f : JQuery.Event -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element.el).draggable({drag: function (x,y) {($f(x))(y.drag);}})">]
-    member private this.onDrag(f : JQueryEvent -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).draggable({drag: function (x,y) {($f(x))(y.drag);}})">]
+    member private this.onDrag(f : JQuery.Event -> Element -> unit) = ()
 
     /// Event triggered when dragging starts.
     [<JavaScript>]
     member this.OnStart f =
         this |> OnAfterRender(fun _ ->  this.onStart f)
-    
+
     /// Event triggered when dragging stops.
     [<JavaScript>]
     member this.OnStop f =

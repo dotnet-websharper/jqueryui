@@ -3,14 +3,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7e70b9e1-7e68-4df9-a3b8-74378e31be08}</ProjectGuid>
+    <ProjectGuid>{4a6bae18-3f58-4add-a7e8-b5380efdf0d1}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>WebSharperProject</RootNamespace>
-    <AssemblyName>IntelliFactory.WebSharper.JQueryUI</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <Name>IntelliFactory.WebSharper.JQueryUI</Name>
-    <TargetFrameworkProfile />
+    <RootNamespace>$(Name)</RootNamespace>
+    <AssemblyName>$(Name)</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +20,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
+    <DocumentationFile>bin\Debug\$(Name).XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,34 +29,16 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Release\IntelliFactory.WebSharper.JQueryUI.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\$(Name).XML</DocumentationFile>
   </PropertyGroup>
+  <Import Project="$(INTELLIFACTORY)/build/IntelliFactory.FSharp.targets" />
+  <PropertyGroup>
+    <WEBSHARPER_HOME>$(IfIvyLibDir)</WEBSHARPER_HOME>
+  </PropertyGroup>
+  <Import Project="$(IfIvyLibDir)/IntelliFactory.WebSharper.targets" Condition="Exists('$(IfIvyLibDir)/IntelliFactory.WebSharper.targets')" />
   <ItemGroup>
-    <Reference Include="IntelliFactory.JavaScript">
-      <HintPath>..\lib\IntelliFactory.JavaScript.dll</HintPath>
-    </Reference>
-    <Reference Include="IntelliFactory.WebSharper">
-      <HintPath>..\lib\IntelliFactory.WebSharper.dll</HintPath>
-    </Reference>
-    <Reference Include="IntelliFactory.WebSharper.Formlet">
-      <HintPath>..\lib\IntelliFactory.WebSharper.Formlet.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Configuration" />
-    <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="../Version.fs">
-      <Link>Version.fs</Link>
-    </Compile>
     <Compile Include="Utils.fs" />
     <Compile Include="Dependencies.fs" />
-    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Accordion.fs" />
     <Compile Include="Autocomplete.fs" />
     <Compile Include="Button.fs" />
@@ -70,10 +53,24 @@
     <Compile Include="Selectable.fs" />
     <Compile Include="Sortable.fs" />
     <Compile Include="Position.fs" />
+    <Compile Include="Test.fs" />
   </ItemGroup>
-  <PropertyGroup Condition="'$(IntelliFactory)' == ''">
-    <IntelliFactory>//ifbuds01/pub</IntelliFactory>
-  </PropertyGroup>
-  <Import Project="$(IntelliFactory)/FSharp/1.9.9.9/bin/Microsoft.FSharp.Targets" />
-  <Import Project="$(IntelliFactory)/bin/IntelliFactory.Targets" />
+  <ItemGroup>
+    <Reference Include="IntelliFactory.WebSharper.Ecma">
+      <HintPath>..\bin\lib\Release\IntelliFactory.WebSharper.Ecma.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="FSharp.Core" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="IntelliFactory.Json" />
+    <Reference Include="IntelliFactory.WebSharper" />
+    <Reference Include="IntelliFactory.WebSharper.Core" />
+    <Reference Include="IntelliFactory.WebSharper.Dom" />
+    <Reference Include="IntelliFactory.WebSharper.JQuery" />
+    <Reference Include="IntelliFactory.WebSharper.Html" />
+    <Reference Include="IntelliFactory.WebSharper.Ecma" />
+  </ItemGroup>
 </Project>

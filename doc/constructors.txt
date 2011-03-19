@@ -1,0 +1,22 @@
+# Constructors
+
+Constructor functions are provided for all `Widgets` and `Effects`.
+There are typically a few options for constructing Widgets depending
+on the desired configuration.
+
+In the original jQuery UI library configuration settings are usually
+passed as a JavaScript object.  For example, a calendar may be
+initialized in a disabled state by passing a configuration setting to
+the constructor function:
+
+    #javascript
+    $("#datepicker").datepicker({{ disabled: true }});
+
+In WebSharper™ configuration settings for any widget are represented
+by a corresponding configuration type and may be passed to the
+constructors as parameters:
+
+    #fsharp
+    let conf = Datepicker.DatepickerConfiguration()
+    conf.Disabled <- true
+    let datePicker = Datepicker.New(conf)

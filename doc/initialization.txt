@@ -1,0 +1,47 @@
+# Widget Initialization
+
+The fundamental difference between original jQuery UI JavaScript
+widgets and their WebSharper™ counterparts is that in JavaScript the
+constructor methods are typically called on elements already attached
+to the DOM tree.  For example, in order for the following code to
+work:
+
+    #javascript
+    $(selector).datepicker();
+
+the selector needs to refer to an element already attached to the
+page.
+
+In WebSharper™ you normally do not work with inserted nodes,
+so whenever you call constructor method such as:
+
+    #fsharp
+    Datepicker.New()
+
+the actual initialization of the internal element is delayed until
+this node is rendered to the page.
+
+Therefore caution needs to be taken when using widget objects.  If the
+widget is not yet rendered, some instance member calls may result in
+runtime errors.
+
+For example, the following code:
+
+    #fsharp
+    let datePicker = Datepicker.New()
+    datePicker.SetDate(new Date(2010,3,14))
+
+will not work since the call to `SetDate` assumes that the
+`datePicker` object is rendered.
+
+Since all widgets implement the `IWidget` interface you may use the
+`OnAfterRender` function to accomodate for this.
+
+You may rewrite the code above using the `OnAfterRender` as in:
+
+    #fsharp
+    datePicker 
+	|> OnAfterRender(fun _ -> 
+		datePicker.SetDate(new JDate(2010,3,14))
+    )
+

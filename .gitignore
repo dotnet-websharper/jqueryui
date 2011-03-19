@@ -1,4 +1,4 @@
-*.suo
-lib
 bin
 obj
+*.docbook
+*.suo

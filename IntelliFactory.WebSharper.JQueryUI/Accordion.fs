@@ -9,17 +9,14 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-//JQueryUI Wrapping: (version Stable 1.8rc1) 
+//JQueryUI Wrapping: (version Stable 1.8rc1)
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
-open Utils
 
-[<Stub>]
-[<JavaScriptType>]
 type AccordionIconConfiguration =
-    {   
+    {
         [<Name "header">]
         Header: string
 
@@ -30,10 +27,8 @@ type AccordionIconConfiguration =
     static member Default =
         { Header="ui-icon-triangle-1-e"; HeaderSelected="ui-icon-triangle-1-s" }
 
-[<Stub>]
-[<JavaScriptType>]
-type AccordionConfiguration[<JavaScript>]() = 
-    
+type AccordionConfiguration[<JavaScript>]() =
+
     [<DefaultValue>]
     [<Name "active">]
     val mutable Active: int
@@ -73,98 +68,100 @@ type AccordionConfiguration[<JavaScript>]() =
     [<DefaultValue>]
     [<Name "navigation">]
     val mutable Navigation: bool
-    
+
     [<DefaultValue>]
     [<Name "navigationFilter">]
     val mutable NavigationFilter: unit -> unit
-    
 
-[<JavaScriptType>]    
+
+
 module internal AccordianInternal =
     [<Inline "jQuery($el).accordion($conf)">]
     let internal Init (el: Dom.Element, conf: AccordionConfiguration) = ()
 
-[<JavaScriptType>]
+[<Require(typeof<Dependencies.JQueryUIJs>)>]
+[<Require(typeof<Dependencies.JQueryUICss>)>]
 type Accordion[<JavaScript>] internal () =
-    inherit Widget()
-    
+    inherit Pagelet()
+
     (****************************************************************
     * Constructors
-    *****************************************************************)        
+    *****************************************************************)
     /// Create an accordion with title and content panels according to the
-    /// given list of name and value pairs.    
+    /// given list of name and value pairs.
     [<JavaScript>]
-    static member New (els : List<string * Element>, conf: AccordionConfiguration): Accordion = 
+    [<Name "New1">]
+    static member New (els : List<string * Element>, conf: AccordionConfiguration): Accordion =
         let a = new Accordion()
         let panel =
-            els
-            |> List.map (fun (header, el) ->
-                [
-                    H3 [A [HRef "#"] -< [Text header]]
-                    Div [el]
-                ]
-            )
-            |> List.concat
-            |> Div
+            let els =
+                els
+                |> List.map (fun (header, el) ->
+                    [
+                        H3 [A [Attr.HRef "#"; Text header]]
+                        Div [el]
+                    ]
+                )
+                |> List.concat
+            Div els
             |>! OnAfterRender (fun el ->
-                AccordianInternal.Init(el.Dom, conf)
-                (a :> IWidget).Render()
+                AccordianInternal.Init(el.Body :?> _, conf)
             )
         a.element <- panel
-        a            
-    
+        a
+
     /// Create an accordion with default configuration settings.
     [<JavaScript>]
+    [<Name "New2">]
     static member New (els : List<string * Element>): Accordion =
-        Accordion.New(els, new AccordionConfiguration())        
+        Accordion.New(els, new AccordionConfiguration())
 
     (****************************************************************
     * Methods
-    *****************************************************************) 
-    /// Remove the accordion functionality completely. 
+    *****************************************************************)
+    /// Remove the accordion functionality completely.
     /// This will return the element back to its pre-init state.
-    [<Inline "jQuery($this.element.el).accordion('destroy')">]
+    [<Inline "jQuery($this.element.Body).accordion('destroy')">]
     member this.Destroy() = ()
 
     /// Disable the accordion.
-    [<Inline "jQuery($this.element.el).accordion('disable')">]
+    [<Inline "jQuery($this.element.Body).accordion('disable')">]
     member this.Disable () = ()
 
     /// Enables the accordion.
-    [<Inline "jQuery($this.element.el).accordion('enable')">]
+    [<Inline "jQuery($this.element.Body).accordion('enable')">]
     member this.Enable () = ()
 
     /// Gets or sets any accordion option.
-    [<Inline "jQuery($this.element.el).accordion('option', $name, $value)">]
+    [<Inline "jQuery($this.element.Body).accordion('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
-    /// Activate a content part of the accordion with the 
-    /// corresponding zero-based index.    
-    [<Inline "jQuery($this.element.el).accordion('activate', $index)">]
+    /// Activate a content part of the accordion with the
+    /// corresponding zero-based index.
+    [<Inline "jQuery($this.element.Body).accordion('activate', $index)">]
     member this.Activate (index: int) = ()
 
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.el).accordion({change: function (x,y) {($f(x))(y.change);}})">]
-    member private this.onChange(f : JQueryEvent -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).accordion({change: function (x,y) {($f(x))(y.change);}})">]
+    member private this.onChange(f : JQuery.Event -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element.el).accordion({change: function (x,y) {($f(x))(y.changestart);}})">]
-    member private this.onChangestart(f : JQueryEvent -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).accordion({change: function (x,y) {($f(x))(y.changestart);}})">]
+    member private this.onChangestart(f : JQuery.Event -> Element -> unit) = ()
 
-    /// Event triggered every time the accordion changes. 
-    /// If the accordion is animated, the event will be triggered 
-    /// upon completion of the animation; otherwise, 
-    /// it is triggered immediately.    
+    /// Event triggered every time the accordion changes.
+    /// If the accordion is animated, the event will be triggered
+    /// upon completion of the animation; otherwise,
+    /// it is triggered immediately.
     [<JavaScript>]
-    member this.OnChange f =      
+    member this.OnChange f =
         this
         |> OnAfterRender (fun _ ->
             this.onChange f
         )
 
-    
-    /// Event triggered every time the accordion starts to change. 
+    /// Event triggered every time the accordion starts to change.
     [<JavaScript>]
     member this.OnChangeStart f =
         this
