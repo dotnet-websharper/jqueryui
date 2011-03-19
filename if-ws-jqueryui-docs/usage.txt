@@ -40,7 +40,7 @@ both settings.
 If you want to serve the resource files locally you need to make sure to you use the same
 naming conventions as used by the online repository.	
 
-## Events
+## Events Usage
 
 jQuery UI widgets allow to add event handlers to widgets. For example,
 the `Datepicker` widget supports the `onSelect` event:
@@ -51,7 +51,7 @@ the `Datepicker` widget supports the `onSelect` event:
     });
 
 
-## Constructors
+## Constructors Usage
 
 Constructor functions are provided for all `Widgets` and `Effects`.
 There are typically a few options for constructing Widgets depending
@@ -99,7 +99,7 @@ perfectly valid:
     let datePicker = DatePicker.New() 
     datePicker.OnSelect(fun date -> ...)
 
-## Widget Initialization
+## Widget Initialization Usage
 
 The fundamental difference between original jQuery UI JavaScript
 widgets and their WebSharper™ counterparts is that in JavaScript the

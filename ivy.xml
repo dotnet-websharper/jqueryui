@@ -11,8 +11,7 @@
     <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="dll.dep" type="bin" conf="default" />
     <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="xml" type="doc" conf="default" />
     <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="pdb" type="debug" conf="default" />
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="api.zip" type="doc" conf="default" />
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="Documentation.zip" type="doc" conf="default" />
+    <artifact name="if-ws-jqueryui-docs" ext="zip" type="doc" conf="default" />
   </publications>
   <dependencies>
     <dependency name="if-ws" rev="latest.integration" conf="build->compiler" />
