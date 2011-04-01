@@ -47,7 +47,6 @@ type Autocomplete[<JavaScript>] internal () =
     interface IPagelet with
         [<JavaScript>]
         member this.Render () =
-            Log "Render auto complete"
             this.element.Render()
         [<JavaScript>]
         member this.Body = this.element.Body
@@ -64,7 +63,6 @@ type Autocomplete[<JavaScript>] internal () =
         let a = new Autocomplete()
         el
         |> OnAfterRender (fun el  ->
-            Log "Init autocomplete"
             AutocompleteInternal.Init(el.Body :?> _, conf)
         )
         a.element <- el

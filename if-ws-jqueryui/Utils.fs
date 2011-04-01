@@ -16,9 +16,6 @@ open IntelliFactory.WebSharper.Html
 [<AutoOpen>]
 module Utils =
 
-    [<Inline "console.log($x)">]
-    let internal Log x = ()
-
     type Pagelet[<JavaScript>]() =
 
         [<DefaultValue>]
