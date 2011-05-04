@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ivy-module version="2.0">
-  <info organisation="IntelliFactory" module="if-ws-jqueryui" revision="2.1" />
+  <info organisation="IntelliFactory" module="if-ws-jqueryui" revision="2.2" />
   <configurations>
     <conf name="build" />
     <conf name="default" />
