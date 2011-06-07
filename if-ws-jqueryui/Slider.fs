@@ -39,8 +39,8 @@ type SliderConfiguration[<JavaScript>] () =
     val mutable Orientation: string
 
     [<DefaultValue>]
-    [<Name "rang">]
-    val mutable Rang: string
+    [<Name "range">]
+    val mutable Range: obj
 
     [<DefaultValue>]
     [<Name "step">]
@@ -56,8 +56,6 @@ type SliderConfiguration[<JavaScript>] () =
     [<Name "values">]
     //0 by default
     val mutable Values: array<int>
-
-
 
 module internal SliderInternal =
     [<Inline "jQuery($el).slider($conf)">]
@@ -116,6 +114,14 @@ type Slider[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).slider('value')">]
     member private this.getValue () = 0
 
+    [<Inline "jQuery($this.element.Body).slider('values', $v)">]
+    member private this.setValues (v: int []) = ()
+
+    [<Inline "jQuery($this.element.Body).slider('values')">]
+    member private this.getValues () = 0
+
+
+
     /// Gets or sets the slider value.
     [<JavaScript>]
     member this.Value
@@ -123,6 +129,14 @@ type Slider[<JavaScript>] internal () =
             this.getValue()
         and set (v: int) =
             this.setValue v
+
+    /// Gets or sets the slider value.
+    [<JavaScript>]
+    member this.Values
+        with get () =
+            this.getValues()
+        and set (v: int []) =
+            this.setValues v
 
     (****************************************************************
     * Events
