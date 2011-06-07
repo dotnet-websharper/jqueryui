@@ -85,7 +85,7 @@ type Button [<JavaScript>]()=
 
     /// Creates a new button given an element and a configuration object.
     [<JavaScript>]
-    [<Name "New3">]
+    [<Name "New2">]
     static member New (genEl : unit -> Element, conf: ButtonConfiguration) : Button =
         let button = new Button()
         button.isEnabled <- true
@@ -98,14 +98,14 @@ type Button [<JavaScript>]()=
 
     /// Creates a new button given a configuration object.
     [<JavaScript>]
-    [<Name "New2">]
+    [<Name "New3">]
     static member New (conf: ButtonConfiguration): Button =
         Button.New(IntelliFactory.WebSharper.Html.Default.Button [], conf)
 
     /// Creates a new button with the given label and
     /// using the default configuration object.
     [<JavaScript>]
-    [<Name "New3">]
+    [<Name "New4">]
     static member New (label: string): Button =
         let conf = new ButtonConfiguration()
         conf.Label <- label
