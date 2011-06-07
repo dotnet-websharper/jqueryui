@@ -118,7 +118,7 @@ type Slider[<JavaScript>] internal () =
     member private this.setValues (v: int []) = ()
 
     [<Inline "jQuery($this.element.Body).slider('values')">]
-    member private this.getValues () = [||]
+    member private this.getValues () : int [] = [||]
 
 
 
