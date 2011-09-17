@@ -19,92 +19,72 @@ open IntelliFactory.WebSharper.Html
 type ResizableConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
-    [<Name "alsoResize">]
-    val mutable AlsoResize: string
+    val mutable alsoResize: string
 
     [<DefaultValue>]
-    [<Name "animate">]
     //false by default
-    val mutable Animate: bool
+    val mutable animate: bool
 
     [<DefaultValue>]
-    [<Name "animateDuration">]
     //"slow" by default
-    val mutable AnimateDuration: string
+    val mutable animateDuration: string
 
     [<DefaultValue>]
-    [<Name "animateEasing">]
     //"swing" by default
-    val mutable AnimateEasing: string
+    val mutable animateEasing: string
 
     [<DefaultValue>]
-    [<Name "aspectRatio">]
-    val mutable AspectRatio: float
+    val mutable aspectRatio: float
 
     [<DefaultValue>]
-    [<Name "autoHide">]
     //false by default
-    val mutable AutoHide: bool
+    val mutable autoHide: bool
 
     [<DefaultValue>]
-    [<Name "cancel">]
     //":input,option" by default
-    val mutable Cancel: string
+    val mutable cancel: string
 
     [<DefaultValue>]
-    [<Name "containment">]
-    val mutable Containment: string
+    val mutable containment: string
 
     [<DefaultValue>]
-    [<Name "delay">]
     //0 by default
-    val mutable Delay: int
+    val mutable delay: int
 
     [<DefaultValue>]
-    [<Name "distance">]
     // 1 by default
-    val mutable Distance: int
+    val mutable distance: int
 
     [<DefaultValue>]
-    [<Name "ghost">]
     //false by default
-    val mutable Ghost: bool
+    val mutable ghost: bool
 
     [<DefaultValue>]
-    [<Name "grid">]
     //Array values: [|x; y|]
-    val mutable Grid: array<int>
+    val mutable grid: array<int>
 
     [<DefaultValue>]
-    [<Name "handles">]
     //"e, s, se" by default
-    val mutable Handles: string
+    val mutable handles: string
 
     [<DefaultValue>]
-    [<Name "helper">]
-    val mutable Helper: string
+    val mutable helper: string
 
     [<DefaultValue>]
-    [<Name "maxHeight">]
-    val mutable MaxHeight: int
+    val mutable maxHeight: int
 
     [<DefaultValue>]
-    [<Name "maxWidth">]
-    val mutable MaxWidth: int
+    val mutable maxWidth: int
 
     [<DefaultValue>]
-    [<Name "minHeight">]
-    val mutable MinHeight: int
+    val mutable minHeight: int
 
     [<DefaultValue>]
-    [<Name "minWidth">]
-    val mutable MinWidth: int
-
+    val mutable minWidth: int
 
 module internal ResizableInternal =
     [<Inline "jQuery($el).resizable($conf)">]
     let internal New (el: Dom.Element, conf: ResizableConfiguration) = ()
-
 
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]

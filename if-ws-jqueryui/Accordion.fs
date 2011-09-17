@@ -30,50 +30,37 @@ type AccordionIconConfiguration =
 type AccordionConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
-    [<Name "active">]
-    val mutable Active: int
+    val mutable active: int
 
     [<DefaultValue>]
-    [<Name "animated">]
-    val mutable Animated: string
+    val mutable animated: string
 
     [<DefaultValue>]
-    [<Name "autoHeight">]
-    val mutable AutoHeight: bool
+    val mutable autoHeight: bool
 
     [<DefaultValue>]
-    [<Name "clearStyle">]
-    val mutable ClearStyle: bool
+    val mutable clearStyle: bool
 
     [<DefaultValue>]
-    [<Name "collapsible">]
-    val mutable Collapsible: bool
+    val mutable collapsible: bool
 
     [<DefaultValue>]
-    [<Name "event">]
-    val mutable Event: string
+    val mutable event: string
 
     [<DefaultValue>]
-    [<Name "fillSpace">]
-    val mutable FillSpace: bool
+    val mutable fillSpace: bool
 
     [<DefaultValue>]
-    [<Name "header">]
-    val mutable Header: string
+    val mutable header: string
 
     [<DefaultValue>]
-    [<Name "icons">]
-    val mutable Icons: AccordionIconConfiguration
+    val mutable icons: AccordionIconConfiguration
 
     [<DefaultValue>]
-    [<Name "navigation">]
-    val mutable Navigation: bool
+    val mutable navigation: bool
 
     [<DefaultValue>]
-    [<Name "navigationFilter">]
-    val mutable NavigationFilter: unit -> unit
-
-
+    val mutable navigationFilter: unit -> unit
 
 module internal AccordianInternal =
     [<Inline "jQuery($el).accordion($conf)">]

@@ -18,100 +18,80 @@ open IntelliFactory.WebSharper.Html
 type DialogConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
-    [<Name "autoOpen">]
     //true by default
-    val mutable AutoOpen: bool
+    val mutable autoOpen: bool
 
     //Buttons' type to be confirmed (string -> (string -> unit) -> unit)
     [<DefaultValue>]
-    [<Name "buttons">]
     //"" by default
-    val mutable Buttons: string
+    val mutable buttons: string
 
     [<DefaultValue>]
-    [<Name "closeOnEscape">]
     //false by default
-    val mutable CloseOnEscape: bool
+    val mutable closeOnEscape: bool
 
     [<DefaultValue>]
-    [<Name "closeText">]
     //"close" by default
-    val mutable CloseText: string
+    val mutable closeText: string
 
     [<DefaultValue>]
-    [<Name "dialogClass">]
     //"" by default
-    val mutable DialogClass: string
+    val mutable dialogClass: string
 
     [<DefaultValue>]
-    [<Name "draggable">]
     //true by default
-    val mutable Draggable: bool
+    val mutable draggable: bool
 
     [<DefaultValue>]
-    [<Name "height">]
-    val mutable Height: int
+    val mutable height: int
 
     [<DefaultValue>]
-    [<Name "hide">]
     //"" by default
-    val mutable Hide: string
+    val mutable hide: string
 
     [<DefaultValue>]
-    [<Name "maxHeight">]
-    val mutable MaxHeight: int
+    val mutable maxHeight: int
 
     [<DefaultValue>]
-    [<Name "maxWidth">]
-    val mutable MaxWidth: int
+    val mutable maxWidth: int
 
     [<DefaultValue>]
-    [<Name "minHeight">]
-    val mutable MinHeight: int
+    val mutable minHeight: int
 
     [<DefaultValue>]
-    [<Name "minWidth">]
-    val mutable MinWidth: int
+    val mutable minWidth: int
 
     [<DefaultValue>]
-    [<Name "modal">]
     //false by default
-    val mutable Modal: bool
+    val mutable modal: bool
 
     [<DefaultValue>]
-    [<Name "position">]
     //"center" by default
-    val mutable Position: string
+    val mutable position: string
 
     [<DefaultValue>]
-    [<Name "resizable">]
     //true by default
-    val mutable Resizable: bool
+    val mutable resizable: bool
 
     [<DefaultValue>]
-    [<Name "show">]
     //"" by default
-    val mutable Show: string
+    val mutable show: string
 
     [<DefaultValue>]
-    [<Name "stack">]
     //true by default
-    val mutable Stack: bool
+    val mutable stack: bool
 
     [<DefaultValue>]
-    [<Name "title">]
     //"" by default
-    val mutable Title: string
+    val mutable title: string
 
     [<DefaultValue>]
-    [<Name "width">]
     //300 by default
-    val mutable Width: int
+    val mutable width: int
 
     [<DefaultValue>]
-    [<Name "zindex">]
     //1000 by default
-    val mutable ZIndex: int
+    val mutable zindex: int
 
 
 module internal DialogInternal =

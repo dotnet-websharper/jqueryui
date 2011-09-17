@@ -15,27 +15,20 @@ namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
-
 type AutocompleteConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
-    [<Name "delay">]
-    val mutable Delay: int
+    val mutable delay: int
 
     [<DefaultValue>]
-    [<Name "minLength">]
-    val mutable MinLength: int
+    val mutable minLength: int
 
     [<DefaultValue>]
-    [<Name "source">]
-    val mutable Source: array<string>
-
-
+    val mutable source: array<string>
 
 module internal AutocompleteInternal =
     [<Inline "jQuery($el).autocomplete($conf)">]
     let Init (el: Dom.Element, conf: AutocompleteConfiguration) = ()
-
 
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]

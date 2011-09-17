@@ -34,19 +34,16 @@ type Target =
 type PositionConfiguration [<JavaScript>]() =
 
     [<DefaultValue>]
-    [<Name "my">]
     //Possible values: "top", "center", "bottom", "left", "right"
-    val mutable My: string
+    val mutable my: string
 
     [<DefaultValue>]
-    [<Name "at">]
     //Possible values: "top", "center", "bottom", "left", "right"
-    val mutable At: string
+    val mutable at: string
 
     //Element to position against. You can use a browser event object contains pageX and pageY values. Example: "#top-menu"
     [<DefaultValue>]
-    [<Name "of">]
-    val mutable private ofInternal : string
+    val mutable ``of``: string
 
     //Element to position against. You can use a browser event object contains pageX and pageY values. Example: "#top-menu"
     [<DefaultValue>]
@@ -58,7 +55,7 @@ type PositionConfiguration [<JavaScript>]() =
             this.ofTarget
         and set t =
             this.ofTarget <- t
-            this.ofInternal <- t.ToString()
+            this.``of`` <- t.ToString()
 
     //Add these left-top values to the calculated position, eg. "50 50" (left top) A single value such as "50" will apply to both
     [<DefaultValue>]
@@ -68,19 +65,16 @@ type PositionConfiguration [<JavaScript>]() =
     val mutable private offsetTuple: (int * int)
 
     [<DefaultValue>]
-    [<Name "collision">]
     //This accepts a single value or a pair for horizontal/vertical, eg. "flip", "fit", "fit flip", "fit none".
-    val mutable Collision: string
+    val mutable collision: string
 
     [<DefaultValue>]
-    [<Name "by">]
     //When specified the actual property setting is delegated to this callback. Receives a single parameter which is a hash of top and left values for the position that should be set.
-    val mutable By: unit -> unit //should take a one parameter
+    val mutable by: unit -> unit //should take a one parameter
 
     [<DefaultValue>]
-    [<Name "bgiframe">]
     //true by default
-    val mutable Bgiframe: bool
+    val mutable bgiframe: bool
 
     [<JavaScript>]
     member this.Offset

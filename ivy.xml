@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ivy-module version="2.0">
-  <info organisation="IntelliFactory" module="if-ws-jqueryui" revision="2.3" />
-  <configurations>
-    <conf name="build" />
-    <conf name="default" />
-  </configurations>
+  <info organisation="IntelliFactory" module="if-ws-jqueryui-2.4" revision="2.4" />
   <publications>
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="dll" type="bin" conf="default" />
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="xml" type="doc" conf="default" />
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="pdb" type="debug" conf="default" />
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="dll" type="bin" />
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="xml" type="doc" />
+    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="pdb" type="debug" />
     <artifact name="if-ws-jqueryui-docs" ext="zip" type="doc" conf="default" />
   </publications>
   <dependencies>
-    <dependency name="if-ws" rev="latest.integration" conf="build->compiler" />
-    <dependency name="if-ws" rev="latest.integration" conf="default->default" />
-    <dependency name="if-ws-proxy-core" rev="latest.integration" conf="default->default" />
-    <dependency name="if-ws-ecma" conf="default" rev="latest.integration" />
-    <dependency name="if-ws-html" conf="default" rev="latest.integration" />
-    <dependency name="if-ws-jquery" conf="default" rev="latest.integration" />
-    <dependency name="if-ws-web" conf="default" rev="latest.integration" />
+    <dependency name="if-ws-2.4" rev="latest.integration" branch="2.4" />
+    <dependency name="if-ws-ecma-2.4" rev="latest.integration" branch="2.4" />
   </dependencies>
 </ivy-module>

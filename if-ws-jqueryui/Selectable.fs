@@ -15,56 +15,43 @@ namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
-
 type ToleranceOfSelectable =
     | [<Name "fit">] Fit
     | [<Name "touch">] Touch
 
-
 type SelectableConfiguration[<JavaScript>]() =
 
-
     [<DefaultValue>]
-    [<Name "disabled">]
     //false by default
-    val mutable Disabled: bool
+    val mutable disabled: bool
 
     [<DefaultValue>]
-    [<Name "autoRefresh">]
     //true by default
-    val mutable AutoRefresh: bool
+    val mutable autoRefresh: bool
 
     [<DefaultValue>]
-    [<Name "cancel">]
     //":input,option"
-    val mutable Cancel: string
+    val mutable cancel: string
 
     [<DefaultValue>]
-    [<Name "delay">]
     //0 by default
-    val mutable Delay: int
+    val mutable delay: int
 
     [<DefaultValue>]
-    [<Name "distance">]
     //0 by default
-    val mutable Distance: int
+    val mutable distance: int
 
     [<DefaultValue>]
-    [<Name "filter">]
     //"*" by default
-    val mutable Filter: string
+    val mutable filter: string
 
     [<DefaultValue>]
-    [<Name "tolerance">]
     //"*" by default
-    val mutable Tolerance: ToleranceOfSelectable
-
-
+    val mutable tolerance: ToleranceOfSelectable
 
 module internal SelectableInternal =
     [<Inline "jQuery($el).selectable($conf)">]
     let internal New (el: Dom.Element, conf: SelectableConfiguration) = ()
-
 
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]

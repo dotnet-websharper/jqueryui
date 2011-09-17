@@ -11,8 +11,7 @@
 
 module IntelliFactory.WebSharper.JQueryUI.Dependencies
 
-module R = IntelliFactory.WebSharper.Resources
-
+module R = IntelliFactory.WebSharper.Core.Resources
 
 [<Sealed>]
 type JQueryUIJs() =

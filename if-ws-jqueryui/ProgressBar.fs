@@ -15,20 +15,15 @@ namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
-
 type ProgressbarConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
-    [<Name "value">]
     //0 by default
-    val mutable Value: int
-
-
+    val mutable value: int
 
 module internal ProgressbarInternal =
     [<Inline "jQuery($el).progressbar($conf)">]
     let Init (el: Dom.Element, conf: ProgressbarConfiguration) = ()
-
 
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]
