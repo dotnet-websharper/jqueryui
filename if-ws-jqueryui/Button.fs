@@ -31,21 +31,17 @@ type ButtonIconsConfiguration =
 type ButtonConfiguration[<JavaScript>] () =
 
     [<DefaultValue>]
-    [<Name "disabled">]
-    val mutable Disabled: bool
+    val mutable disabled: bool
 
     [<DefaultValue>]
-    [<Name "text">]
-    val mutable Text: bool
+    val mutable text: bool
 
     [<DefaultValue>]
-    [<Name "label">]
     //true by default
-    val mutable Label: string
+    val mutable label: string
 
     [<DefaultValue>]
-    [<Name "icons">]
-    val mutable Icons: ButtonIconsConfiguration
+    val mutable icons: ButtonIconsConfiguration
 
 
 module internal ButtonInternal =
@@ -108,7 +104,7 @@ type Button [<JavaScript>]()=
     [<Name "New4">]
     static member New (label: string): Button =
         let conf = new ButtonConfiguration()
-        conf.Label <- label
+        conf.label <- label
         Button.New(conf)
 
     (****************************************************************

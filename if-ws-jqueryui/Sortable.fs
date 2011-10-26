@@ -15,7 +15,6 @@ namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
-
 type AxisConfiguration =
     | [<Name "X">] X
     | [<Name "Y">] Y
@@ -24,126 +23,98 @@ type ToleranceConfiguration =
     | [<Name "intersect">] Intersect
     | [<Name "Pointer">] Pointer
 
-
 type SortableConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
-    [<Name "appendTo">]
-    val mutable AppendTo: string
+    val mutable appendTo: string
 
     [<DefaultValue>]
-    [<Name "axis">]
-    val mutable Axis: AxisConfiguration
+    val mutable axis: AxisConfiguration
 
     [<DefaultValue>]
-    [<Name "cancel">]
-    val mutable Cancel: string
+    val mutable cancel: string
 
     [<DefaultValue>]
-    [<Name "connectWith">]
-    val mutable ConnectWith: string
+    val mutable connectWith: string
 
     [<DefaultValue>]
-    [<Name "containment">]
-    val mutable Containment: string
+    val mutable containment: string
 
     [<DefaultValue>]
-    [<Name "cursor">]
     //"auto" by default
-    val mutable Cursor: string
+    val mutable cursor: string
 
     [<DefaultValue>]
-    [<Name "cursorAt">]
     //Coordinates can be combination of one or two keys: {"top"; "left"; "right"; "bottom"}
-    val mutable CurosorAt: string
+    val mutable cursorAt: string
 
     [<DefaultValue>]
-    [<Name "delay">]
     //0 by default
-    val mutable Delay: int
+    val mutable delay: int
 
     [<DefaultValue>]
-    [<Name "distance">]
-    val mutable Distance: int
+    val mutable distance: int
 
     [<DefaultValue>]
-    [<Name "dropOnEmpty">]
     //true by default
-    val mutable DropOnEmpty: bool
+    val mutable dropOnEmpty: bool
 
     [<DefaultValue>]
-    [<Name "forceHelperSize">]
     //false by default
-    val mutable ForceHelperSize: bool
+    val mutable forceHelperSize: bool
 
     [<DefaultValue>]
-    [<Name "forcePlaceholderSize">]
     //false by default
-    val mutable ForcePlaceholderSize: bool
+    val mutable forcePlaceholderSize: bool
 
     [<DefaultValue>]
-    [<Name "grid">]
     //array value [|x; y|]
-    val mutable Grid: array<int>
+    val mutable grid: array<int>
 
     [<DefaultValue>]
-    [<Name "handle">]
-    val mutable Handel: string
+    val mutable handle: string
 
     [<DefaultValue>]
-    [<Name "helper">]
     //"original" by default, Possible values: "original", "clone"
-    val mutable Helper: string
+    val mutable helper: string
 
     [<DefaultValue>]
-    [<Name "items">]
     //"> *" by default
-    val mutable Items: string
+    val mutable items: string
 
     [<DefaultValue>]
-    [<Name "opacity">]
-    val mutable Opacity: float
+    val mutable opacity: float
 
     [<DefaultValue>]
-    [<Name "placeholder">]
-    val mutable Placeholder: string
+    val mutable placeholder: string
 
     [<DefaultValue>]
-    [<Name "revert">]
     //"false" by default
-    val mutable Revert: bool
+    val mutable revert: bool
 
     [<DefaultValue>]
-    [<Name "scroll">]
     //"true" by default
-    val mutable Scroll: bool
+    val mutable scroll: bool
 
     [<DefaultValue>]
-    [<Name "scrollSensitivity">]
     //"20" by default
-    val mutable ScrollSensitivity: int
+    val mutable scrollSensitivity: int
 
     [<DefaultValue>]
-    [<Name "scrollSpeed">]
     //"20" by default
-    val mutable ScrollSpeed: int
+    val mutable scrollSpeed: int
 
     [<DefaultValue>]
-    [<Name "tolerance">]
     //"false" by default
-    val mutable Tolerance: ToleranceConfiguration
+    val mutable tolerance: ToleranceConfiguration
 
     [<DefaultValue>]
-    [<Name "zIndex">]
     //"1000" by default
-    val mutable ZIndex: int
-
-
+    val mutable zIndex: int
 
 module internal SortableInternal =
     [<Inline "jQuery($el).sortable($conf)">]
     let Init (el: Dom.Element, conf: SortableConfiguration) = ()
-
 
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]

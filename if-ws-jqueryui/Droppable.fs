@@ -15,57 +15,44 @@ namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
-
 type ToleranceOfDroppable =
     | [<Name "fit">] Fit
     | [<Name "intersect">] Intersect
     | [<Name "pointer">] Pointer
     | [<Name "touch">] Touch
 
-
-
 type DroppableConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
-    [<Name "accept">]
     //"" by default
-    val mutable Accept: string
+    val mutable accept: string
 
     [<DefaultValue>]
-    [<Name "activeClass">]
-    val mutable ActiveClass: string
+    val mutable activeClass: string
 
     [<DefaultValue>]
-    [<Name "addClasses">]
     //true by default
-    val mutable AddClasses: bool
+    val mutable addClasses: bool
 
     [<DefaultValue>]
-    [<Name "greedy">]
     //false by default
-    val mutable Greedy: bool
+    val mutable greedy: bool
 
     [<DefaultValue>]
-    [<Name "hoverClass">]
     //"drophover" by default
-    val mutable HoverClass: string
+    val mutable hoverClass: string
 
     [<DefaultValue>]
-    [<Name "scope">]
     //"default" by default
-    val mutable Scope: string
+    val mutable scope: string
 
     [<DefaultValue>]
-    [<Name "tolerance">]
     //"intersect" by default
-    val mutable Tolerance: ToleranceOfDroppable
-
-
+    val mutable tolerance: ToleranceOfDroppable
 
 module internal DroppableInternal =
     [<Inline "jQuery($el).droppable($conf)">]
     let internal New (el: Dom.Element, conf: DroppableConfiguration) = ()
-
 
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]

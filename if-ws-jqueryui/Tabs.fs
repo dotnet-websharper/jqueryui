@@ -57,72 +57,57 @@ type TabsInfo =
 type TabsConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
-    [<Name "ajaxOptions">]
     //null by default
-    val mutable AjaxOptions: TabsAjaxOptionsConfiguration
+    val mutable ajaxOptions: TabsAjaxOptionsConfiguration
 
     [<DefaultValue>]
-    [<Name "cache">]
     //false by default
-    val mutable Cache: bool
+    val mutable cache: bool
 
     [<DefaultValue>]
-    [<Name "collapsible">]
     //false by default
-    val mutable Collapsible: bool
+    val mutable collapsible: bool
 
     [<DefaultValue>]
-    [<Name "cookie">]
     //null by default
-    val mutable Cookie: TabsCookieConfiguration
+    val mutable cookie: TabsCookieConfiguration
 
     [<DefaultValue>]
-    [<Name "deselectable">]
     //false by default
-    val mutable Deselectable: bool
+    val mutable deselectable: bool
 
     [<DefaultValue>]
-    [<Name "disabled">]
     //[] by default
-    val mutable Disabled: array<int>
+    val mutable disabled: array<int>
 
     [<DefaultValue>]
-    [<Name "event">]
     //"click" by default
-    val mutable Event: string
+    val mutable event: string
 
     //Option, Array?
     [<DefaultValue>]
-    [<Name "fx">]
     //null by default
-    val mutable Fx: TabsFxConfiguration
+    val mutable fx: TabsFxConfiguration
 
     [<DefaultValue>]
-    [<Name "idPrefix">]
     //"ui-tabs-" by default
-    val mutable IdPrefix: string
+    val mutable idPrefix: string
 
     [<DefaultValue>]
-    [<Name "panelTemplate">]
     //"<div></div>" by default
-    val mutable PanelTemplate: string
+    val mutable panelTemplate: string
 
     [<DefaultValue>]
-    [<Name "selected">]
     //0 by default
-    val mutable Selected: int
+    val mutable selected: int
 
     [<DefaultValue>]
-    [<Name "spinner">]
     //"<em>Loading&#8230;</em>" by default
-    val mutable Spinner: string
+    val mutable spinner: string
 
     [<DefaultValue>]
-    [<Name "tabTemplate">]
     //"<li><a href="#{href}"><span>#{label}</span></a></li>" by default
-    val mutable TabTemplate: string
-
-
+    val mutable tabTemplate: string
 
 module internal TabsInternal =
     [<Inline "jQuery($el).tabs($conf)">]

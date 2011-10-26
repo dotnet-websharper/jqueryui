@@ -46,144 +46,114 @@ type DraggableStackConfiguration =
 type DraggableConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
-    [<Name "addClasses">]
     //true by default
-    val mutable AddClasses: bool
+    val mutable addClasses: bool
 
     [<DefaultValue>]
-    [<Name "appendTo">]
     //"parent" by default, string of Element
-    val mutable AppendTo: string
+    val mutable appendTo: string
 
     [<DefaultValue>]
-    [<Name "axis">]
     //"" by default, string of int
-    val mutable Axis: string
+    val mutable axis: string
 
     [<DefaultValue>]
-    [<Name "cancel">]
     //"" by default, string of Element
-    val mutable Cancel: string
+    val mutable cancel: string
 
     [<DefaultValue>]
-    [<Name "connectToSortable">]
     //"" by default, string of Element
-    val mutable ConnectToSortable: string
+    val mutable connectToSortable: string
 
     [<DefaultValue>]
-    [<Name "containment">]
     //"" by default, string of Element
-    val mutable Containment: string
+    val mutable containment: string
 
     [<DefaultValue>]
-    [<Name "cursor">]
     //"auto" by default
-    val mutable Cursor: string
+    val mutable cursor: string
 
     [<DefaultValue>]
-    [<Name "cursorAt">]
     //"top=1, left=1" by default
-    val mutable CursorAt: DraggablecursorAtConfiguration
+    val mutable cursorAt: DraggablecursorAtConfiguration
 
     [<DefaultValue>]
-    [<Name "delay">]
     //0 by default
-    val mutable Delay: int
+    val mutable delay: int
 
     [<DefaultValue>]
-    [<Name "distance">]
     //1 by default
-    val mutable Distance: int
+    val mutable distance: int
 
     [<DefaultValue>]
-    [<Name "grid">]
     //0 by default
-    val mutable Grid: array<int>
+    val mutable grid: array<int>
 
     [<DefaultValue>]
-    [<Name "handle">]
     //"" by default, string of Element
-    val mutable Handle: string
+    val mutable handle: string
 
     [<DefaultValue>]
-    [<Name "helper">]
     //"original" by default
-    val mutable Helper: string
+    val mutable helper: string
 
     [<DefaultValue>]
-    [<Name "iframeFix">]
     //false by default
-    val mutable IframeFix: bool
+    val mutable iframeFix: bool
 
     [<DefaultValue>]
-    [<Name "opacity">]
-    val mutable Opacity: float
+    val mutable opacity: float
 
     [<DefaultValue>]
-    [<Name "refreshPositions">]
     //false by default
-    val mutable RefreshPositions: bool
+    val mutable refreshPositions: bool
 
     [<DefaultValue>]
-    [<Name "revert">]
     //false by default
-    val mutable Revert: bool
+    val mutable revert: bool
 
     [<DefaultValue>]
-    [<Name "revertDuration">]
     //500 by default
-    val mutable RevertDuration: int
+    val mutable revertDuration: int
 
     [<DefaultValue>]
-    [<Name "scope">]
     //"default" by default
-    val mutable Scope: string
+    val mutable scope: string
 
     [<DefaultValue>]
-    [<Name "scroll">]
     //true by default
-    val mutable Scroll: bool
+    val mutable scroll: bool
 
     [<DefaultValue>]
-    [<Name "scrollSensitivity">]
     //20 by default
-    val mutable ScrollSensitivity: int
+    val mutable scrollSensitivity: int
 
     [<DefaultValue>]
-    [<Name "scrollSpeed">]
     //20 by default
-    val mutable ScrollSpeed: int
+    val mutable scrollSpeed: int
 
     [<DefaultValue>]
-    [<Name "snap">]
     //false by default
     val mutable snap: bool
 
     [<DefaultValue>]
-    [<Name "snapMode">]
     //"both" by default
-    val mutable SnapMode: string
+    val mutable snapMode: string
 
     [<DefaultValue>]
-    [<Name "snapTolerance">]
     //20 by default
-    val mutable SnapTolerance: int
+    val mutable snapTolerance: int
 
     [<DefaultValue>]
-    [<Name "stack">]
-    val mutable Stack: DraggableStackConfiguration
+    val mutable stack: DraggableStackConfiguration
 
     [<DefaultValue>]
-    [<Name "zIndex">]
     //2700 by default
-    val mutable ZIndex: int
-
+    val mutable zIndex: int
 
 module internal DraggableInternal =
     [<Inline "jQuery($el).draggable($conf)">]
     let internal New (el: Dom.Element, conf: DraggableConfiguration) = ()
-
-
 
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]

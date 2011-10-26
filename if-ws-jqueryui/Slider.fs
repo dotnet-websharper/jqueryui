@@ -19,43 +19,35 @@ open IntelliFactory.WebSharper.Html
 type SliderConfiguration[<JavaScript>] () =
 
     [<DefaultValue>]
-    [<Name "animate">]
     //false by default
-    val mutable Animate: bool
+    val mutable animate: bool
 
     [<DefaultValue>]
-    [<Name "max">]
     //100 by default
-    val mutable Max: int
+    val mutable max: int
 
     [<DefaultValue>]
-    [<Name "min">]
     //0 by default
-    val mutable Min: int
+    val mutable min: int
 
     [<DefaultValue>]
-    [<Name "orientation">]
     //"horizontal" by default
-    val mutable Orientation: string
+    val mutable orientation: string
 
     [<DefaultValue>]
-    [<Name "range">]
-    val mutable Range: obj
+    val mutable range: obj
 
     [<DefaultValue>]
-    [<Name "step">]
     //1 by default
-    val mutable Step: int
+    val mutable step: int
 
     [<DefaultValue>]
-    [<Name "value">]
     //0 by default
-    val mutable Value: int
+    val mutable value: int
 
     [<DefaultValue>]
-    [<Name "values">]
     //0 by default
-    val mutable Values: array<int>
+    val mutable values: array<int>
 
 module internal SliderInternal =
     [<Inline "jQuery($el).slider($conf)">]

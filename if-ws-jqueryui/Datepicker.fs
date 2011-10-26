@@ -30,223 +30,179 @@ type DatepickerShowOptionsConfiguration =
 type DatepickerConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
-    [<Name "altField">]
-    val mutable AltField: string
+    val mutable altField: string
 
     [<DefaultValue>]
-    [<Name "appendText">]
     //"" by default
-    val mutable AppendText: string
+    val mutable appendText: string
 
     [<DefaultValue>]
-    [<Name "altFormat">]
     //"" by default
-    val mutable AltFormat: string
+    val mutable altFormat: string
 
     [<DefaultValue>]
-    [<Name "autoSize">]
     //false by default
-    val mutable AutoSize: bool
+    val mutable autoSize: bool
 
     [<DefaultValue>]
-    [<Name "buttonImage">]
     //"" by default
-    val mutable ButtonImage: string
+    val mutable buttonImage: string
 
     [<DefaultValue>]
-    [<Name "buttonImageOnly">]
     //false by default
-    val mutable ButtonImageOnly: bool
+    val mutable buttonImageOnly: bool
 
     [<DefaultValue>]
-    [<Name "buttonText">]
     //"..." by default
-    val mutable ButtonText: string
+    val mutable buttonText: string
 
     [<DefaultValue>]
-    [<Name "calculateWeek">]
     //"iso8601Week" by default
-    val mutable CalculateWeek: EcmaScript.Date -> int
+    val mutable calculateWeek: EcmaScript.Date -> int
 
     [<DefaultValue>]
-    [<Name "changeMonth">]
     //fasle by default
-    val mutable ChangeMonth: bool
+    val mutable changeMonth: bool
 
     [<DefaultValue>]
-    [<Name "changeYear">]
     //fasle by default
-    val mutable ChangeYear: bool
+    val mutable changeYear: bool
 
     [<DefaultValue>]
-    [<Name "closeText">]
     //"Done" by default
-    val mutable CloseText: string
+    val mutable closeText: string
 
     [<DefaultValue>]
-    [<Name "constrainInput">]
     //true by default
-    val mutable ConstrainInput: bool
+    val mutable constrainInput: bool
 
     [<DefaultValue>]
-    [<Name "currentText">]
     //"Today" by default
-    val mutable CurrentText: string
+    val mutable currentText: string
 
     [<DefaultValue>]
-    [<Name "dateFormat">]
     //"mm/dd/yy" by default
-    val mutable DateFormat: string
+    val mutable dateFormat: string
 
     [<DefaultValue>]
-    [<Name "dayNames">]
     //array<string> = [|"Sunday"; "Monday"; "Tuesday"; "Wednesday"; "Thursday"; "Friday"; "Saturday"|]
-    val mutable DayNames: array<string>
+    val mutable dayNames: array<string>
 
     [<DefaultValue>]
-    [<Name "dayNamesMin">]
     // array<string> = [|"Su"; "Mo"; "Tu"; "We"; "Th"; "Fr"; "Sa"|]
-    val mutable DayNamesMin: array<string>
+    val mutable dayNamesMin: array<string>
 
     [<DefaultValue>]
-    [<Name "dayNamesShort">]
     // array<string> = [|"Sun"; "Mon"; "Tue"; "Wed"; "Thu"; "Fri"; "Sat"|]
-    val mutable DayNamesShort: array<string>
+    val mutable dayNamesShort: array<string>
 
     [<DefaultValue>]
-    [<Name "defaultDate">]
     // null by default
-    val mutable DefaultDate: EcmaScript.Date
+    val mutable defaultDate: EcmaScript.Date
 
     [<DefaultValue>]
-    [<Name "duration">]
     // "normal" by default
-    val mutable Duration: string
+    val mutable duration: string
 
     [<DefaultValue>]
-    [<Name "firstDay">]
     // 0 by default
-    val mutable FirstDay: int
+    val mutable firstDay: int
 
     [<DefaultValue>]
-    [<Name "gotoCurrent">]
     // fasle by default
-    val mutable GotoCurrent: bool
+    val mutable gotoCurrent: bool
 
     [<DefaultValue>]
-    [<Name "hideIfNoPrevNext">]
     // fasle by default
-    val mutable HideIfNoPrevNext: bool
+    val mutable hideIfNoPrevNext: bool
 
     [<DefaultValue>]
-    [<Name "isRTL">]
     // false by default
-    val mutable IsRTL: bool
+    val mutable isRTL: bool
 
     [<DefaultValue>]
-    [<Name "maxDate">]
     // null by default
-    val mutable MaxDate: string
+    val mutable maxDate: string
 
     [<DefaultValue>]
-    [<Name "minDate">]
     // null by default
-    val mutable MinDate: EcmaScript.Date
+    val mutable minDate: EcmaScript.Date
 
     [<DefaultValue>]
-    [<Name "monthNames">]
     // by default [|"January"; "February"; "March"; "April"; "May"; "June"; "July"; "August"; "September"; "October"; "November"; "December"|]
-    val mutable MonthNames: array<string>
+    val mutable monthNames: array<string>
 
     [<DefaultValue>]
-    [<Name "monthNamesShort">]
     // by default [|"Jan"; "Feb"; "Mar"; "Apr"; "May"; "Jun"; "Jul"; "Aug"; "Sep"; "Oct"; "Nov"; "Dec"|]
-    val mutable MonthNamesShort: array<string>
+    val mutable monthNamesShort: array<string>
 
     [<DefaultValue>]
-    [<Name "navigationAsDateFormat">]
     // false by default
-    val mutable NavigationAsDateFormat: bool
+    val mutable navigationAsDateFormat: bool
 
     [<DefaultValue>]
-    [<Name "nextText">]
     // "Next" by default
-    val mutable NextText: string
+    val mutable nextText: string
 
     [<DefaultValue>]
-    [<Name "numberOfMonths">]
     //1 by default
-    val mutable NumberOfMonths: array<int>
+    val mutable numberOfMonths: array<int>
 
     [<DefaultValue>]
-    [<Name "prevText">]
     // "Prev" by default
-    val mutable PrevText: string
+    val mutable prevText: string
 
     [<DefaultValue>]
-    [<Name "shortYearCutoff">]
     // "+10" by default
-    val mutable ShortYearCutoff: int
+    val mutable shortYearCutoff: int
 
     [<DefaultValue>]
-    [<Name "showAnim">]
     // "show" by default
-    val mutable ShowAnim: string
+    val mutable showAnim: string
 
     [<DefaultValue>]
-    [<Name "showButtonPanel">]
     // false by default
-    val mutable ShowButtonPanel: bool
+    val mutable showButtonPanel: bool
 
     [<DefaultValue>]
-    [<Name "showCurrentAtPos">]
     // 0 by default
-    val mutable ShowCurrentAtPos: int
+    val mutable showCurrentAtPos: int
 
     [<DefaultValue>]
-    [<Name "showMonthAfterYear">]
     // fasle by default
-    val mutable ShowMonthAfterYear: bool
+    val mutable showMonthAfterYear: bool
 
     [<DefaultValue>]
-    [<Name "showOn">]
     // "focus" by default
-    val mutable ShowOn: string
+    val mutable showOn: string
 
     [<DefaultValue>]
-    [<Name "showOptions">]
     //{} by default
-    val mutable ShowOptions: DatepickerShowOptionsConfiguration
+    val mutable showOptions: DatepickerShowOptionsConfiguration
 
     [<DefaultValue>]
-    [<Name "showOtherMonths">]
     // false by default
-    val mutable ShowOtherMonths: bool
+    val mutable showOtherMonths: bool
 
     [<DefaultValue>]
-    [<Name "showWeek">]
     //false by default
-    val mutable ShowWeek: bool
+    val mutable showWeek: bool
 
     [<DefaultValue>]
-    [<Name "stepMonths">]
     // 1 by default
-    val mutable StepMonths: int
+    val mutable stepMonths: int
 
     [<DefaultValue>]
-    [<Name "weekHeader">]
     // 1 by default
-    val mutable WeekHeader: string
+    val mutable weekHeader: string
 
     [<DefaultValue>]
-    [<Name "yearRange">]
     // "-10:+10" by default
-    val mutable YearRange: string
+    val mutable yearRange: string
 
     [<DefaultValue>]
-    [<Name "yearSuffix">]
     // 1 by default
-    val mutable YearSuffix: string
+    val mutable yearSuffix: string
 
 module internal DatepickerInternal =
     [<Inline "jQuery($el).datepicker($conf)">]
