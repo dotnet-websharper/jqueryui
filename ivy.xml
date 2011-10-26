@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ivy-module version="2.0">
-  <info organisation="IntelliFactory" module="if-ws-jqueryui-2.4" revision="2.4" />
+  <info organisation="IntelliFactory" module="if-ws-jqueryui" revision="2.4" />
   <publications>
     <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="dll" type="bin" />
     <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="xml" type="doc" />
@@ -8,7 +8,7 @@
     <artifact name="if-ws-jqueryui-docs" ext="zip" type="doc" conf="default" />
   </publications>
   <dependencies>
-    <dependency name="if-ws-2.4" rev="latest.integration" branch="2.4" />
-    <dependency name="if-ws-ecma-2.4" rev="latest.integration" branch="2.4" />
+    <dependency name="if-ws" rev="latest.integration" />
+    <dependency name="if-ws-ecma" rev="latest.integration" />
   </dependencies>
 </ivy-module>
