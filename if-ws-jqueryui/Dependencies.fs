@@ -12,7 +12,9 @@
 module IntelliFactory.WebSharper.JQueryUI.Dependencies
 
 module R = IntelliFactory.WebSharper.Core.Resources
+module A = IntelliFactory.WebSharper.Core.Attributes
 
+[<A.Require(typeof<IntelliFactory.WebSharper.JQuery.Resources.JQuery>)>]
 [<Sealed>]
 type JQueryUIJs() =
     inherit R.BaseResource(
