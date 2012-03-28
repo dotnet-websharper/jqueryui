@@ -21,6 +21,21 @@ type ToleranceOfDroppable =
     | [<Name "pointer">] Pointer
     | [<Name "touch">] Touch
 
+type DroppableEvent =
+    {
+        [<Name "draggable">]
+        Draggable : JQuery.JQuery
+
+        [<Name "helper">]
+        Helper : JQuery.JQuery
+
+        [<Name "offset">]
+        Offset : DraggablecursorAtConfiguration
+
+        [<Name "position">]
+        Position : DraggablecursorAtConfiguration
+    }
+
 type DroppableConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
@@ -108,24 +123,24 @@ type Droppable[<JavaScript>] internal () =
     * Events
     *****************************************************************)
     /// Event triggered any time an accepted draggable starts dragging.
-    [<Inline "jQuery($this.element.Body).droppable({activate: function (x,y) {($f(x))(y.activate);}})">]
-    member private this.onActivate(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).droppable({activate: function (x,y) {($f(x))(y);}})">]
+    member private this.onActivate(f : JQuery.Event -> DroppableEvent -> unit) = ()
 
     /// Event triggered any time an accepted draggable stops dragging.
-    [<Inline "jQuery($this.element.Body).droppable({deactivate: function (x,y) {($f(x))(y.deactivate);}})">]
-    member private this.onDeactivate(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).droppable({deactivate: function (x,y) {($f(x))(y);}})">]
+    member private this.onDeactivate(f : JQuery.Event -> DroppableEvent -> unit) = ()
 
     /// Event is triggered when an accepted draggable is dragged 'over' (within the tolerance of) this droppable.
-    [<Inline "jQuery($this.element.Body).droppable({over: function (x,y) {($f(x))(y.over);}})">]
-    member private this.onOver(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).droppable({over: function (x,y) {($f(x))(y);}})">]
+    member private this.onOver(f : JQuery.Event -> DroppableEvent -> unit) = ()
 
     /// Event triggered when an accepted draggable is dragged out (within the tolerance of) this droppable.
-    [<Inline "jQuery($this.element.Body).droppable({out: function (x,y) {($f(x))(y.out);}})">]
-    member private this.onOut(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).droppable({out: function (x,y) {($f(x))(y);}})">]
+    member private this.onOut(f : JQuery.Event -> DroppableEvent -> unit) = ()
 
     /// Event triggered when an accepted draggable is dropped 'over' (within the tolerance of) this droppable.
-    [<Inline "jQuery($this.element.Body).droppable({drop: function (x,y) {($f(x))(y.drop);}})">]
-    member private this.onDrop(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).droppable({drop: function (x,y) {($f(x))(y);}})">]
+    member private this.onDrop(f : JQuery.Event -> DroppableEvent -> unit) = ()
 
     /// Event triggered any time an accepted draggable stops dragging.
     [<JavaScript>]

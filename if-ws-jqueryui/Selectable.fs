@@ -116,11 +116,11 @@ type Selectable[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).selectable({selecting: function (x,y) {($f(x))(y.selecting);}})">]
     member private this.onSelecting(f : JQuery.Event -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).selectable({start: function (x,y) {($f(x))(y.start);}})">]
-    member private this.onStart(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).selectable({start: function (x,y) {($f(x));}})">]
+    member private this.onStart(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).selectable({stop: function (x,y) {($f(x))(y.stop);}})">]
-    member private this.onStop(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).selectable({stop: function (x,y) {($f(x));}})">]
+    member private this.onStop(f : JQuery.Event -> unit) = ()
 
     [<Inline "jQuery($this.element.Body).selectable({unselected: function (x,y) {($f(x))(y.unselected);}})">]
     member private this.onUnselected(f : JQuery.Event -> Element -> unit) = ()
@@ -143,12 +143,12 @@ type Selectable[<JavaScript>] internal () =
 
     /// Event triggered at the beginning of the select operation.
     [<JavaScript>]
-    member this.OnStart(f : JQuery.Event -> Element -> unit) =
+    member this.OnStart f =
         this |> OnAfterRender(fun _ -> this.onStart f)
 
     /// Event triggered at the end of the select operation.
     [<JavaScript>]
-    member this.OnStop(f : JQuery.Event -> Element -> unit) =
+    member this.OnStop f =
         this |> OnAfterRender(fun _ -> this.onStop f)
 
     /// Event is triggered at the end of the select operation,

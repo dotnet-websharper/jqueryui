@@ -151,6 +151,21 @@ type DraggableConfiguration[<JavaScript>]() =
     //2700 by default
     val mutable zIndex: int
 
+type DraggableEvent =
+    {
+        [<Name "offset">]
+        Offset : DraggablecursorAtConfiguration
+
+        [<Name "originalPosition">]
+        OriginalPosition : DraggablecursorAtConfiguration
+
+        [<Name "position">]
+        Position : DraggablecursorAtConfiguration
+
+        [<Name "helper">]
+        Helper : JQuery.JQuery
+    }
+
 module internal DraggableInternal =
     [<Inline "jQuery($el).draggable($conf)">]
     let internal New (el: Dom.Element, conf: DraggableConfiguration) = ()
@@ -208,14 +223,14 @@ type Draggable[<JavaScript>] internal () =
     * Events
     *****************************************************************)
 
-    [<Inline "jQuery($this.element.Body).draggable({start: function (x,y) {($f(x))(y.start);}})">]
-    member private this.onStart(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).draggable({start: function (x,y) {($f(x))(y);}})">]
+    member private this.onStart(f : JQuery.Event -> DraggableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).draggable({stop: function (x,y) {($f(x))(y.stop);}})">]
-    member private this.onStop(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).draggable({stop: function (x,y) {($f(x))(y);}})">]
+    member private this.onStop(f : JQuery.Event -> DraggableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).draggable({drag: function (x,y) {($f(x))(y.drag);}})">]
-    member private this.onDrag(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).draggable({drag: function (x,y) {($f(x))(y);}})">]
+    member private this.onDrag(f : JQuery.Event -> DraggableEvent -> unit) = ()
 
     /// Event triggered when dragging starts.
     [<JavaScript>]

@@ -62,6 +62,24 @@ type AccordionConfiguration[<JavaScript>]() =
     [<DefaultValue>]
     val mutable navigationFilter: unit -> unit
 
+type AccordionChangeEvent =
+    {
+        [<Name "newHeader">]
+        NewHeader: JQuery.JQuery
+
+        [<Name "newContent">]
+        NewContent: JQuery.JQuery
+
+        [<Name "oldHeader">]
+        OldHeader: JQuery.JQuery
+
+        [<Name "oldContent">]
+        OldContent: JQuery.JQuery
+
+        [<Name "options">]
+        Options: AccordionConfiguration
+    }
+
 module internal AccordianInternal =
     [<Inline "jQuery($el).accordion($conf)">]
     let internal Init (el: Dom.Element, conf: AccordionConfiguration) = ()
@@ -131,11 +149,11 @@ type Accordion[<JavaScript>] internal () =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Body).accordion({change: function (x,y) {($f(x))(y.change);}})">]
-    member private this.onChange(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).accordion({change: function (x,y) {($f(x))(y);}})">]
+    member private this.onChange(f : JQuery.Event -> AccordionChangeEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).accordion({change: function (x,y) {($f(x))(y.changestart);}})">]
-    member private this.onChangestart(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).accordion({changestart: function (x,y) {($f(x))(y);}})">]
+    member private this.onChangestart(f : JQuery.Event -> AccordionChangeEvent -> unit) = ()
 
     /// Event triggered every time the accordion changes.
     /// If the accordion is animated, the event will be triggered

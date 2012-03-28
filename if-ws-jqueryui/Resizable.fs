@@ -15,6 +15,47 @@ namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
+type ResizablePosition =
+    {
+        [<Name "left">]
+        Left : int
+
+        [<Name "top">]
+        Top : int
+    }
+
+type ResizableSize =
+    {
+        [<Name "width">]
+        Width : int
+
+        [<Name "height">]
+        Height : int
+    }
+
+type ResizableEvent =
+    {
+        [<Name "element">]
+        Element : JQuery.JQuery
+
+        [<Name "helper">]
+        Helper : JQuery.JQuery
+
+        [<Name "originalElement">]
+        OriginalElement : JQuery.JQuery
+
+        [<Name "originalPosition">]
+        OriginalPosition : ResizablePosition
+
+        [<Name "position">]
+        Position : ResizablePosition
+
+        [<Name "originalSize">]
+        OriginalSize : ResizableSize
+
+        [<Name "size">]
+        Size : ResizableSize
+    }
 
 type ResizableConfiguration[<JavaScript>]() =
 
@@ -136,14 +177,14 @@ type Resizable[<JavaScript>] internal () =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Body).resizable({start: function (x,y) {($f(x))(y.start);}})">]
-    member private this.onStart(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).resizable({start: function (x,y) {($f(x))(y);}})">]
+    member private this.onStart(f : JQuery.Event -> ResizableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).resizable({resize: function (x,y) {($f(x))(y.resize);}})">]
-    member private this.onResize(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).resizable({resize: function (x,y) {($f(x))(y);}})">]
+    member private this.onResize(f : JQuery.Event -> ResizableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).resizable({stop: function (x,y) {($f(x))(y.stop);}})">]
-    member private this.onStop(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).resizable({stop: function (x,y) {($f(x))(y);}})">]
+    member private this.onStop(f : JQuery.Event -> ResizableEvent -> unit) = ()
 
     /// Event triggered at the start of a resize operation.
     [<JavaScript>]

@@ -123,22 +123,22 @@ type Autocomplete[<JavaScript>] internal () =
     * Events
     *****************************************************************)
 
-    [<Inline "jQuery($this.element.Body).autocomplete({search: function (x,y) {($f(x))(y.search);}})">]
-    member private this.onSearch(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).autocomplete({search: function (x,y) {($f(x));}})">]
+    member private this.onSearch(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).autocomplete({focus: function (x,y) {($f(x))(y.focus);}})">]
-    member private this.onFocus(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).autocomplete({focus: function (x,y) {($f(x))(y.item);}})">]
+    member private this.onFocus(f : JQuery.Event -> string -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).autocomplete({select: function (x,y) {($f(x))(y.select);}})">]
-    member private this.onSelect(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).autocomplete({select: function (x,y) {($f(x))(y.item);}})">]
+    member private this.onSelect(f : JQuery.Event -> string -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).autocomplete({close: function (x,y) {($f(x))(y.close);}})">]
-    member private this.onClose(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).autocomplete({close: function (x,y) {($f(x));}})">]
+    member private this.onClose(f : JQuery.Event -> unit) = ()
 
     /// After an item was selected; ui.item refers to the selected item.
     /// Always triggered after the close event
-    [<Inline "jQuery($this.element.Body).autocomplete({change: function (x,y) {($f(x))(y.change);}})">]
-    member private this.onChange(f : JQuery.Event -> Element -> unit) = ()
+    [<Inline "jQuery($this.element.Body).autocomplete({change: function (x,y) {($f(x))(y.item);}})">]
+    member private this.onChange(f : JQuery.Event -> string -> unit) = ()
 
     /// Triggered before a request (source-option) is started.
     [<JavaScript>]
