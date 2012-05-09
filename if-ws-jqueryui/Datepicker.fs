@@ -15,8 +15,6 @@ namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
-
-
 type DatepickerShowOptionsConfiguration =
     {
         [<Name "showOptions">]
@@ -25,7 +23,6 @@ type DatepickerShowOptionsConfiguration =
 
     [<JavaScript>]
     static member Default = {Direction = "up"}
-
 
 type DatepickerConfiguration[<JavaScript>]() =
 
@@ -208,6 +205,10 @@ module internal DatepickerInternal =
     [<Inline "jQuery($el).datepicker($conf)">]
     let Init (el: Dom.Element, conf: DatepickerConfiguration) = ()
 
+    [<Inline "jQuery($el).datepicker('getDate')">]
+    let getDate (el: Dom.Element) : EcmaScript.Date =
+        Unchecked.defaultof<_>
+
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]
 type Datepicker[<JavaScript>] internal  () =
@@ -224,8 +225,7 @@ type Datepicker[<JavaScript>] internal  () =
         dp.element <- el
         el
         |> OnAfterRender (fun el  ->
-            DatepickerInternal.Init(el.Body, conf)
-        )
+            DatepickerInternal.Init(el.Body, conf))
         |> ignore
         dp
 
@@ -307,12 +307,11 @@ type Datepicker[<JavaScript>] internal  () =
     // Adding an event and delayin it if the Pagelet is not yet rendered.
     /// Triggered when a date is selected.
     [<JavaScript>]
-    member this.OnSelect(f : EcmaScript.Date -> unit) : unit =
+    member this.OnSelect(f: EcmaScript.Date -> unit) : unit =
         this
         |> OnBeforeRender(fun _ ->
-            this.onSelect <| fun s ->
-                // TODO: verify
-                f <| EcmaScript.Date(s)
+            this.onSelect <| fun _ ->
+                f (DatepickerInternal.getDate this.element.Dom)
         )
         |> ignore
 
