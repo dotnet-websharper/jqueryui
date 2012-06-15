@@ -241,23 +241,23 @@ type Tabs[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).tabs({select: function (x,y) {($f(x))(y);}})">]
     member private this.onSelect(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).tabs({load: function (x,y) {$f(x);}})">]
-    member private this.onLoad(f : JQuery.Event -> unit) = ()
+    [<Inline "jQuery($this.element.Body).tabs({load: function (x,y) {($f(x))(y);}})">]
+    member private this.onLoad(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).tabs({show: function (x,y) {$f(x);}})">]
-    member private this.onShow(f : JQuery.Event -> unit) = ()
+    [<Inline "jQuery($this.element.Body).tabs({show: function (x,y) {($f(x))(y);}})">]
+    member private this.onShow(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).tabs({add: function (x,y) {$f(x);}})">]
-    member private this.onAdd(f : JQuery.Event -> unit) = ()
+    [<Inline "jQuery($this.element.Body).tabs({add: function (x,y) {($f(x))(y);}})">]
+    member private this.onAdd(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).tabs({remove: function (x,y) {$f(x);}})">]
-    member private this.onRemove(f : JQuery.Event -> unit) = ()
+    [<Inline "jQuery($this.element.Body).tabs({remove: function (x,y) {($f(x))(y);}})">]
+    member private this.onRemove(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).tabs({enable: function (x,y) {$f(x);}})">]
-    member private this.onEnable(f : JQuery.Event -> unit) = ()
+    [<Inline "jQuery($this.element.Body).tabs({enable: function (x,y) {($f(x))(y);}})">]
+    member private this.onEnable(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).tabs({diable: function (x,y) {$f(x);}})">]
-    member private this.onDisable(f : JQuery.Event -> unit) = ()
+    [<Inline "jQuery($this.element.Body).tabs({diable: function (x,y) {($f(x))(y);}})">]
+    member private this.onDisable(f : JQuery.Event -> TabsInfo -> unit) = ()
 
 
     /// Event triggered when a tab is selcted.
