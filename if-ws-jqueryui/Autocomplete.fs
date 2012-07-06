@@ -18,10 +18,22 @@ open IntelliFactory.WebSharper.Html
 type AutocompleteConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
+    val mutable disabled: bool
+
+    [<DefaultValue>]
+    val mutable appendTo: string
+
+    [<DefaultValue>]
+    val mutable autoFocus: bool
+
+    [<DefaultValue>]
     val mutable delay: int
 
     [<DefaultValue>]
     val mutable minLength: int
+
+    [<DefaultValue>]
+    val mutable position: PositionConfiguration
 
     [<DefaultValue>]
     val mutable source: array<string>
@@ -101,6 +113,17 @@ type Autocomplete[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).autocomplete('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
+    /// Get or set any autocomplete option. If no value is specified, will act as a getter.
+    [<Inline "jQuery($this.element.Body).autocomplete('option', $name)">]
+    member this.Option (name: string) = X<obj>
+
+    [<Inline "jQuery($this.element.Body).autocomplete('widget')">]
+    member private this.getWidget () = X<Dom.Element>
+
+    /// Returns the .ui-autocomplete element.
+    [<JavaScript>]
+    member this.Widget = this.getWidget()
+
     /// Triggers a search event using the current string value, which, when data is available,
     /// then will display the suggestions;
     /// can be used by a selectbox-like button to open the suggestions when clicked.
@@ -123,22 +146,35 @@ type Autocomplete[<JavaScript>] internal () =
     * Events
     *****************************************************************)
 
-    [<Inline "jQuery($this.element.Body).autocomplete({search: function (x,y) {($f(x));}})">]
+    [<Inline "jQuery($this.element.Body).bind('autocompletecreate', function (x,y) {($f(x));})">]
+    member private this.onCreate(f : JQuery.Event -> unit) = ()
+
+    [<Inline "jQuery($this.element.Body).bind('autocompletesearch', function (x,y) {($f(x));})">]
     member private this.onSearch(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).autocomplete({focus: function (x,y) {($f(x))(y.item);}})">]
+    [<Inline "jQuery($this.element.Body).bind('autocompleteopen', function (x,y) {($f(x));})">]
+    member private this.onOpen(f : JQuery.Event -> unit) = ()
+
+    [<Inline "jQuery($this.element.Body).bind('autocompletefocus', function (x,y) {($f(x))(y.item);})">]
     member private this.onFocus(f : JQuery.Event -> string -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).autocomplete({select: function (x,y) {($f(x))(y.item);}})">]
+    [<Inline "jQuery($this.element.Body).bind('autocompleteselect', function (x,y) {($f(x))(y.item);})">]
     member private this.onSelect(f : JQuery.Event -> string -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).autocomplete({close: function (x,y) {($f(x));}})">]
+    [<Inline "jQuery($this.element.Body).bind('autocompleteclose', function (x,y) {($f(x));})">]
     member private this.onClose(f : JQuery.Event -> unit) = ()
 
     /// After an item was selected; ui.item refers to the selected item.
     /// Always triggered after the close event
-    [<Inline "jQuery($this.element.Body).autocomplete({change: function (x,y) {($f(x))(y.item);}})">]
+    [<Inline "jQuery($this.element.Body).bind('autocompletechange', function (x,y) {($f(x))(y.item);})">]
     member private this.onChange(f : JQuery.Event -> string -> unit) = ()
+
+    /// This event is triggered when autocomplete is created.
+    [<JavaScript>]
+    member this.OnCreate f =
+        this
+        |> OnAfterRender (fun _ -> this.onCreate f)
+        |> ignore
 
     /// Triggered before a request (source-option) is started.
     [<JavaScript>]
@@ -152,6 +188,13 @@ type Autocomplete[<JavaScript>] internal () =
     member this.OnChange f =
         this
         |> OnAfterRender (fun _ -> this.onChange f)
+        |> ignore
+
+    /// Triggered when the list is opened.
+    [<JavaScript>]
+    member this.OnOpen f =
+        this
+        |> OnAfterRender (fun _ -> this.onOpen f)
         |> ignore
 
     /// Triggered when the list is hidden.

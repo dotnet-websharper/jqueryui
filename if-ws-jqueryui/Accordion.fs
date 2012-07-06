@@ -30,6 +30,9 @@ type AccordionIconConfiguration =
 type AccordionConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
+    val mutable disabled: bool
+
+    [<DefaultValue>]
     val mutable active: int
 
     [<DefaultValue>]
@@ -137,23 +140,60 @@ type Accordion[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).accordion('enable')">]
     member this.Enable () = ()
 
+    [<Inline "jQuery($this.element.Body).accordion('widget')">]
+    member private this.getWidget () = X<Dom.Element>
+
+    /// Returns the .ui-accordion element.
+    [<JavaScript>]
+    member this.Widget = this.getWidget()
+
     /// Gets or sets any accordion option.
     [<Inline "jQuery($this.element.Body).accordion('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
+
+    /// Gets or sets any accordion option.
+    [<Inline "jQuery($this.element.Body).accordion('option', $name)">]
+    member this.Option (name: string) = X<obj>
 
     /// Activate a content part of the accordion with the
     /// corresponding zero-based index.
     [<Inline "jQuery($this.element.Body).accordion('activate', $index)">]
     member this.Activate (index: int) = ()
 
+    /// Activate a content part of the accordion with the
+    /// corresponding zero-based index.
+    [<Inline "jQuery($this.element.Body).accordion('activate', $selector)">]
+    member this.Activate (selector: string) = ()
+
+    /// Pass false to close all content parts (only possible with collapsible=true).
+    [<Inline "jQuery($this.element.Body).accordion('activate', $keep_open)">]
+    member this.Activate (keep_open: bool) = ()
+
+    /// Recompute heights of the accordion contents when using the fillSpace
+    /// option and the container height changed. For example, when the container
+    /// is a resizable, this method should be called by its resize-event.
+    [<Inline "jQuery($this.element.Body).accordion('resize')">]
+    member this.Resize () = ()
+
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Body).accordion({change: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('accordioncreate', function (x,y) {($f(x))(y);})">]
+    member private this.onCreate(f : JQuery.Event -> AccordionChangeEvent -> unit) = ()
+
+    [<Inline "jQuery($this.element.Body).bind('accordionchange', function (x,y) {($f(x))(y);})">]
     member private this.onChange(f : JQuery.Event -> AccordionChangeEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).accordion({changestart: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('accordionchangestart', function (x,y) {($f(x))(y);})">]
     member private this.onChangestart(f : JQuery.Event -> AccordionChangeEvent -> unit) = ()
+
+    /// This event is triggered when accordion is created.
+    [<JavaScript>]
+    member this.OnCreate f =
+        this
+        |> OnAfterRender (fun _ ->
+            this.onCreate f
+        )
 
     /// Event triggered every time the accordion changes.
     /// If the accordion is animated, the event will be triggered

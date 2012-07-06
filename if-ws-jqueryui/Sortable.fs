@@ -56,6 +56,9 @@ type SortableEvent =
 type SortableConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
+    val mutable disabled: bool
+
+    [<DefaultValue>]
     val mutable appendTo: string
 
     [<DefaultValue>]
@@ -194,6 +197,18 @@ type Sortable [<JavaScript>] internal () =
     [<Inline "$this.sortable('option', $optionName, $value)">]
     member this.Option(optionName: string, value: obj) : unit = ()
 
+    /// Gets sortable option.
+    [<Inline "$this.sortable('option', $optionName)">]
+    member this.Option(optionName: string) = box()
+
+    [<Inline "$this.sortable('widget')">]
+    member private this.getWidget() = As<Dom.Element>()
+
+    /// Returns the .ui-sortable element.
+    [<JavaScript>]
+    member this.Widget = this.getWidget()
+
+
     /// Serializes the sortable's item id's into a form/ajax submittable string.
     [<Inline "$this.sortable('serialize', $options)">]
     member this.Serialize(options: obj) : unit = ()
@@ -220,41 +235,49 @@ type Sortable [<JavaScript>] internal () =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Body).sortable({sort: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sortcreate', function (x,y) {($f(x))(y);})">]
+    member private this.onCreate(f : JQuery.Event -> SortableEvent -> unit) = ()
+
+    [<Inline "jQuery($this.element.Body).bind('sortstart', function (x,y) {($f(x))(y);})">]
     member private this.onStart(f : JQuery.Event -> SortableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).sortable({sort: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sort', function (x,y) {($f(x))(y);})">]
     member private this.onSort(f : JQuery.Event -> SortableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).sortable({change: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sortchange', function (x,y) {($f(x))(y);})">]
     member private this.onChange(f : JQuery.Event -> SortableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).sortable({beforeStop: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sortbeforestop', function (x,y) {($f(x))(y);})">]
     member private this.onBeforeStop(f : JQuery.Event -> SortableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).sortable({stop: function (event,ui) {($f(event))(ui);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sortstop', function (event,ui) {($f(event))(ui);})">]
     member private this.onStop(f : JQuery.Event -> SortableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).sortable({update: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sortupdate', function (x,y) {($f(x))(y);})">]
     member private this.onUpdate(f : JQuery.Event -> SortableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).sortable({receive: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sortreceive', function (x,y) {($f(x))(y);})">]
     member private this.onReceive(f : JQuery.Event -> SortableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).sortable({remove: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sortremove', function (x,y) {($f(x))(y);})">]
     member private this.onRemove(f : JQuery.Event -> SortableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).sortable({over: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sortover', function (x,y) {($f(x))(y);})">]
     member private this.onOver(f : JQuery.Event -> SortableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).sortable({out: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sortout', function (x,y) {($f(x))(y);})">]
     member private this.onOut(f : JQuery.Event -> SortableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).sortable({activate: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sortactivate', function (x,y) {($f(x))(y);})">]
     member private this.onActivate(f : JQuery.Event -> SortableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).sortable({deactivate: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sortdeactivate', function (x,y) {($f(x))(y);})">]
     member private this.onDeactivate(f : JQuery.Event -> SortableEvent -> unit) = ()
+
+    /// Event triggered triggered when sortable is created.
+    [<JavaScript>]
+    member this.OnCreate f =
+        this |> OnAfterRender(fun _ ->  this.onCreate f)
 
     /// Event triggered triggered when sorting starts.
     [<JavaScript>]

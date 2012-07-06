@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -35,6 +35,7 @@
   <ItemGroup>
     <Compile Include="Utils.fs" />
     <Compile Include="Dependencies.fs" />
+    <Compile Include="Position.fs" />
     <Compile Include="Accordion.fs" />
     <Compile Include="Autocomplete.fs" />
     <Compile Include="Button.fs" />
@@ -48,7 +49,6 @@
     <Compile Include="Resizable.fs" />
     <Compile Include="Selectable.fs" />
     <Compile Include="Sortable.fs" />
-    <Compile Include="Position.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="IntelliFactory.WebSharper.Ecma" />

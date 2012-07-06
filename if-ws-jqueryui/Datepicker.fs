@@ -27,15 +27,17 @@ type DatepickerShowOptionsConfiguration =
 type DatepickerConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
+    val mutable disabled: bool
+
+    [<DefaultValue>]
     val mutable altField: string
+
+    [<DefaultValue>]
+    val mutable altFormat: string
 
     [<DefaultValue>]
     //"" by default
     val mutable appendText: string
-
-    [<DefaultValue>]
-    //"" by default
-    val mutable altFormat: string
 
     [<DefaultValue>]
     //false by default
@@ -148,6 +150,10 @@ type DatepickerConfiguration[<JavaScript>]() =
     [<DefaultValue>]
     // "Prev" by default
     val mutable prevText: string
+
+    [<DefaultValue>]
+    // false by default
+    val mutable selectOtherMonths: bool
 
     [<DefaultValue>]
     // "+10" by default
@@ -270,6 +276,33 @@ type Datepicker[<JavaScript>] internal  () =
     [<Inline "jQuery($this.element.Body).datepicker('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
+    /// Get a datepicker option.
+    [<Inline "jQuery($this.element.Body).datepicker('option', $name)">]
+    member this.Option (name: string) = X<obj>
+
+    [<Inline "jQuery($this.element.Body).datepicker('widget')">]
+    member private this.getWidget () = X<Dom.Element>
+
+    /// Returns the .ui-datepicker element.
+    [<JavaScript>]
+    member this.Widget = this.getWidget()
+
+    /// Open a datepicker in a "dialog" box.
+    [<Inline "jQuery($this.element.Body).datepicker('dialog', $date, function(x,y){return ($onSelect(x))(y)}, $settings, $pos)">]
+    member this.Dialog (date: EcmaScript.Date, onSelect: string -> Datepicker -> unit, settings: DatepickerConfiguration, pos: int * int) = ()
+
+    /// Open a datepicker in a "dialog" box.
+    [<Inline "jQuery($this.element.Body).datepicker('dialog', $date, function(x,y){return ($onSelect(x))(y)}, $settings)">]
+    member this.Dialog (date: EcmaScript.Date, onSelect: string -> Datepicker -> unit, settings: DatepickerConfiguration) = ()
+
+    /// Open a datepicker in a "dialog" box.
+    [<Inline "jQuery($this.element.Body).datepicker('dialog', $date, function(x,y){return ($onSelect(x))(y)})">]
+    member this.Dialog (date: EcmaScript.Date, onSelect: string -> Datepicker -> unit) = ()
+
+    /// Open a datepicker in a "dialog" box.
+    [<Inline "jQuery($this.element.Body).datepicker('dialog', $date)">]
+    member this.Dialog (date: EcmaScript.Date) = ()
+
     /// Returns true or false wether the datepicker is disabled.
     [<Inline "jQuery($this.element.Body).datepicker('isDisabled')">]
     member this.IsDisabled () : bool = Unchecked.defaultof<_>()
@@ -282,6 +315,10 @@ type Datepicker[<JavaScript>] internal  () =
     [<Inline "jQuery($this.element.Body).datepicker('show')">]
     member this.Show () = ()
 
+    /// Redraw a date picker, after having made some external modifications.
+    [<Inline "jQuery($this.element.Body).datepicker('refresh')">]
+    member this.Refresh () = ()
+
     /// Get the currently selected date of the datepicker.
     [<Inline "jQuery($this.element.Body).datepicker('getDate')">]
     member this.GetDate () : EcmaScript.Date = Unchecked.defaultof<_>()
@@ -290,37 +327,67 @@ type Datepicker[<JavaScript>] internal  () =
     [<Inline "jQuery($this.element.Body).datepicker('setDate', $date)">]
     member this.SetDate (date:string) = ()
 
+    /// Sets the selected date.
+    [<Inline "jQuery($this.element.Body).datepicker('setDate', $date)">]
+    member this.SetDate (date:EcmaScript.Date) = ()
+
 
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Body).datepicker({onSelect: function (x,y) {$f(x);}})">]
-    member private this.onSelect(f : string -> unit) = ()
+    [<Inline "jQuery($this.element.Body).datepicker({beforeShow: function (x,y) {($f(x))(y);}})">]
+    member private this.onBeforeShow(f : string -> Datepicker -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).datepicker({onClose: function (x,y) {$f();}})">]
-    member private this.onClose(f : unit -> unit) = ()
+    [<Inline "jQuery($this.element.Body).datepicker({beforeShowDay: function (x,y) {$f(x);}})">]
+    member private this.onBeforeShowDay(f : EcmaScript.Date -> unit) = ()
 
-    // beforeShow
-    // beforeShowDay function(date)
-    // onChangeMonthYear function(year, month, inst)
-    // onClose function(dateText, inst)
-    // Adding an event and delayin it if the Pagelet is not yet rendered.
-    /// Triggered when a date is selected.
+    [<Inline "jQuery($this.element.Body).datepicker({beforeShowDay: function (x,y,z) {(($f(x))(y))(z);}})">]
+    member private this.onChangeMonthYear(f : int -> int -> Datepicker -> unit) = ()
+
+    [<Inline "jQuery($this.element.Body).datepicker({onSelect: function (x,y) {($f(x))(y);}})">]
+    member private this.onSelect(f : string -> Datepicker -> unit) = ()
+
+    [<Inline "jQuery($this.element.Body).datepicker({onClose: function (x,y) {($f(x))(y);}})">]
+    member private this.onClose(f : string -> Datepicker -> unit) = ()
+
     [<JavaScript>]
-    member this.OnSelect(f: EcmaScript.Date -> unit) : unit =
+    member this.OnBeforeShow(f: EcmaScript.Date -> Datepicker -> unit) : unit =
         this
         |> OnBeforeRender(fun _ ->
-            this.onSelect <| fun _ ->
-                f (DatepickerInternal.getDate this.element.Dom)
+            this.onBeforeShow <| fun _ d ->
+                f (DatepickerInternal.getDate this.element.Dom) d
         )
         |> ignore
 
-    /// Triggered when the datepicker is closed.
     [<JavaScript>]
-    member this.OnClose(f : unit -> unit) : unit  =
+    member this.OnBeforeShowDay(f: EcmaScript.Date -> unit) : unit =
         this
-        |> OnBeforeRender (fun _ ->
-            this.onClose f
+        |> OnBeforeRender(fun _ -> this.onBeforeShowDay f)
+        |> ignore
+
+    [<JavaScript>]
+    member this.OnChangeMonthYear(f: int -> int -> Datepicker -> unit) : unit =
+        this
+        |> OnBeforeRender(fun _ -> this.onChangeMonthYear f)
+        |> ignore
+
+    [<JavaScript>]
+    member this.OnClose(f: EcmaScript.Date -> Datepicker -> unit) : unit =
+        this
+        |> OnBeforeRender(fun _ ->
+            this.onClose <| fun _ d ->
+                f (DatepickerInternal.getDate this.element.Dom) d
+        )
+        |> ignore
+
+    // Adding an event and delayin it if the Pagelet is not yet rendered.
+    /// Triggered when a date is selected.
+    [<JavaScript>]
+    member this.OnSelect(f: EcmaScript.Date -> Datepicker -> unit) : unit =
+        this
+        |> OnBeforeRender(fun _ ->
+            this.onSelect <| fun _ d ->
+                f (DatepickerInternal.getDate this.element.Dom) d
         )
         |> ignore
 

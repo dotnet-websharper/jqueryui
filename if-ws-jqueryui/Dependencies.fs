@@ -18,13 +18,13 @@ module A = IntelliFactory.WebSharper.Core.Attributes
 [<Sealed>]
 type JQueryUIJs() =
     inherit R.BaseResource(
-        "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/",
+        "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/",
         "/jquery-ui.min.js")
 
 [<Sealed>]
 type JQueryUICss() =
     inherit R.BaseResource(
-        "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base",
+        "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/base",
         "/jquery.ui.all.css")
 
 

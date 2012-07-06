@@ -107,9 +107,24 @@ type Selectable[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).selectable('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
+    /// Gets selectable option.
+    [<Inline "jQuery($this.element.Body).selectable('option', $name)">]
+    member this.Option (name: string) = X<obj>
+
+    [<Inline "jQuery($this.element.Body).selectable('widget')">]
+    member private this.getWidget() = X<Dom.Element>
+
+    /// Returns the .ui-selectable element.
+    [<JavaScript>]
+    member this.Widget = this.getWidget()
+
+
     (****************************************************************
     * Events
     *****************************************************************)
+    [<Inline "jQuery($this.element.Body).selectable({create: function (x,y) {($f(x))(y.create);}})">]
+    member private this.onCreate(f : JQuery.Event -> Element -> unit) = ()
+
     [<Inline "jQuery($this.element.Body).selectable({selected: function (x,y) {($f(x))(y.selected);}})">]
     member private this.onSelected(f : JQuery.Event -> Element -> unit) = ()
 
@@ -128,6 +143,10 @@ type Selectable[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).selectable({unselecting: function (x,y) {($f(x))(y.unselecting);}})">]
     member private this.onUnselecting(f : JQuery.Event -> Element -> unit) = ()
 
+    /// This event is triggered when selectable is created.
+    [<JavaScript>]
+    member this.OnCreate(f : JQuery.Event -> Element -> unit) =
+        this |> OnAfterRender(fun _ ->  this.onCreate f)
 
     /// Event triggered at the end of the select operation,
     /// on each element added to the selection.

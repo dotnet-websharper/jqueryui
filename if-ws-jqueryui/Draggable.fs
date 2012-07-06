@@ -46,6 +46,9 @@ type DraggableStackConfiguration =
 type DraggableConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
+    val mutable disabled: bool
+
+    [<DefaultValue>]
     //true by default
     val mutable addClasses: bool
 
@@ -218,19 +221,39 @@ type Draggable[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).draggable('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
+    /// Gets a draggable option.
+    [<Inline "jQuery($this.element.Body).draggable('option', $name)">]
+    member this.Option (name: string) = X<obj>
+
+
+    [<Inline "jQuery($this.element.Body).draggable('widget')">]
+    member private this.getWidget () = X<Dom.Element>
+
+    /// Returns the .ui-draggable element.
+    [<JavaScript>]
+    member this.Widget = this.getWidget()
+
 
     (****************************************************************
     * Events
     *****************************************************************)
 
-    [<Inline "jQuery($this.element.Body).draggable({start: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('dragcreate', function (x,y) {($f(x))(y);})">]
+    member private this.onCreate(f : JQuery.Event -> DraggableEvent -> unit) = ()
+
+    [<Inline "jQuery($this.element.Body).bind('dragstart', function (x,y) {($f(x))(y);})">]
     member private this.onStart(f : JQuery.Event -> DraggableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).draggable({stop: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('dragstop', function (x,y) {($f(x))(y);})">]
     member private this.onStop(f : JQuery.Event -> DraggableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).draggable({drag: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('drag', function (x,y) {($f(x))(y);})">]
     member private this.onDrag(f : JQuery.Event -> DraggableEvent -> unit) = ()
+
+    /// Event triggered when dragging is created.
+    [<JavaScript>]
+    member this.OnCreate f =
+        this |> OnAfterRender(fun _ ->  this.onCreate f)
 
     /// Event triggered when dragging starts.
     [<JavaScript>]

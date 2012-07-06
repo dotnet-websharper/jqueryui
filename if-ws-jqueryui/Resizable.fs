@@ -60,6 +60,9 @@ type ResizableEvent =
 type ResizableConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
+    val mutable disabled: bool
+
+    [<DefaultValue>]
     val mutable alsoResize: string
 
     [<DefaultValue>]
@@ -170,21 +173,33 @@ type Resizable[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).resizable('enable')">]
     member this.Enable() = ()
 
-    /// Removes resizable functionality.
+    /// Gets a resizable option.
+    [<Inline "jQuery($this.element.Body).resizable('option', $optionName)">]
+    member this.Option(optionName: string) = X<obj>
+
+    /// Sets a resizable option.
     [<Inline "jQuery($this.element.Body).resizable('option', $optionName, $value)">]
     member this.Option(optionName: string, value: obj) : unit = ()
 
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Body).resizable({start: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('resizecreate', function (x,y) {($f(x))(y);})">]
+    member private this.onCreate(f : JQuery.Event -> ResizableEvent -> unit) = ()
+
+    [<Inline "jQuery($this.element.Body).bind('resizestart', function (x,y) {($f(x))(y);})">]
     member private this.onStart(f : JQuery.Event -> ResizableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).resizable({resize: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('resize', function (x,y) {($f(x))(y);})">]
     member private this.onResize(f : JQuery.Event -> ResizableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).resizable({stop: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('resizestop', function (x,y) {($f(x))(y);})">]
     member private this.onStop(f : JQuery.Event -> ResizableEvent -> unit) = ()
+
+    /// Event triggered at the creation of a resizable.
+    [<JavaScript>]
+    member this.OnCreate f =
+        this |> OnAfterRender(fun _ ->  this.onCreate f)
 
     /// Event triggered at the start of a resize operation.
     [<JavaScript>]

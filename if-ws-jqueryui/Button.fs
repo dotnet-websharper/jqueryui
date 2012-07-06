@@ -137,6 +137,17 @@ type Button [<JavaScript>]()=
     [<Inline "jQuery($this.element.Body).button('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
+    /// Get any button option.
+    [<Inline "jQuery($this.element.Body).button('option', $name)">]
+    member this.Option (name: string) = X<obj>
+
+    [<Inline "jQuery($this.element.Body).button('widget')">]
+    member private this.getWidget () = X<Dom.Element>
+
+    /// Returns the .ui-button element.
+    [<JavaScript>]
+    member this.Widget = this.getWidget()
+
     /// Refreshes the visual state of the button.
     /// Useful for updating button state after the native element's checked or disabled state
     /// is changed programatically.
@@ -146,6 +157,16 @@ type Button [<JavaScript>]()=
     (****************************************************************
     * Events
     *****************************************************************)
+
+    [<Inline "jQuery($this.element.Body).bind('buttoncreate', function (x,y) {($f(x));})">]
+    member private this.onCreate(f : JQuery.Event -> unit) = ()
+
+    /// This event is triggered when button is created.
+    [<JavaScript>]
+    member this.OnCreate f =
+        this
+        |> OnAfterRender (fun _ -> this.onCreate f)
+        |> ignore
 
     /// Triggered when the button is clicked.
     [<JavaScript>]

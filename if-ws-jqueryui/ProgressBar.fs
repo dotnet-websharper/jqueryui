@@ -18,6 +18,9 @@ open IntelliFactory.WebSharper.Html
 type ProgressbarConfiguration[<JavaScript>]() =
 
     [<DefaultValue>]
+    val mutable disabled: bool
+
+    [<DefaultValue>]
     //0 by default
     val mutable value: int
 
@@ -87,6 +90,17 @@ type Progressbar[<JavaScript>]internal () =
     [<Inline "jQuery($this.element.Body).progressbar('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
+    /// Gets a progressbar option.
+    [<Inline "jQuery($this.element.Body).progressbar('option', $name)">]
+    member this.Option (name: string) = X<obj>
+
+    [<Inline "jQuery($this.element.Body).progressbar('widget')">]
+    member private this.getWidget () = X<Dom.Element>
+
+    /// Returns the .ui-progressbar element.
+    [<JavaScript>]
+    member this.Widget = this.getWidget()
+
     /// Sets the value of the progressbar.
     [<Inline "jQuery($this.element.Body).progressbar('value', $v)">]
     member private this.setValue (v: int) = ()
@@ -106,12 +120,32 @@ type Progressbar[<JavaScript>]internal () =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Body).accordion({change: function (x,y) {$f(x);}})">]
+    [<Inline "jQuery($this.element.Body).bind('accordioncreate', function (x,y) {$f(x);})">]
+    member private this.onCreate(f : JQuery.Event -> unit) = ()
+
+    [<Inline "jQuery($this.element.Body).bind('accordionchange', function (x,y) {$f(x);})">]
     member private this.onChange(f : JQuery.Event -> unit) = ()
 
-    // Event triggered when the value of the progressbar changes.
+    [<Inline "jQuery($this.element.Body).bind('accordioncomplete', function (x,y) {$f(x);})">]
+    member private this.onComplete(f : JQuery.Event -> unit) = ()
+
+    /// Event triggered when the progressbar is created.
+    [<JavaScript>]
+    member this.OnCreate(f : JQuery.Event -> unit) =
+        this |> OnAfterRender(fun _ ->
+            this.onCreate f
+        )
+
+    /// Event triggered when the value of the progressbar changes.
     [<JavaScript>]
     member this.OnChange(f : JQuery.Event -> unit) =
         this |> OnAfterRender(fun _ ->
             this.onChange f
+        )
+
+    /// This event is triggered when the value of the progressbar reaches the maximum value of 100.
+    [<JavaScript>]
+    member this.OnComplete(f : JQuery.Event -> unit) =
+        this |> OnAfterRender(fun _ ->
+            this.onComplete f
         )

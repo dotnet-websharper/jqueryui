@@ -183,6 +183,17 @@ type Tabs[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).tabs('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
+    /// Gets a tabs option.
+    [<Inline "jQuery($this.element.Body).tabs('option', $name)">]
+    member this.Option (name: string) = X<obj>
+
+    [<Inline "jQuery($this.element.Body).tabs('widget')">]
+    member private this.getWidget () = X<Dom.Element>
+
+    /// Returns the .ui-tabs element.
+    [<JavaScript>]
+    member this.Widget = this.getWidget()
+
     [<Inline "jQuery($this.element.Body).tabs('add', $url, $label, $index)">]
     member private this.add (url:string, label:string, index: int) = ()
 
@@ -238,29 +249,39 @@ type Tabs[<JavaScript>] internal () =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Body).tabs({select: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('tabscreate', function (x,y) {($f(x))(y);})">]
+    member private this.onCreate(f : JQuery.Event -> TabsInfo -> unit) = ()
+
+    [<Inline "jQuery($this.element.Body).bind('tabsselect', function (x,y) {($f(x))(y);})">]
     member private this.onSelect(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).tabs({load: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('tabsload', function (x,y) {($f(x))(y);})">]
     member private this.onLoad(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).tabs({show: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('tabsshow', function (x,y) {($f(x))(y);})">]
     member private this.onShow(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).tabs({add: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('tabsadd', function (x,y) {($f(x))(y);})">]
     member private this.onAdd(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).tabs({remove: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('tabsremove', function (x,y) {($f(x))(y);})">]
     member private this.onRemove(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).tabs({enable: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('tabsenable', function (x,y) {($f(x))(y);})">]
     member private this.onEnable(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).tabs({diable: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Body).bind('tabsdisable', function (x,y) {($f(x))(y);})">]
     member private this.onDisable(f : JQuery.Event -> TabsInfo -> unit) = ()
 
 
-    /// Event triggered when a tab is selcted.
+    /// Event triggered when the tabs are created.
+    [<JavaScript>]
+    member this.OnCreate f =
+        this |> OnAfterRender(fun _ ->
+            this.onCreate f
+        )
+
+    /// Event triggered when a tab is selected.
     [<JavaScript>]
     member this.OnSelect f =
         this |> OnAfterRender(fun _ ->

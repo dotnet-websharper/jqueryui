@@ -19,6 +19,9 @@ open IntelliFactory.WebSharper.Html
 type SliderConfiguration[<JavaScript>] () =
 
     [<DefaultValue>]
+    val mutable disabled: bool
+
+    [<DefaultValue>]
     //false by default
     val mutable animate: bool
 
@@ -100,6 +103,17 @@ type Slider[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).slider('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
+    /// Gets a slider option.
+    [<Inline "jQuery($this.element.Body).slider('option', $name)">]
+    member this.Option (name: string) = X<obj>
+
+    [<Inline "jQuery($this.element.Body).slider('widget')">]
+    member private this.getWidget () = X<Dom.Element>
+
+    /// Returns the .ui-slider element.
+    [<JavaScript>]
+    member this.Widget = this.getWidget()
+
     [<Inline "jQuery($this.element.Body).slider('value', $v)">]
     member private this.setValue (v: int) = ()
 
@@ -134,19 +148,23 @@ type Slider[<JavaScript>] internal () =
     * Events
     *****************************************************************)
 
-    [<Inline "jQuery($this.element.Body).slider({start: function (x,y) {$f(x);}})">]
+    [<Inline "jQuery($this.element.Body).bind('slidercreate', function (x,y) {$f(x);})">]
+    member private this.onCreate(f : JQuery.Event -> unit) = ()
+
+
+    [<Inline "jQuery($this.element.Body).bind('sliderstart', function (x,y) {$f(x);})">]
     member private this.onStart(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).slider({change: function (x,y) {$f(x);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sliderchange', function (x,y) {$f(x);})">]
     member private this.onChange(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).slider({slide: function (x,y) {$f(x);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sliderslide', function (x,y) {$f(x);})">]
     member private this.onSlide(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).slider({stop: function (x,y) {$f(x);}})">]
+    [<Inline "jQuery($this.element.Body).bind('sliderstop', function (x,y) {$f(x);})">]
     member private this.onStop(f : JQuery.Event -> unit) = ()
 
 
