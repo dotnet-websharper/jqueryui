@@ -38,36 +38,45 @@ type DroppableEvent =
 
 type DroppableConfiguration[<JavaScript>]() =
 
-    [<DefaultValue>]
-    //false by default
-    val mutable disabled: bool
-
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "accept">]
     //"" by default
-    val mutable accept: string
+    member val Accept = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable activeClass: string
+    [<Stub>]
+    [<Name "activeClass">]
+    //
+    member val ActiveClass = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "addClasses">]
     //true by default
-    val mutable addClasses: bool
+    member val AddClasses = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "disabled">]
     //false by default
-    val mutable greedy: bool
+    member val Disabled = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "greedy">]
+    //false by default
+    member val Greedy = Unchecked.defaultof<bool> with get, set
+
+    [<Stub>]
+    [<Name "hoverClass">]
     //"drophover" by default
-    val mutable hoverClass: string
+    member val HoverClass = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "scope">]
     //"default" by default
-    val mutable scope: string
+    member val Scope = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "tolerance">]
     //"intersect" by default
-    val mutable tolerance: ToleranceOfDroppable
+    member val Tolerance = Unchecked.defaultof<ToleranceOfDroppable> with get, set
 
 module internal DroppableInternal =
     [<Inline "jQuery($el).droppable($conf)">]
@@ -107,15 +116,15 @@ type Droppable[<JavaScript>] internal () =
     *****************************************************************)
     /// Removes droppable functionality completely.
     [<Inline "jQuery($this.element.Body).droppable('destroy')">]
-    member this.Destroy() = ()
+    member this.Destroy() = X<unit>
 
     /// Disables droppable functionality.
     [<Inline "jQuery($this.element.Body).droppable('disable')">]
-    member this.Disable() = ()
+    member this.Disable() = X<unit>
 
     /// Enables droppable functionality.
     [<Inline "jQuery($this.element.Body).droppable('enable')">]
-    member this.Enable() = ()
+    member this.Enable() = X<unit>
 
     /// Sets droppable option.
     [<Inline "jQuery($this.element.Body).droppable('option', $optionName, $value)">]
@@ -124,6 +133,14 @@ type Droppable[<JavaScript>] internal () =
     /// Gets droppable option.
     [<Inline "jQuery($this.element.Body).droppable('option', $optionName)">]
     member this.Option(optionName: string) = X<obj>
+
+    /// Gets all options.
+    [<Inline "jQuery($this.element.Body).droppable('option')">]
+    member this.Option () = X<DroppableConfiguration>
+
+    /// Sets one or more options.
+    [<Inline "jQuery($this.element.Body).droppable('option', $options)">]
+    member this.Option (options: DroppableConfiguration) = X<unit>
 
     [<Inline "jQuery($this.element.Body).droppable('widget')">]
     member private this.getWidget () = X<Dom.Element>

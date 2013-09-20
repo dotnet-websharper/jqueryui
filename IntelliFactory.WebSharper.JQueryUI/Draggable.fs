@@ -45,114 +45,145 @@ type DraggableStackConfiguration =
 
 type DraggableConfiguration[<JavaScript>]() =
 
-    [<DefaultValue>]
-    val mutable disabled: bool
-
-    [<DefaultValue>]
+    [<Name "addClasses">]
+    [<Stub>]
     //true by default
-    val mutable addClasses: bool
+    member val AddClasses = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Name "appendTo">]
+    [<Stub>]
     //"parent" by default, string of Element
-    val mutable appendTo: string
+    member val AppendTo = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "axis">]
+    [<Stub>]
     //"" by default, string of int
-    val mutable axis: string
+    member val Axis = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "cancel">]
+    [<Stub>]
     //"" by default, string of Element
-    val mutable cancel: string
+    member val Cancel = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "connectToSortable">]
+    [<Stub>]
     //"" by default, string of Element
-    val mutable connectToSortable: string
+    member val ConnectToSortable = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "containment">]
+    [<Stub>]
     //"" by default, string of Element
-    val mutable containment: string
+    member val Containment = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "cursor">]
+    [<Stub>]
     //"auto" by default
-    val mutable cursor: string
+    member val Cursor = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "cursorAt">]
+    [<Stub>]
     //"top=1, left=1" by default
-    val mutable cursorAt: DraggablecursorAtConfiguration
+    member val CursorAt = Unchecked.defaultof<DraggablecursorAtConfiguration> with get, set
 
-    [<DefaultValue>]
+    [<Name "delay">]
+    [<Stub>]
     //0 by default
-    val mutable delay: int
+    member val Delay = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Name "disabled">]
+    [<Stub>]
+    //false by default
+    member val Disabled = Unchecked.defaultof<bool> with get, set
+
+    [<Name "distance">]
+    [<Stub>]
     //1 by default
-    val mutable distance: int
+    member val Distance = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Name "grid">]
+    [<Stub>]
     //0 by default
-    val mutable grid: array<int>
+    member val Grid = Unchecked.defaultof<int[]> with get, set
 
-    [<DefaultValue>]
+    [<Name "handle">]
+    [<Stub>]
     //"" by default, string of Element
-    val mutable handle: string
+    member val Handle = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "helper">]
+    [<Stub>]
     //"original" by default
-    val mutable helper: string
+    member val Helper = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "iframeFix">]
+    [<Stub>]
     //false by default
-    val mutable iframeFix: bool
+    member val IframeFix = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
-    val mutable opacity: float
+    [<Name "opacity">]
+    [<Stub>]
+    //1 by default
+    member val Opacity = Unchecked.defaultof<float> with get, set
 
-    [<DefaultValue>]
+    [<Name "refreshPositions">]
+    [<Stub>]
     //false by default
-    val mutable refreshPositions: bool
+    member val RefreshPositions = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Name "revert">]
+    [<Stub>]
     //false by default
-    val mutable revert: bool
+    member val Revert = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Name "revertDuration">]
+    [<Stub>]
     //500 by default
-    val mutable revertDuration: int
+    member val RevertDuration = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Name "scope">]
+    [<Stub>]
     //"default" by default
-    val mutable scope: string
+    member val Scope = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "scroll">]
+    [<Stub>]
     //true by default
-    val mutable scroll: bool
+    member val Scroll = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Name "scrollSensitivity">]
+    [<Stub>]
     //20 by default
-    val mutable scrollSensitivity: int
+    member val ScrollSensitivity = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Name "scrollSpeed">]
+    [<Stub>]
     //20 by default
-    val mutable scrollSpeed: int
+    member val ScrollSpeed = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Name "snap">]
+    [<Stub>]
     //false by default
-    val mutable snap: bool
+    member val Snap = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Name "snapMode">]
+    [<Stub>]
     //"both" by default
-    val mutable snapMode: string
+    member val SnapMode = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "snapTolerance">]
+    [<Stub>]
     //20 by default
-    val mutable snapTolerance: int
+    member val SnapTolerance = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
-    val mutable stack: DraggableStackConfiguration
+    [<Name "stack">]
+    [<Stub>]
+    //
+    member val Stack = Unchecked.defaultof<DraggableStackConfiguration> with get, set
 
-    [<DefaultValue>]
+    [<Name "zIndex">]
+    [<Stub>]
     //2700 by default
-    val mutable zIndex: int
+    member val ZIndex = Unchecked.defaultof<int> with get, set
 
 type DraggableEvent =
     {
@@ -207,24 +238,31 @@ type Draggable[<JavaScript>] internal () =
     *****************************************************************)
     /// Removes draggable functionality completely.
     [<Inline "jQuery($this.element.Body).draggable('destroy')">]
-    member this.Destroy() = ()
+    member this.Destroy() = X<unit>
 
     /// Disables the draggable functionality.
     [<Inline "jQuery($this.element.Body).draggable('disable')">]
-    member this.Disable() = ()
+    member this.Disable() = X<unit>
 
     /// Enables the draggable functionality.
     [<Inline "jQuery($this.element.Body).draggable('enable')">]
-    member this.Enable() = ()
+    member this.Enable() = X<unit>
 
     /// Sets a draggable option.
     [<Inline "jQuery($this.element.Body).draggable('option', $name, $value)">]
-    member this.Option (name: string, value: obj) = ()
+    member this.Option (name: string, value: obj) = X<unit>
 
     /// Gets a draggable option.
     [<Inline "jQuery($this.element.Body).draggable('option', $name)">]
     member this.Option (name: string) = X<obj>
 
+    /// Gets all options.
+    [<Inline "jQuery($this.element.Body).draggable('option')">]
+    member this.Option () = X<DraggableConfiguration>
+
+    /// Sets one or more options.
+    [<Inline "jQuery($this.element.Body).draggable('option', $options)">]
+    member this.Option (options: DraggableConfiguration) = X<unit>
 
     [<Inline "jQuery($this.element.Body).draggable('widget')">]
     member private this.getWidget () = X<Dom.Element>

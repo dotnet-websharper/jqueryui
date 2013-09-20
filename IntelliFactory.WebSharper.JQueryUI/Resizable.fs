@@ -59,72 +59,100 @@ type ResizableEvent =
 
 type ResizableConfiguration[<JavaScript>]() =
 
-    [<DefaultValue>]
-    val mutable disabled: bool
+    [<Stub>]
+    [<Name "alsoResize">]
+    //
+    member val AlsoResize = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable alsoResize: string
-
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "animate">]
     //false by default
-    val mutable animate: bool
+    member val Animate = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "animateDuration">]
     //"slow" by default
-    val mutable animateDuration: string
+    member val AnimateDuration = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "animateEasing">]
     //"swing" by default
-    val mutable animateEasing: string
+    member val AnimateEasing = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable aspectRatio: float
+    [<Stub>]
+    [<Name "aspectRatio">]
+    //
+    member val AspectRatio = Unchecked.defaultof<float> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "autoHide">]
     //false by default
-    val mutable autoHide: bool
+    member val AutoHide = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "cancel">]
     //":input,option" by default
-    val mutable cancel: string
+    member val Cancel = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable containment: string
+    [<Stub>]
+    [<Name "containment">]
+    //
+    member val Containment = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "delay">]
     //0 by default
-    val mutable delay: int
+    member val Delay = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "disabled">]
+    //
+    member val Disabled = Unchecked.defaultof<bool> with get, set
+
+    [<Stub>]
+    [<Name "distance">]
     // 1 by default
-    val mutable distance: int
+    member val Distance = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "ghost">]
     //false by default
-    val mutable ghost: bool
+    member val Ghost = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "grid">]
     //Array values: [|x; y|]
-    val mutable grid: array<int>
+    member val Grid = Unchecked.defaultof<array<int>> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "handles">]
     //"e, s, se" by default
-    val mutable handles: string
+    member val Handles = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable helper: string
+    [<Stub>]
+    [<Name "helper">]
+    //
+    member val Helper = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable maxHeight: int
+    [<Stub>]
+    [<Name "maxHeight">]
+    //
+    member val MaxHeight = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
-    val mutable maxWidth: int
+    [<Stub>]
+    [<Name "maxWidth">]
+    //
+    member val MaxWidth = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
-    val mutable minHeight: int
+    [<Stub>]
+    [<Name "minHeight">]
+    //
+    member val MinHeight = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
-    val mutable minWidth: int
+    [<Stub>]
+    [<Name "minWidth">]
+    //
+    member val MinWidth = Unchecked.defaultof<int> with get, set
 
 module internal ResizableInternal =
     [<Inline "jQuery($el).resizable($conf)">]
@@ -180,6 +208,22 @@ type Resizable[<JavaScript>] internal () =
     /// Sets a resizable option.
     [<Inline "jQuery($this.element.Body).resizable('option', $optionName, $value)">]
     member this.Option(optionName: string, value: obj) : unit = ()
+
+    /// Gets all options.
+    [<Inline "jQuery($this.element.Body).resizable('option')">]
+    member this.Option () = X<ResizableConfiguration>
+
+    /// Sets one or more options.
+    [<Inline "jQuery($this.element.Body).resizable('option', $options)">]
+    member this.Option (options: ResizableConfiguration) = X<unit>
+
+    [<Inline "jQuery($this.element.Body).resizable('widget')">]
+    member private this.getWidget() = X<Dom.Element>
+
+    /// Returns the .ui-resizable element.
+    [<JavaScript>]
+    member this.Widget = this.getWidget()
+
 
     (****************************************************************
     * Events

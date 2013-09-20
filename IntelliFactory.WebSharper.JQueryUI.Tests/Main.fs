@@ -110,6 +110,17 @@ module internal Client =
         dp |> OnAfterRender(fun _ -> Log "Dp After Render")
         dp |> OnBeforeRender(fun _ -> Log "Dp Before Render")
         Div [dp]
+
+    let TestDraggable () =
+        let d =
+            Draggable.New(
+                Div [
+                    Attr.Style "width:200px;background:lightgray;text-align:center"
+                    Text "Drag me!"
+                ],
+                DraggableConfiguration(Axis = "x"))
+        Div [d]
+
 //
 //    let TestDialog () =
 //        let conf = DialogConfiguration()
@@ -289,6 +300,7 @@ module internal Client =
                 "Autocomplete", TestAutocomplete ()
                 "Button", TestButton ()
                 "Datepicker", TestDatepicker ()
+                "Draggable", TestDraggable ()
 //                "Dialog", TestDialog ()
 //                "Progressbar", TestProgressbar ()
 //                "Slider", TestSlider ()

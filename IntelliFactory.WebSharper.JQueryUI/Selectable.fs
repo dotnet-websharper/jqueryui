@@ -21,33 +21,45 @@ type ToleranceOfSelectable =
 
 type SelectableConfiguration[<JavaScript>]() =
 
-    [<DefaultValue>]
-    //false by default
-    val mutable disabled: bool
+    [<Stub>]
+    [<Name "appendTo">]
+    //"body" by default
+    member val AppendTo = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "autoRefresh">]
     //true by default
-    val mutable autoRefresh: bool
+    member val AutoRefresh = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "cancel">]
     //":input,option"
-    val mutable cancel: string
+    member val Cancel = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "delay">]
     //0 by default
-    val mutable delay: int
+    member val Delay = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "disabled">]
+    //false by default
+    member val Disabled = Unchecked.defaultof<bool> with get, set
+
+    [<Stub>]
+    [<Name "distance">]
     //0 by default
-    val mutable distance: int
+    member val Distance = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "filter">]
     //"*" by default
-    val mutable filter: string
+    member val Filter = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "tolerance">]
     //"*" by default
-    val mutable tolerance: ToleranceOfSelectable
+    member val Tolerance = Unchecked.defaultof<ToleranceOfSelectable> with get, set
 
 module internal SelectableInternal =
     [<Inline "jQuery($el).selectable($conf)">]
@@ -110,6 +122,14 @@ type Selectable[<JavaScript>] internal () =
     /// Gets selectable option.
     [<Inline "jQuery($this.element.Body).selectable('option', $name)">]
     member this.Option (name: string) = X<obj>
+
+    /// Gets all options.
+    [<Inline "jQuery($this.element.Body).selectable('option')">]
+    member this.Option () = X<SelectableConfiguration>
+
+    /// Sets one or more options.
+    [<Inline "jQuery($this.element.Body).selectable('option', $options)">]
+    member this.Option (options: SelectableConfiguration) = X<unit>
 
     [<Inline "jQuery($this.element.Body).selectable('widget')">]
     member private this.getWidget() = X<Dom.Element>

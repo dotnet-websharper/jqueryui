@@ -55,95 +55,131 @@ type SortableEvent =
 
 type SortableConfiguration[<JavaScript>]() =
 
-    [<DefaultValue>]
-    val mutable disabled: bool
+    [<Stub>]
+    [<Name "appendTo">]
+    //
+    member val AppendTo = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable appendTo: string
+    [<Stub>]
+    [<Name "axis">]
+    //
+    member val Axis = Unchecked.defaultof<AxisConfiguration> with get, set
 
-    [<DefaultValue>]
-    val mutable axis: AxisConfiguration
+    [<Stub>]
+    [<Name "cancel">]
+    //
+    member val Cancel = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable cancel: string
+    [<Stub>]
+    [<Name "connectWith">]
+    //
+    member val ConnectWith = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable connectWith: string
+    [<Stub>]
+    [<Name "containment">]
+    //
+    member val Containment = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable containment: string
-
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "cursor">]
     //"auto" by default
-    val mutable cursor: string
+    member val Cursor = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "cursorAt">]
     //Coordinates can be combination of one or two keys: {"top"; "left"; "right"; "bottom"}
-    val mutable cursorAt: string
+    member val CursorAt = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "delay">]
     //0 by default
-    val mutable delay: int
+    member val Delay = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
-    val mutable distance: int
+    [<Stub>]
+    [<Name "disabled">]
+    //
+    member val Disabled = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+
+    [<Stub>]
+    [<Name "distance">]
+    //
+    member val Distance = Unchecked.defaultof<int> with get, set
+
+    [<Stub>]
+    [<Name "dropOnEmpty">]
     //true by default
-    val mutable dropOnEmpty: bool
+    member val DropOnEmpty = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "forceHelperSize">]
     //false by default
-    val mutable forceHelperSize: bool
+    member val ForceHelperSize = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "forcePlaceholderSize">]
     //false by default
-    val mutable forcePlaceholderSize: bool
+    member val ForcePlaceholderSize = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "grid">]
     //array value [|x; y|]
-    val mutable grid: array<int>
+    member val Grid = Unchecked.defaultof<array<int>> with get, set
 
-    [<DefaultValue>]
-    val mutable handle: string
+    [<Stub>]
+    [<Name "handle">]
+    //
+    member val Handle = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "helper">]
     //"original" by default, Possible values: "original", "clone"
-    val mutable helper: string
+    member val Helper = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "items">]
     //"> *" by default
-    val mutable items: string
+    member val Items = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable opacity: float
+    [<Stub>]
+    [<Name "opacity">]
+    //
+    member val Opacity = Unchecked.defaultof<float> with get, set
 
-    [<DefaultValue>]
-    val mutable placeholder: string
+    [<Stub>]
+    [<Name "placeholder">]
+    //
+    member val Placeholder = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "revert">]
     //"false" by default
-    val mutable revert: bool
+    member val Revert = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "scroll">]
     //"true" by default
-    val mutable scroll: bool
+    member val Scroll = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "scrollSensitivity">]
     //"20" by default
-    val mutable scrollSensitivity: int
+    member val ScrollSensitivity = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "scrollSpeed">]
     //"20" by default
-    val mutable scrollSpeed: int
+    member val ScrollSpeed = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "tolerance">]
     //"false" by default
-    val mutable tolerance: ToleranceConfiguration
+    member val Tolerance = Unchecked.defaultof<ToleranceConfiguration> with get, set
 
-    [<DefaultValue>]
+    [<Stub>]
+    [<Name "zIndex">]
     //"1000" by default
-    val mutable zIndex: int
+    member val ZIndex = Unchecked.defaultof<int> with get, set
 
 module internal SortableInternal =
     [<Inline "jQuery($el).sortable($conf)">]
@@ -200,6 +236,14 @@ type Sortable [<JavaScript>] internal () =
     /// Gets sortable option.
     [<Inline "$this.sortable('option', $optionName)">]
     member this.Option(optionName: string) = box()
+
+    /// Gets all options.
+    [<Inline "jQuery($this.element.Body).sortable('option')">]
+    member this.Option () = X<SortableConfiguration>
+
+    /// Sets one or more options.
+    [<Inline "jQuery($this.element.Body).sortable('option', $options)">]
+    member this.Option (options: SortableConfiguration) = X<unit>
 
     [<Inline "$this.sortable('widget')">]
     member private this.getWidget() = As<Dom.Element>()
@@ -322,6 +366,11 @@ type Sortable [<JavaScript>] internal () =
     /// Event triggered when a sortable item is moved into a connected list.
     [<JavaScript>]
     member this.OnOver f =
+        this |> OnAfterRender(fun _ -> this.onOver f)
+
+    /// Event triggered when a sortable item is moved away from a connected list.
+    [<JavaScript>]
+    member this.OnOut f =
         this |> OnAfterRender(fun _ -> this.onOut f)
 
     /// Event triggered when using connected lists, every connected list on drag start receives it.
