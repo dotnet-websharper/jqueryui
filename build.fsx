@@ -15,12 +15,11 @@ let test =
         .References(fun r -> [r.Project main])
 
 bt.Solution [
-
     main
     test
 
     bt.NuGet.CreatePackage()
-        .Description("Bindings to JQuery UI")
+        .Description("WebSharper Extensions for jQuery UI")
         .Add(main)
 
 ]
