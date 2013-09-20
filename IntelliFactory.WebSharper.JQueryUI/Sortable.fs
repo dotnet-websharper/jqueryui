@@ -239,11 +239,11 @@ type Sortable [<JavaScript>] internal () =
 
     /// Gets all options.
     [<Inline "jQuery($this.element.Body).sortable('option')">]
-    member this.Option () = X<SortableConfiguration>
+    member this.Option () = Unchecked.defaultof<SortableConfiguration>
 
     /// Sets one or more options.
     [<Inline "jQuery($this.element.Body).sortable('option', $options)">]
-    member this.Option (options: SortableConfiguration) = X<unit>
+    member this.Option (options: SortableConfiguration) = Unchecked.defaultof<unit>
 
     [<Inline "$this.sortable('widget')">]
     member private this.getWidget() = As<Dom.Element>()

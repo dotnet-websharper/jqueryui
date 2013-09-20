@@ -15,8 +15,6 @@ namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
-
-
 type TabsAjaxOptionsConfiguration =
     {
     [<Name "ajaxOptions">]
@@ -48,75 +46,74 @@ type TabsFxConfiguration =
 
 type TabsInfo =
     {
-        options : string []
-        tab : Dom.Node
-        panel : Dom.Node
-        index : int
+        tab : JQuery.JQuery
+        panel : JQuery.JQuery
+    }
+
+type TabsActivateEvent =
+    {
+        [<Name "newTab">]
+        NewTab : JQuery.JQuery
+
+        [<Name "oldTab">]
+        OldTab : JQuery.JQuery
+
+        [<Name "newPanel">]
+        NewPanel : JQuery.JQuery
+
+        [<Name "oldPanel">]
+        OldPanel : JQuery.JQuery
     }
 
 type TabsConfiguration[<JavaScript>]() =
 
-    [<DefaultValue>]
+    [<Name "active">]
+    [<Stub>]
     //null by default
-    val mutable ajaxOptions: TabsAjaxOptionsConfiguration
+    member val Active = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Name "collapsible">]
+    [<Stub>]
     //false by default
-    val mutable cache: bool
+    member val Collapsible = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
-    //false by default
-    val mutable collapsible: bool
-
-    [<DefaultValue>]
-    //null by default
-    val mutable cookie: TabsCookieConfiguration
-
-    [<DefaultValue>]
-    //false by default
-    val mutable deselectable: bool
-
-    [<DefaultValue>]
+    [<Name "disabled">]
+    [<Stub>]
     //[] by default
-    val mutable disabled: array<int>
+    member val Disabled = Unchecked.defaultof<array<int>> with get, set
 
-    [<DefaultValue>]
+    [<Name "event">]
+    [<Stub>]
     //"click" by default
-    val mutable event: string
+    member val Event = Unchecked.defaultof<string> with get, set
 
-    //Option, Array?
-    [<DefaultValue>]
+    [<Name "heightStyle">]
+    [<Stub>]
+    //"content" by default
+    member val HeightStyle = Unchecked.defaultof<string> with get, set
+
+    [<Name "hide">]
+    [<Stub>]
     //null by default
-    val mutable fx: TabsFxConfiguration
+    member val Hide = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    //"ui-tabs-" by default
-    val mutable idPrefix: string
+    [<Name "show">]
+    [<Stub>]
+    //null by default
+    member val Show = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    //"<div></div>" by default
-    val mutable panelTemplate: string
-
-    [<DefaultValue>]
-    //0 by default
-    val mutable selected: int
-
-    [<DefaultValue>]
-    //"<em>Loading&#8230;</em>" by default
-    val mutable spinner: string
-
-    [<DefaultValue>]
-    //"<li><a href="#{href}"><span>#{label}</span></a></li>" by default
-    val mutable tabTemplate: string
-
+[<AutoOpen>]
 module internal TabsInternal =
     [<Inline "jQuery($el).tabs($conf)">]
     let Init(el: Dom.Element, conf: TabsConfiguration) = ()
 
+    type JQuery.JQuery with
+        [<Inline "$this.eq($i)">]
+        member this.Eq(i: int) = this
 
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]
-type Tabs[<JavaScript>] internal () =
+type Tabs[<JavaScript>] internal (tabContainer, panelContainer) =
     inherit Pagelet()
 
     (****************************************************************
@@ -127,29 +124,21 @@ type Tabs[<JavaScript>] internal () =
     [<JavaScript>]
     [<Name "New1">]
     static member New (els : List<string * Element>, conf: TabsConfiguration): Tabs =
-        let el =
+        let panelContainer, tabContainer =
             let itemPanels =
                 els
                 |> List.map (fun (label, panel) ->
                    let id = NewId()
-                   let item =
-                    LI [
-                        A [
-                            Attr.HRef ("#" + id)
-                            Text label
-                        ]
-                        panel
-                    ]
+                   let item = LI [A [Attr.HRef ("#" + id); Text label]]
                    let tab = Div [Attr.Id id] -< [panel]
                    (item :> IPagelet, tab :> IPagelet)
                 )
-            let ul =
-                UL <| Seq.map fst itemPanels
-            Div [ul] -< (List.map snd itemPanels)
+            let tabs = UL (Seq.map fst itemPanels)
+            Div (tabs :> IPagelet :: List.map snd itemPanels), tabs
 
-        let tabs = new Tabs ()
+        let tabs = new Tabs (tabContainer, panelContainer)
         tabs.element <-
-            el
+            panelContainer
             |>! OnAfterRender (fun el ->
                 TabsInternal.Init(el.Body, conf)
             )
@@ -194,57 +183,40 @@ type Tabs[<JavaScript>] internal () =
     [<JavaScript>]
     member this.Widget = this.getWidget()
 
-    [<Inline "jQuery($this.element.Body).tabs('add', $url, $label, $index)">]
-    member private this.add (url:string, label:string, index: int) = ()
-
-    [<Inline "jQuery($this.element.Body).tabs('length')">]
-    member private this.getLength () = 0
-
-    /// Removes the tab with the given index.
-    [<Inline "jQuery($this.element.Body).tabs('remove', $index)">]
-    member this.Remove (index: int) = ()
-
-    /// Selects the tab with the given index.
-    [<Inline "jQuery($this.element.Body).tabs('select', $index)">]
-    member this.Select (index: int) = ()
-
     /// Reloads the content of an Ajax tab.
     [<Inline "jQuery($this.element.Body).tabs('load', $index)">]
     member this.Load (index: int) = ()
 
-    /// Changes the url from which an Ajax (remote) tab will be loaded.
-    [<Inline "jQuery($this.element.Body).tabs('url', $index)">]
-    member this.Url (index: int) = ()
-
-    /// Sets up an automatic rotation through tabs of a tab pane.
-    /// The second argument is an amount of time in milliseconds until the next
-    /// tab in the cycle gets activated. Use 0 or null to stop the rotation.
-    /// The third controls whether or not to continue the rotation after a tab has been
-    /// selected by a user.
-    [<Inline "jQuery($this.element.Body).tabs('rotate', $secs, $loop)">]
-    member this.Rotate (secs: int, loop: bool) = ()
+    /// Process any tabs that were added or removed directly in the DOM and recompute the height of the tab panels. Results depend on the content and the heightStyle option.
+    [<Inline "jQuery($this.element.Body).tabs('refresh')">]
+    member this.Refresh () = ()
 
     /// Retrieve the number of tabs of the first matched tab pane.
     [<JavaScript>]
-    member this.Length
-        with get () = this.getLength()
+    member this.Length = JQuery.JQuery.Of(tabContainer.Body).Children().Size()
 
     /// Add a new tab with the given element and label
     /// inserted at the specified index.
     [<JavaScript>]
     member this.Add(el: Element, label: string, ix: int) =
         let id = NewId()
-        let tab = Div [Attr.Id id] -< [el]
-        this.element.Append tab
-        this.add("#" + id, label, ix)
+        let tab = LI [A [Attr.HRef ("#" + id)] :> IPagelet; Text label]
+        let panel = Div [Attr.Id id] -< [el]
+        JQuery.JQuery.Of(tabContainer.Body).Children().Eq(ix).Before(tab.Body).Ignore
+        JQuery.JQuery.Of(panelContainer.Body).Children().Eq(ix).After(panel.Body).Ignore // after because the first child is the tabset
+        (tab :> IPagelet).Render()
+        (panel :> IPagelet).Render()
+        this.Refresh()
 
     /// Add a new tab with the given element and label.
     [<JavaScript>]
     member this.Add(el: Element, label: string) =
         let id = NewId()
-        let tab = Div [Attr.Id id] -< [el]
-        this.element.Append tab
-        this.add("#" + id, label, this.Length)
+        let tab = LI [A [Attr.HRef ("#" + id)] :> IPagelet; Text label]
+        let panel = Div [Attr.Id id] -< [el]
+        tabContainer.Append(tab)
+        panelContainer.Append(panel)
+        this.Refresh()
 
     (****************************************************************
     * Events
@@ -252,26 +224,17 @@ type Tabs[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).bind('tabscreate', function (x,y) {($f(x))(y);})">]
     member private this.onCreate(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('tabsselect', function (x,y) {($f(x))(y);})">]
-    member private this.onSelect(f : JQuery.Event -> TabsInfo -> unit) = ()
-
     [<Inline "jQuery($this.element.Body).bind('tabsload', function (x,y) {($f(x))(y);})">]
     member private this.onLoad(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('tabsshow', function (x,y) {($f(x))(y);})">]
-    member private this.onShow(f : JQuery.Event -> TabsInfo -> unit) = ()
+    [<Inline "jQuery($this.element.Body).bind('tabsbeforeload', function (x,y) {($f(x))(y);})">]
+    member private this.onBeforeLoad(f : JQuery.Event -> TabsInfo -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('tabsadd', function (x,y) {($f(x))(y);})">]
-    member private this.onAdd(f : JQuery.Event -> TabsInfo -> unit) = ()
+    [<Inline "jQuery($this.element.Body).bind('tabsactivate', function (x,y) {($f(x))(y);})">]
+    member private this.onActivate(f : JQuery.Event -> TabsActivateEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('tabsremove', function (x,y) {($f(x))(y);})">]
-    member private this.onRemove(f : JQuery.Event -> TabsInfo -> unit) = ()
-
-    [<Inline "jQuery($this.element.Body).bind('tabsenable', function (x,y) {($f(x))(y);})">]
-    member private this.onEnable(f : JQuery.Event -> TabsInfo -> unit) = ()
-
-    [<Inline "jQuery($this.element.Body).bind('tabsdisable', function (x,y) {($f(x))(y);})">]
-    member private this.onDisable(f : JQuery.Event -> TabsInfo -> unit) = ()
+    [<Inline "jQuery($this.element.Body).bind('tabsbeforeactivate', function (x,y) {($f(x))(y);})">]
+    member private this.onBeforeActivate(f : JQuery.Event -> TabsActivateEvent -> unit) = ()
 
 
     /// Event triggered when the tabs are created.
@@ -281,13 +244,6 @@ type Tabs[<JavaScript>] internal () =
             this.onCreate f
         )
 
-    /// Event triggered when a tab is selected.
-    [<JavaScript>]
-    member this.OnSelect f =
-        this |> OnAfterRender(fun _ ->
-            this.onSelect f
-        )
-
     /// Event triggered when a tab is loaded.
     [<JavaScript>]
     member this.OnLoad f =
@@ -295,28 +251,23 @@ type Tabs[<JavaScript>] internal () =
             this.onLoad f
         )
 
-    /// Event triggered when a tab is showed.
+    /// Event triggered before a tab is loaded.
     [<JavaScript>]
-    member this.OnShow f =
+    member this.OnBeforeLoad f =
         this |> OnAfterRender(fun _  ->
-            this.onShow f
+            this.onBeforeLoad f
         )
 
-    /// Event triggered when a tab is added.
+    /// Event triggered when a tab is activated.
     [<JavaScript>]
-    member this.OnAdd f =
+    member this.OnActivate f =
         this |> OnAfterRender(fun _  ->
-            this.onAdd f
+            this.onActivate f
         )
-    /// Event triggered when a tab is enabled.
+
+    /// Event triggered when a tab is beforeActivated.
     [<JavaScript>]
-    member this.OnEnable f =
+    member this.OnBeforeActivate f =
         this |> OnAfterRender(fun _  ->
-            this.onEnable f
-        )
-    /// Event triggered when a tab is disabled.
-    [<JavaScript>]
-    member this.OnDisable f =
-        this |> OnAfterRender(fun _  ->
-            this.onDisable f
+            this.onBeforeActivate f
         )

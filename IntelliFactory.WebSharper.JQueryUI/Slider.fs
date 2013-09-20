@@ -18,39 +18,48 @@ open IntelliFactory.WebSharper.Html
 
 type SliderConfiguration[<JavaScript>] () =
 
-    [<DefaultValue>]
-    val mutable disabled: bool
-
-    [<DefaultValue>]
+    [<Name "animate">]
+    [<Stub>]
     //false by default
-    val mutable animate: bool
+    member val Animate = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Name "disabled">]
+    [<Stub>]
+    member val Disabled = Unchecked.defaultof<bool> with get, set
+
+    [<Name "max">]
+    [<Stub>]
     //100 by default
-    val mutable max: int
+    member val Max = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Name "min">]
+    [<Stub>]
     //0 by default
-    val mutable min: int
+    member val Min = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Name "orientation">]
+    [<Stub>]
     //"horizontal" by default
-    val mutable orientation: string
+    member val Orientation = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable range: obj
+    [<Name "range">]
+    [<Stub>]
+    member val Range = Unchecked.defaultof<obj> with get, set
 
-    [<DefaultValue>]
+    [<Name "step">]
+    [<Stub>]
     //1 by default
-    val mutable step: int
+    member val Step = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Name "value">]
+    [<Stub>]
     //0 by default
-    val mutable value: int
+    member val Value = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Name "values">]
+    [<Stub>]
     //0 by default
-    val mutable values: array<int>
+    member val Values = Unchecked.defaultof<array<int>> with get, set
 
 module internal SliderInternal =
     [<Inline "jQuery($el).slider($conf)">]

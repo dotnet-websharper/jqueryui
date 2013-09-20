@@ -17,12 +17,19 @@ open IntelliFactory.WebSharper.Html
 
 type ProgressbarConfiguration[<JavaScript>]() =
 
-    [<DefaultValue>]
-    val mutable disabled: bool
+    [<Name "disabled">]
+    [<Stub>]
+    member val Disabled = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Name "value">]
+    [<Stub>]
     //0 by default
-    val mutable value: int
+    member val Value = Unchecked.defaultof<int> with get, set
+
+    [<Name "max">]
+    [<Stub>]
+    //100 by default
+    member val Max = Unchecked.defaultof<int> with get, set
 
 module internal ProgressbarInternal =
     [<Inline "jQuery($el).progressbar($conf)">]

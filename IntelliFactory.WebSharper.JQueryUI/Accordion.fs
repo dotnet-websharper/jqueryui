@@ -29,58 +29,60 @@ type AccordionIconConfiguration =
 
 type AccordionConfiguration[<JavaScript>]() =
 
-    [<DefaultValue>]
-    val mutable disabled: bool
+    [<Name "active">]
+    [<Stub>]
+    member val Active = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
-    val mutable active: int
+    [<Name "animate">]
+    [<Stub>]
+    member val Animated = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable animated: string
+    [<Name "collapsible">]
+    [<Stub>]
+    member val Collapsible = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
-    val mutable autoHeight: bool
+    [<Name "disabled">]
+    [<Stub>]
+    member val Disabled = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
-    val mutable clearStyle: bool
+    [<Name "event">]
+    [<Stub>]
+    member val Event = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable collapsible: bool
+    [<Name "header">]
+    [<Stub>]
+    member val Header = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable event: string
+    [<Name "heightStyle">]
+    [<Stub>]
+    member val HeightStyle = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable fillSpace: bool
+    [<Name "icons">]
+    [<Stub>]
+    member val Icons = Unchecked.defaultof<AccordionIconConfiguration> with get, set
 
-    [<DefaultValue>]
-    val mutable header: string
+type AccordionCreateEvent =
+    {
+        [<Name "header">]
+        Header: JQuery.JQuery
 
-    [<DefaultValue>]
-    val mutable icons: AccordionIconConfiguration
-
-    [<DefaultValue>]
-    val mutable navigation: bool
-
-    [<DefaultValue>]
-    val mutable navigationFilter: unit -> unit
+        [<Name "panel">]
+        Panel: JQuery.JQuery
+    }
 
 type AccordionChangeEvent =
     {
         [<Name "newHeader">]
         NewHeader: JQuery.JQuery
 
-        [<Name "newContent">]
-        NewContent: JQuery.JQuery
+        [<Name "newPanel">]
+        NewPanel: JQuery.JQuery
 
         [<Name "oldHeader">]
         OldHeader: JQuery.JQuery
 
-        [<Name "oldContent">]
-        OldContent: JQuery.JQuery
-
-        [<Name "options">]
-        Options: AccordionConfiguration
+        [<Name "oldPanel">]
+        OldPanel: JQuery.JQuery
     }
 
 module internal AccordianInternal =
@@ -155,37 +157,40 @@ type Accordion[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).accordion('option', $name)">]
     member this.Option (name: string) = X<obj>
 
+    /// Gets all options.
+    [<Inline "jQuery($this.element.Body).accordion('option')">]
+    member this.Option () = X<AccordionConfiguration>
+
+    /// Sets one or more options.
+    [<Inline "jQuery($this.element.Body).accordion('option', $options)">]
+    member this.Option (options: AccordionConfiguration) = X<unit>
+
     /// Activate a content part of the accordion with the
     /// corresponding zero-based index.
-    [<Inline "jQuery($this.element.Body).accordion('activate', $index)">]
+    [<Inline "jQuery($this.element.Body).accordion('option', 'active', $index)">]
     member this.Activate (index: int) = ()
 
-    /// Activate a content part of the accordion with the
-    /// corresponding zero-based index.
-    [<Inline "jQuery($this.element.Body).accordion('activate', $selector)">]
-    member this.Activate (selector: string) = ()
-
     /// Pass false to close all content parts (only possible with collapsible=true).
-    [<Inline "jQuery($this.element.Body).accordion('activate', $keep_open)">]
+    [<Inline "jQuery($this.element.Body).accordion('option', 'active', $keep_open)">]
     member this.Activate (keep_open: bool) = ()
 
     /// Recompute heights of the accordion contents when using the fillSpace
     /// option and the container height changed. For example, when the container
     /// is a resizable, this method should be called by its resize-event.
-    [<Inline "jQuery($this.element.Body).accordion('resize')">]
-    member this.Resize () = ()
+    [<Inline "jQuery($this.element.Body).accordion('refresh')">]
+    member this.Refresh () = ()
 
     (****************************************************************
     * Events
     *****************************************************************)
     [<Inline "jQuery($this.element.Body).bind('accordioncreate', function (x,y) {($f(x))(y);})">]
-    member private this.onCreate(f : JQuery.Event -> AccordionChangeEvent -> unit) = ()
+    member private this.onCreate(f : JQuery.Event -> AccordionCreateEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('accordionchange', function (x,y) {($f(x))(y);})">]
-    member private this.onChange(f : JQuery.Event -> AccordionChangeEvent -> unit) = ()
+    [<Inline "jQuery($this.element.Body).bind('accordionbeforeactivate', function (x,y) {($f(x))(y);})">]
+    member private this.onBeforeActivate(f : JQuery.Event -> AccordionChangeEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('accordionchangestart', function (x,y) {($f(x))(y);})">]
-    member private this.onChangestart(f : JQuery.Event -> AccordionChangeEvent -> unit) = ()
+    [<Inline "jQuery($this.element.Body).bind('accordionactivate', function (x,y) {($f(x))(y);})">]
+    member private this.onActivate(f : JQuery.Event -> AccordionChangeEvent -> unit) = ()
 
     /// This event is triggered when accordion is created.
     [<JavaScript>]
@@ -200,16 +205,16 @@ type Accordion[<JavaScript>] internal () =
     /// upon completion of the animation; otherwise,
     /// it is triggered immediately.
     [<JavaScript>]
-    member this.OnChange f =
+    member this.OnBeforeActivate f =
         this
         |> OnAfterRender (fun _ ->
-            this.onChange f
+            this.onBeforeActivate f
         )
 
     /// Event triggered every time the accordion starts to change.
     [<JavaScript>]
-    member this.OnChangeStart f =
+    member this.OnActivate f =
         this
         |> OnAfterRender (fun _ ->
-            this.onChangestart f
+            this.onActivate f
         )

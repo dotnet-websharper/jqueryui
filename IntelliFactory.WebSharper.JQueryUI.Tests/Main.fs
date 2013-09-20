@@ -38,8 +38,8 @@ module internal Client =
         |> OnAfterRender (fun _ ->
             Log "Acc1 - After Render"
         )
-        acc1.OnChange (fun _ _ ->
-            Log "Acc1 - Change"
+        acc1.OnActivate (fun _ _ ->
+            Log "Acc1 - Activate"
         )
         let els2 =
             [
@@ -50,8 +50,8 @@ module internal Client =
         let acc2 = Accordion.New(els2)
 
         // Events
-        acc2.OnChange (fun _ _ ->
-            Log "Acc2 - Change"
+        acc2.OnActivate (fun _ _ ->
+            Log "Acc2 - Activate"
         )
         let button = JQueryUI.Button.New("Click")
         button.OnClick (fun _ ->
@@ -66,7 +66,7 @@ module internal Client =
 
     let TestAutocomplete () =
         let conf = new AutocompleteConfiguration()
-        conf.source <- [|"Apa"; "Beta"; "Zeta" ; "Zebra"|]
+        conf.Source <- [|"Apa"; "Beta"; "Zeta" ; "Zebra"|]
         let a = Autocomplete.New(Input [], conf)
         a |> OnBeforeRender (fun _ -> Log "Before Render")
         a |> OnAfterRender ( fun _ ->

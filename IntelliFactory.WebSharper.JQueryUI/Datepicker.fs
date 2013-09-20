@@ -24,200 +24,251 @@ type DatepickerShowOptionsConfiguration =
     [<JavaScript>]
     static member Default = {Direction = "up"}
 
-type DatepickerConfiguration[<JavaScript>]() =
-
-    [<DefaultValue>]
-    val mutable disabled: bool
-
-    [<DefaultValue>]
-    val mutable altField: string
-
-    [<DefaultValue>]
-    val mutable altFormat: string
-
-    [<DefaultValue>]
-    //"" by default
-    val mutable appendText: string
-
-    [<DefaultValue>]
-    //false by default
-    val mutable autoSize: bool
-
-    [<DefaultValue>]
-    //"" by default
-    val mutable buttonImage: string
-
-    [<DefaultValue>]
-    //false by default
-    val mutable buttonImageOnly: bool
-
-    [<DefaultValue>]
-    //"..." by default
-    val mutable buttonText: string
-
-    [<DefaultValue>]
-    //"iso8601Week" by default
-    val mutable calculateWeek: EcmaScript.Date -> int
-
-    [<DefaultValue>]
-    //fasle by default
-    val mutable changeMonth: bool
-
-    [<DefaultValue>]
-    //fasle by default
-    val mutable changeYear: bool
-
-    [<DefaultValue>]
-    //"Done" by default
-    val mutable closeText: string
-
-    [<DefaultValue>]
-    //true by default
-    val mutable constrainInput: bool
-
-    [<DefaultValue>]
-    //"Today" by default
-    val mutable currentText: string
-
-    [<DefaultValue>]
-    //"mm/dd/yy" by default
-    val mutable dateFormat: string
-
-    [<DefaultValue>]
-    //array<string> = [|"Sunday"; "Monday"; "Tuesday"; "Wednesday"; "Thursday"; "Friday"; "Saturday"|]
-    val mutable dayNames: array<string>
-
-    [<DefaultValue>]
-    // array<string> = [|"Su"; "Mo"; "Tu"; "We"; "Th"; "Fr"; "Sa"|]
-    val mutable dayNamesMin: array<string>
-
-    [<DefaultValue>]
-    // array<string> = [|"Sun"; "Mon"; "Tue"; "Wed"; "Thu"; "Fri"; "Sat"|]
-    val mutable dayNamesShort: array<string>
-
-    [<DefaultValue>]
-    // null by default
-    val mutable defaultDate: EcmaScript.Date
-
-    [<DefaultValue>]
-    // "normal" by default
-    val mutable duration: string
-
-    [<DefaultValue>]
-    // 0 by default
-    val mutable firstDay: int
-
-    [<DefaultValue>]
-    // fasle by default
-    val mutable gotoCurrent: bool
-
-    [<DefaultValue>]
-    // fasle by default
-    val mutable hideIfNoPrevNext: bool
-
-    [<DefaultValue>]
-    // false by default
-    val mutable isRTL: bool
-
-    [<DefaultValue>]
-    // null by default
-    val mutable maxDate: string
-
-    [<DefaultValue>]
-    // null by default
-    val mutable minDate: EcmaScript.Date
-
-    [<DefaultValue>]
-    // by default [|"January"; "February"; "March"; "April"; "May"; "June"; "July"; "August"; "September"; "October"; "November"; "December"|]
-    val mutable monthNames: array<string>
-
-    [<DefaultValue>]
-    // by default [|"Jan"; "Feb"; "Mar"; "Apr"; "May"; "Jun"; "Jul"; "Aug"; "Sep"; "Oct"; "Nov"; "Dec"|]
-    val mutable monthNamesShort: array<string>
-
-    [<DefaultValue>]
-    // false by default
-    val mutable navigationAsDateFormat: bool
-
-    [<DefaultValue>]
-    // "Next" by default
-    val mutable nextText: string
-
-    [<DefaultValue>]
-    //1 by default
-    val mutable numberOfMonths: array<int>
-
-    [<DefaultValue>]
-    // "Prev" by default
-    val mutable prevText: string
-
-    [<DefaultValue>]
-    // false by default
-    val mutable selectOtherMonths: bool
-
-    [<DefaultValue>]
-    // "+10" by default
-    val mutable shortYearCutoff: int
-
-    [<DefaultValue>]
-    // "show" by default
-    val mutable showAnim: string
-
-    [<DefaultValue>]
-    // false by default
-    val mutable showButtonPanel: bool
-
-    [<DefaultValue>]
-    // 0 by default
-    val mutable showCurrentAtPos: int
-
-    [<DefaultValue>]
-    // fasle by default
-    val mutable showMonthAfterYear: bool
-
-    [<DefaultValue>]
-    // "focus" by default
-    val mutable showOn: string
-
-    [<DefaultValue>]
-    //{} by default
-    val mutable showOptions: DatepickerShowOptionsConfiguration
-
-    [<DefaultValue>]
-    // false by default
-    val mutable showOtherMonths: bool
-
-    [<DefaultValue>]
-    //false by default
-    val mutable showWeek: bool
-
-    [<DefaultValue>]
-    // 1 by default
-    val mutable stepMonths: int
-
-    [<DefaultValue>]
-    // 1 by default
-    val mutable weekHeader: string
-
-    [<DefaultValue>]
-    // "-10:+10" by default
-    val mutable yearRange: string
-
-    [<DefaultValue>]
-    // 1 by default
-    val mutable yearSuffix: string
-
-module internal DatepickerInternal =
+type internal DatepickerInternal =
     [<Inline "jQuery($el).datepicker($conf)">]
-    let Init (el: Dom.Element, conf: DatepickerConfiguration) = ()
+    static member Init (el: Dom.Element, conf: DatepickerConfiguration) = ()
 
     [<Inline "jQuery($el).datepicker('getDate')">]
-    let getDate (el: Dom.Element) : EcmaScript.Date =
+    static member getDate (el: Dom.Element) : EcmaScript.Date =
         Unchecked.defaultof<_>
 
-[<Require(typeof<Dependencies.JQueryUIJs>)>]
-[<Require(typeof<Dependencies.JQueryUICss>)>]
-type Datepicker[<JavaScript>] internal  () =
+and DatepickerConfiguration[<JavaScript>]() =
+
+    [<Name "altField">]
+    [<Stub>]
+    member val AltField = Unchecked.defaultof<string> with get, set
+
+    [<Name "altFormat">]
+    [<Stub>]
+    member val AltFormat = Unchecked.defaultof<string> with get, set
+
+    [<Name "appendText">]
+    [<Stub>]
+    //"" by default
+    member val AppendText = Unchecked.defaultof<string> with get, set
+
+    [<Name "autoSize">]
+    [<Stub>]
+    //false by default
+    member val AutoSize = Unchecked.defaultof<bool> with get, set
+
+    [<Name "buttonImage">]
+    [<Stub>]
+    //"" by default
+    member val ButtonImage = Unchecked.defaultof<string> with get, set
+
+    [<Name "buttonImageOnly">]
+    [<Stub>]
+    //false by default
+    member val ButtonImageOnly = Unchecked.defaultof<bool> with get, set
+
+    [<Name "buttonText">]
+    [<Stub>]
+    //"..." by default
+    member val ButtonText = Unchecked.defaultof<string> with get, set
+
+    [<Name "calculateWeek">]
+    [<Stub>]
+    //"iso8601Week" by default
+    member val CalculateWeek = Unchecked.defaultof<EcmaScript.Date -> int> with get, set
+
+    [<Name "changeMonth">]
+    [<Stub>]
+    //false by default
+    member val ChangeMonth = Unchecked.defaultof<bool> with get, set
+
+    [<Name "changeYear">]
+    [<Stub>]
+    //false by default
+    member val ChangeYear = Unchecked.defaultof<bool> with get, set
+
+    [<Name "closeText">]
+    [<Stub>]
+    //"Done" by default
+    member val CloseText = Unchecked.defaultof<string> with get, set
+
+    [<Name "constrainInput">]
+    [<Stub>]
+    //true by default
+    member val ConstrainInput = Unchecked.defaultof<bool> with get, set
+
+    [<Name "currentText">]
+    [<Stub>]
+    //"Today" by default
+    member val CurrentText = Unchecked.defaultof<string> with get, set
+
+    [<Name "dateFormat">]
+    [<Stub>]
+    //"mm/dd/yy" by default
+    member val DateFormat = Unchecked.defaultof<string> with get, set
+
+    [<Name "dayNames">]
+    [<Stub>]
+    //array<string> = [|"Sunday"; "Monday"; "Tuesday"; "Wednesday"; "Thursday"; "Friday"; "Saturday"|]
+    member val DayNames = Unchecked.defaultof<array<string>> with get, set
+
+    [<Name "dayNamesMin">]
+    [<Stub>]
+    // array<string> = [|"Su"; "Mo"; "Tu"; "We"; "Th"; "Fr"; "Sa"|]
+    member val DayNamesMin = Unchecked.defaultof<array<string>> with get, set
+
+    [<Name "dayNamesShort">]
+    [<Stub>]
+    // array<string> = [|"Sun"; "Mon"; "Tue"; "Wed"; "Thu"; "Fri"; "Sat"|]
+    member val DayNamesShort = Unchecked.defaultof<array<string>> with get, set
+
+    [<Name "defaultDate">]
+    [<Stub>]
+    // null by default
+    member val DefaultDate = Unchecked.defaultof<EcmaScript.Date> with get, set
+
+    [<Name "duration">]
+    [<Stub>]
+    // "normal" by default
+    member val Duration = Unchecked.defaultof<string> with get, set
+
+    [<Name "firstDay">]
+    [<Stub>]
+    // 0 by default
+    member val FirstDay = Unchecked.defaultof<int> with get, set
+
+    [<Name "gotoCurrent">]
+    [<Stub>]
+    // false by default
+    member val GotoCurrent = Unchecked.defaultof<bool> with get, set
+
+    [<Name "hideIfNoPrevNext">]
+    [<Stub>]
+    // false by default
+    member val HideIfNoPrevNext = Unchecked.defaultof<bool> with get, set
+
+    [<Name "isRTL">]
+    [<Stub>]
+    //false by default
+    member val isRTL = Unchecked.defaultof<bool> with get, set
+
+    [<Name "maxDate">]
+    [<Stub>]
+    // null by default
+    member val MaxDate = Unchecked.defaultof<string> with get, set
+
+    [<Name "minDate">]
+    [<Stub>]
+    // null by default
+    member val MinDate = Unchecked.defaultof<EcmaScript.Date> with get, set
+
+    [<Name "monthNames">]
+    [<Stub>]
+    // by default [|"January"; "February"; "March"; "April"; "May"; "June"; "July"; "August"; "September"; "October"; "November"; "December"|]
+    member val MonthNames = Unchecked.defaultof<array<string>> with get, set
+
+    [<Name "monthNamesShort">]
+    [<Stub>]
+    // by default [|"Jan"; "Feb"; "Mar"; "Apr"; "May"; "Jun"; "Jul"; "Aug"; "Sep"; "Oct"; "Nov"; "Dec"|]
+    member val MonthNamesShort = Unchecked.defaultof<array<string>> with get, set
+
+    [<Name "navigationAsDateFormat">]
+    [<Stub>]
+    // false by default
+    member val NavigationAsDateFormat = Unchecked.defaultof<bool> with get, set
+
+    [<Name "nextText">]
+    [<Stub>]
+    // "Next" by default
+    member val NextText = Unchecked.defaultof<string> with get, set
+
+    [<Name "numberOfMonths">]
+    [<Stub>]
+    //1 by default
+    member val NumberOfMonths = Unchecked.defaultof<array<int>> with get, set
+
+    [<Name "onChangeMonthYear">]
+    [<Stub>]
+    member val OnChangeMonthYear = Unchecked.defaultof<int * int * Datepicker -> unit> with get, set
+
+    [<Name "onClose">]
+    [<Stub>]
+    member val OnClose = Unchecked.defaultof<string * Datepicker -> unit> with get, set
+
+    [<Name "prevText">]
+    [<Stub>]
+    // "Prev" by default
+    member val PrevText = Unchecked.defaultof<string> with get, set
+
+    [<Name "selectOtherMonths">]
+    [<Stub>]
+    // false by default
+    member val SelectOtherMonths = Unchecked.defaultof<bool> with get, set
+
+    [<Name "shortYearCutoff">]
+    [<Stub>]
+    // "+10" by default
+    member val ShortYearCutoff = Unchecked.defaultof<int> with get, set
+
+    [<Name "showAnim">]
+    [<Stub>]
+    // "show" by default
+    member val ShowAnim = Unchecked.defaultof<string> with get, set
+
+    [<Name "showButtonPanel">]
+    [<Stub>]
+    // false by default
+    member val ShowButtonPanel = Unchecked.defaultof<bool> with get, set
+
+    [<Name "showCurrentAtPos">]
+    [<Stub>]
+    // 0 by default
+    member val ShowCurrentAtPos = Unchecked.defaultof<int> with get, set
+
+    [<Name "showMonthAfterYear">]
+    [<Stub>]
+    // false by default
+    member val ShowMonthAfterYear = Unchecked.defaultof<bool> with get, set
+
+    [<Name "showOn">]
+    [<Stub>]
+    // "focus" by default
+    member val ShowOn = Unchecked.defaultof<string> with get, set
+
+    [<Name "showOptions">]
+    [<Stub>]
+    //{} by default
+    member val ShowOptions = Unchecked.defaultof<DatepickerShowOptionsConfiguration> with get, set
+
+    [<Name "showOtherMonths">]
+    [<Stub>]
+    // false by default
+    member val ShowOtherMonths = Unchecked.defaultof<bool> with get, set
+
+    [<Name "showWeek">]
+    [<Stub>]
+    //false by default
+    member val ShowWeek = Unchecked.defaultof<bool> with get, set
+
+    [<Name "stepMonths">]
+    [<Stub>]
+    // 1 by default
+    member val StepMonths = Unchecked.defaultof<int> with get, set
+
+    [<Name "weekHeader">]
+    [<Stub>]
+    // 1 by default
+    member val WeekHeader = Unchecked.defaultof<string> with get, set
+
+    [<Name "yearRange">]
+    [<Stub>]
+    // "-10:+10" by default
+    member val YearRange = Unchecked.defaultof<string> with get, set
+
+    [<Name "yearSuffix">]
+    [<Stub>]
+    // 1 by default
+    member val YearSuffix = Unchecked.defaultof<string> with get, set
+
+and
+    [<Require(typeof<Dependencies.JQueryUIJs>)>]
+    [<Require(typeof<Dependencies.JQueryUICss>)>]
+    Datepicker[<JavaScript>] internal  () =
     inherit Pagelet()
 
     (****************************************************************
@@ -279,6 +330,14 @@ type Datepicker[<JavaScript>] internal  () =
     /// Get a datepicker option.
     [<Inline "jQuery($this.element.Body).datepicker('option', $name)">]
     member this.Option (name: string) = X<obj>
+
+    /// Gets all options.
+    [<Inline "jQuery($this.element.Body).datepicker('option')">]
+    member this.Option () = X<DatepickerConfiguration>
+
+    /// Sets one or more options.
+    [<Inline "jQuery($this.element.Body).datepicker('option', $options)">]
+    member this.Option (options: DatepickerConfiguration) = X<unit>
 
     [<Inline "jQuery($this.element.Body).datepicker('widget')">]
     member private this.getWidget () = X<Dom.Element>

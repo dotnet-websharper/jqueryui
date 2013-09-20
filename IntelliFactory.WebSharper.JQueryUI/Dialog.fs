@@ -17,87 +17,99 @@ open IntelliFactory.WebSharper.Html
 
 type DialogConfiguration[<JavaScript>]() =
 
-    [<DefaultValue>]
-    val mutable disabled: bool
+    [<Name "appendTo">]
+    [<Stub>]
+    //"body" by default
+    member val AppendTo = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "autoOpen">]
+    [<Stub>]
     //true by default
-    val mutable autoOpen: bool
+    member val AutoOpen = Unchecked.defaultof<bool> with get, set
 
-    //Buttons' type to be confirmed (string -> (string -> unit) -> unit)
-    [<DefaultValue>]
+    [<Name "buttons">]
+    //Stub type to be confirmed (string -> (string -> unit) -> unit)
+    [<Stub>]
     //"" by default
-    val mutable buttons: string
+    member val Buttons = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "closeOnEscape">]
+    [<Stub>]
     //false by default
-    val mutable closeOnEscape: bool
+    member val CloseOnEscape = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Name "closeText">]
+    [<Stub>]
     //"close" by default
-    val mutable closeText: string
+    member val CloseText = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "dialogClass">]
+    [<Stub>]
     //"" by default
-    val mutable dialogClass: string
+    member val DialogClass = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "draggable">]
+    [<Stub>]
     //true by default
-    val mutable draggable: bool
+    member val Draggable = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
-    val mutable height: int
+    [<Name "height">]
+    [<Stub>]
+    member val Height = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Name "hide">]
+    [<Stub>]
     //"" by default
-    val mutable hide: string
+    member val Hide = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable maxHeight: int
+    [<Name "maxHeight">]
+    [<Stub>]
+    member val MaxHeight = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
-    val mutable maxWidth: int
+    [<Name "maxWidth">]
+    [<Stub>]
+    member val MaxWidth = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
-    val mutable minHeight: int
+    [<Name "minHeight">]
+    [<Stub>]
+    member val MinHeight = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
-    val mutable minWidth: int
+    [<Name "minWidth">]
+    [<Stub>]
+    member val MinWidth = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
+    [<Name "modal">]
+    [<Stub>]
     //false by default
-    val mutable modal: bool
+    member val Modal = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Name "position">]
+    [<Stub>]
     //"center" by default
-    val mutable position: string
+    member val Position = Unchecked.defaultof<Position> with get, set
 
-    [<DefaultValue>]
+    [<Name "resizable">]
+    [<Stub>]
     //true by default
-    val mutable resizable: bool
+    member val Resizable = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
+    [<Name "show">]
+    [<Stub>]
     //"" by default
-    val mutable show: string
+    member val Show = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    //true by default
-    val mutable stack: bool
-
-    [<DefaultValue>]
+    [<Name "title">]
+    [<Stub>]
     //"" by default
-    val mutable title: string
+    member val Title = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "width">]
+    [<Stub>]
     //300 by default
-    val mutable width: int
-
-    [<DefaultValue>]
-    //1000 by default
-    val mutable zindex: int
+    member val Width = Unchecked.defaultof<int> with get, set
 
 
-module internal DialogInternal =
+module DialogInternal =
     [<Inline "jQuery($el).dialog($conf)">]
     let Init (el: Dom.Element, conf: DialogConfiguration) = ()
 
@@ -149,6 +161,14 @@ type Dialog[<JavaScript>]internal () =
     /// Gets dialog option.
     [<Inline "jQuery($this.element.Body).dialog('option', $name)">]
     member this.Option (name: string) = X<obj>
+
+    /// Gets all options.
+    [<Inline "jQuery($this.element.Body).dialog('option')">]
+    member this.Option () = X<DialogConfiguration>
+
+    /// Sets one or more options.
+    [<Inline "jQuery($this.element.Body).dialog('option', $options)">]
+    member this.Option (options: DialogConfiguration) = X<unit>
 
     [<Inline "jQuery($this.element.Body).dialog('widget')">]
     member private this.getWidget () = X<Dom.Element>

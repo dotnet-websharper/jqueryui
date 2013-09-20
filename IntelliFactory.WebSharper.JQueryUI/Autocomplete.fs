@@ -15,28 +15,62 @@ namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
+type AutocompleteRequest =
+    {
+        [<Name "term">]
+        Term : string
+    }
+
+type AutocompleteItem =
+    {
+        [<Name "label">]
+        Label : string
+
+        [<Name "value">]
+        Value : string
+    }
+
 type AutocompleteConfiguration[<JavaScript>]() =
 
-    [<DefaultValue>]
-    val mutable disabled: bool
+    [<Name "appendTo">]
+    [<Stub>]
+    member val AppendTo = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable appendTo: string
+    [<Name "autoFocus">]
+    [<Stub>]
+    member val AutoFocus = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
-    val mutable autoFocus: bool
+    [<Name "delay">]
+    [<Stub>]
+    member val Delay = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
-    val mutable delay: int
+    [<Name "disabled">]
+    [<Stub>]
+    member val Disabled = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
-    val mutable minLength: int
+    [<Name "minLength">]
+    [<Stub>]
+    member val MinLength = Unchecked.defaultof<int> with get, set
 
-    [<DefaultValue>]
-    val mutable position: PositionConfiguration
+    [<Name "position">]
+    [<Stub>]
+    member val Position = Unchecked.defaultof<PositionConfiguration> with get, set
 
-    [<DefaultValue>]
-    val mutable source: array<string>
+    [<Name "source">]
+    [<Stub>]
+    member val Source = Unchecked.defaultof<array<string>> with get, set
+
+    [<Name "source">]
+    [<Stub>]
+    member val SourceItems = Unchecked.defaultof<array<AutocompleteItem>> with get, set
+
+    [<Name "source">]
+    [<Stub>]
+    member val SourceUrl = Unchecked.defaultof<string> with get, set
+
+    [<Name "source">]
+    [<Stub>]
+    member val SourceCallback = Unchecked.defaultof<AutocompleteRequest * (AutocompleteItem[] -> unit) -> unit> with get, set
 
 module internal AutocompleteInternal =
     [<Inline "jQuery($el).autocomplete($conf)">]
@@ -117,6 +151,14 @@ type Autocomplete[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).autocomplete('option', $name)">]
     member this.Option (name: string) = X<obj>
 
+    /// Gets all options.
+    [<Inline "jQuery($this.element.Body).autocomplete('option')">]
+    member this.Option () = X<AutocompleteConfiguration>
+
+    /// Sets one or more options.
+    [<Inline "jQuery($this.element.Body).autocomplete('option', $options)">]
+    member this.Option (options: AutocompleteConfiguration) = X<unit>
+
     [<Inline "jQuery($this.element.Body).autocomplete('widget')">]
     member private this.getWidget () = X<Dom.Element>
 
@@ -155,6 +197,9 @@ type Autocomplete[<JavaScript>] internal () =
     [<Inline "jQuery($this.element.Body).bind('autocompleteopen', function (x,y) {($f(x));})">]
     member private this.onOpen(f : JQuery.Event -> unit) = ()
 
+    [<Inline "jQuery($this.element.Body).bind('autocompleteresponse', function (x,y) {($f(x))(y.content);})">]
+    member private this.onResponse(f : JQuery.Event -> AutocompleteItem[] -> unit) = ()
+
     [<Inline "jQuery($this.element.Body).bind('autocompletefocus', function (x,y) {($f(x))(y.item);})">]
     member private this.onFocus(f : JQuery.Event -> string -> unit) = ()
 
@@ -188,6 +233,13 @@ type Autocomplete[<JavaScript>] internal () =
     member this.OnChange f =
         this
         |> OnAfterRender (fun _ -> this.onChange f)
+        |> ignore
+
+    /// This event is triggered when autocomplete is created.
+    [<JavaScript>]
+    member this.OnResponse f =
+        this
+        |> OnAfterRender (fun _ -> this.onResponse f)
         |> ignore
 
     /// Triggered when the list is opened.

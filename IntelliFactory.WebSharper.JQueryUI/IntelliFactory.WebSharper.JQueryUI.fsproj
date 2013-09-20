@@ -55,9 +55,12 @@
     <Compile Include="Button.fs" />
     <Compile Include="Datepicker.fs" />
     <Compile Include="Dialog.fs" />
+    <Compile Include="Menu.fs" />
     <Compile Include="ProgressBar.fs" />
     <Compile Include="Slider.fs" />
+    <Compile Include="Spinner.fs" />
     <Compile Include="Tabs.fs" />
+    <Compile Include="Tooltip.fs" />
     <Compile Include="Draggable.fs" />
     <Compile Include="Droppable.fs" />
     <Compile Include="Resizable.fs" />

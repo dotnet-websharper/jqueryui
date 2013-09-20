@@ -30,18 +30,22 @@ type ButtonIconsConfiguration =
 
 type ButtonConfiguration[<JavaScript>] () =
 
-    [<DefaultValue>]
-    val mutable disabled: bool
+    [<Name "disabled">]
+    [<Stub>]
+    member val Disabled = Unchecked.defaultof<bool> with get, set
 
-    [<DefaultValue>]
-    val mutable text: bool
+    [<Name "icons">]
+    [<Stub>]
+    member val Icons = Unchecked.defaultof<ButtonIconsConfiguration> with get, set
 
-    [<DefaultValue>]
+    [<Name "label">]
+    [<Stub>]
     //true by default
-    val mutable label: string
+    member val Label = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
-    val mutable icons: ButtonIconsConfiguration
+    [<Name "text">]
+    [<Stub>]
+    member val Text = Unchecked.defaultof<bool> with get, set
 
 
 module internal ButtonInternal =
@@ -103,8 +107,7 @@ type Button [<JavaScript>]()=
     [<JavaScript>]
     [<Name "New4">]
     static member New (label: string): Button =
-        let conf = new ButtonConfiguration()
-        conf.label <- label
+        let conf = new ButtonConfiguration(Label = label)
         Button.New(conf)
 
     (****************************************************************
@@ -140,6 +143,14 @@ type Button [<JavaScript>]()=
     /// Get any button option.
     [<Inline "jQuery($this.element.Body).button('option', $name)">]
     member this.Option (name: string) = X<obj>
+
+    /// Gets all options.
+    [<Inline "jQuery($this.element.Body).button('option')">]
+    member this.Option () = X<ButtonConfiguration>
+
+    /// Sets one or more options.
+    [<Inline "jQuery($this.element.Body).button('option', $options)">]
+    member this.Option (options: ButtonConfiguration) = X<unit>
 
     [<Inline "jQuery($this.element.Body).button('widget')">]
     member private this.getWidget () = X<Dom.Element>
