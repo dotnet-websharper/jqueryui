@@ -1,3 +1,6 @@
 (bin|obj)/(Debug|Release)
 [.]build
 [.]suo$
+^build/.*
+^packages/.*
+^tools/packages/.*
