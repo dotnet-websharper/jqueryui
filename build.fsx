@@ -1,19 +1,26 @@
 #load "tools/includes.fsx"
 open IntelliFactory.Build
 
-let bt = BuildTool().PackageId("IntelliFactory.WebSharper.JQueryUI", "2.5")
+let bt =
+    BuildTool().PackageId("IntelliFactory.WebSharper.JQueryUI", "2.5").References(fun r ->
+        [
+            r.Assembly "System.Web"
+        ])
 
 let main =
     bt.WebSharper.Library("IntelliFactory.WebSharper.JQueryUI")
     |> fun main ->
-        main.SourcesFromProject().References(fun r ->
-            [
-                r.Assembly "System.Web"
-            ])
+        main.SourcesFromProject()
+
+let test =
+    bt.WebSharper.HtmlWebsite("IntelliFactory.WebSharper.JQueryUI.Tests")
+        .SourcesFromProject()
+        .References(fun r -> [r.Project main])
 
 bt.Solution [
 
     main
+    test
 
     bt.NuGet.CreatePackage()
         .Description("Bindings to JQuery UI")

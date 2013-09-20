@@ -10,15 +10,18 @@
 // $end{copyright}
 
 //JQueryUI Wrapping: (version Stable 1.8rc1)
-namespace IntelliFactory.WebSharper.JQueryUI
+namespace IntelliFactory.WebSharper.JQueryUI.Tests
 
-module internal Test =
+open IntelliFactory.WebSharper
 
-    open IntelliFactory.WebSharper
+[<JavaScript>]
+module internal Client =
+
+    open IntelliFactory.WebSharper.JQueryUI
     open IntelliFactory.WebSharper.Html
+    open IntelliFactory.WebSharper.JavaScript
 
-    [<JavaScript>]
-    let TestAccordian () =
+    let TestAccordion () =
         let els1 =
             [
                 "Foo", Div [Button [Text "click"]]
@@ -61,10 +64,9 @@ module internal Test =
         )
         Div [acc2] -< [button]
 
-    [<JavaScript>]
     let TestAutocomplete () =
         let conf = new AutocompleteConfiguration()
-        conf.Source <- [|"Apa"; "Beta"; "Zeta" ; "Zebra"|]
+        conf.source <- [|"Apa"; "Beta"; "Zeta" ; "Zebra"|]
         let a = Autocomplete.New(Input [], conf)
         a |> OnBeforeRender (fun _ -> Log "Before Render")
         a |> OnAfterRender ( fun _ ->
@@ -72,8 +74,8 @@ module internal Test =
             a.Search "Z"
         )
         a.OnChange (fun _ _ -> Log "Change")
-        a.OnClose <| fun _ _ -> Log "Close"
-        a.OnSearch <| fun _ _ -> Log "Search"
+        a.OnClose <| fun _ -> Log "Close"
+        a.OnSearch <| fun _ -> Log "Search"
         a.OnFocus <| fun _ _ -> Log "Focus"
 
         let bClose = JQueryUI.Button.New "Close"
@@ -87,7 +89,6 @@ module internal Test =
             bDestroy
         ]
 
-    [<JavaScript>]
     let TestButton () =
         let b1 = JQueryUI.Button.New ("Click")
         b1 |> OnAfterRender(fun _ -> Log "After Render")
@@ -103,7 +104,6 @@ module internal Test =
         )
         Div [b1; b2]
 
-    [<JavaScript>]
     let TestDatepicker () =
         let conf = new DatepickerConfiguration()
         let dp = Datepicker.New(Input [], conf)
@@ -111,7 +111,6 @@ module internal Test =
         dp |> OnBeforeRender(fun _ -> Log "Dp Before Render")
         Div [dp]
 //
-//    [<JavaScript>]
 //    let TestDialog () =
 //        let conf = DialogConfiguration()
 //        conf.Buttons <- "Buttons"
@@ -139,7 +138,6 @@ module internal Test =
 //            bC
 //        ]
 //
-//    [<JavaScript>]
 //    let TestProgressbar () =
 //        let conf = ProgressbarConfiguration()
 //        let p = Progressbar.New(Div [], conf)
@@ -154,7 +152,6 @@ module internal Test =
 //        Div [p ; b]
 //
 //
-//    [<JavaScript>]
 //    let TestSlider () =
 //        let s = Slider.New()
 //        s |> OnBeforeRender(fun _ -> Log "slider: before render")
@@ -172,7 +169,6 @@ module internal Test =
 //        )
 //        pan
 //
-//    [<JavaScript>]
 //    let TestTabs () =
 //        let conf = new TabsConfiguration()
 //        let tabs =
@@ -193,7 +189,6 @@ module internal Test =
 //        )
 //        Div [t ; b]
 //
-////    [<JavaScript>]
 ////    let TestSortable () =
 ////        let elem =
 ////            List.init 6 (fun i ->
@@ -203,7 +198,6 @@ module internal Test =
 ////        let sortable = Sortable.New elem
 ////        Div [sortable]
 //
-//    [<JavaScript>]
 //    let TestWidget t w =
 //        Div [
 //            Attr.Style "border:solid 1px gray; padding:10px; margin-top: 10px"
@@ -213,7 +207,6 @@ module internal Test =
 //    [<Inline "jQuery(document)">]
 //    let Document () : Element = Unchecked.defaultof<_>()
 //
-//    [<JavaScript>]
 //    let TestPosition() =
 //        let position1Body =
 //            Div [Attr.Style "width:50px; height:50px; background-color:#F00;"]
@@ -279,7 +272,6 @@ module internal Test =
 ////            ]
 ////            -< [p1; p2; p3; p4 ]
 //
-//    [<JavaScript>]
 //    let TestResizable () =
 //        let img = Div [Attr.Src "http://www.look4design.co.uk/l4design/companies/light-iq/image14.jpg" ]
 //        let resizable = Resizable.New img
@@ -290,11 +282,10 @@ module internal Test =
 //        Div [drag]
 //
 //
-    [<JavaScript>]
     let Tests () =
         let tab =
             [
-                "Accordion", TestAccordian ()
+                "Accordion", TestAccordion ()
                 "Autocomplete", TestAutocomplete ()
                 "Button", TestButton ()
                 "Datepicker", TestDatepicker ()
@@ -309,6 +300,35 @@ module internal Test =
             |> Tabs.New
         Div [tab]
 
-    [<JavaScript>]
-    let Main() = Tests ()
+open IntelliFactory.WebSharper.Sitelets
 
+type Action = | Index
+
+module Site =
+
+    [<Sealed>]
+    type TestControl() =
+        inherit Web.Control()
+
+        [<JavaScript>]
+        override this.Body =
+            Client.Tests() :> _
+
+    open IntelliFactory.Html
+
+    let HomePage =
+        Content.PageContent <| fun ctx ->
+            { Page.Default with
+                Title = Some "WebSharper JQueryUI Tests"
+                Body = [Div [new TestControl()]] }
+
+    let Main = Sitelet.Content "/" Index HomePage
+
+[<Sealed>]
+type Website() =
+    interface IWebsite<Action> with
+        member this.Sitelet = Site.Main
+        member this.Actions = [Action.Index]
+
+[<assembly: Website(typeof<Website>)>]
+do ()
