@@ -2,15 +2,12 @@
 open IntelliFactory.Build
 
 let bt =
-    BuildTool().PackageId("IntelliFactory.WebSharper.JQueryUI", "2.5").References(fun r ->
-        [
-            r.Assembly "System.Web"
-        ])
+    BuildTool().PackageId("IntelliFactory.WebSharper.JQueryUI", "2.5")
+        .References(fun r -> [r.Assembly "System.Web"])
 
 let main =
     bt.WebSharper.Library("IntelliFactory.WebSharper.JQueryUI")
-    |> fun main ->
-        main.SourcesFromProject()
+        .SourcesFromProject()
 
 let test =
     bt.WebSharper.HtmlWebsite("IntelliFactory.WebSharper.JQueryUI.Tests")

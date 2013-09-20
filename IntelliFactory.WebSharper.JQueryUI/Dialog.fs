@@ -15,7 +15,22 @@ namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
-type DialogConfiguration[<JavaScript>]() =
+type DialogButton [<JavaScript>]() =
+
+    [<Inline "void($this.click = function(e){$f({Body:this,Render:function(){}})(e)})">]
+    member private this.setClick(f: Element -> JQuery.Event -> unit) = ()
+    
+    [<Name "click">]
+    member this.Click
+        with [<JavaScript>] set (f : Dialog -> JQuery.Event -> unit) =
+            this.setClick(fun el ev -> f (Dialog.OfExisting el) ev)
+        and get () = As<Dialog -> JQuery.Event -> unit>()
+
+    [<Name "text">]
+    [<Stub>]
+    member val Text = Unchecked.defaultof<string> with get, set
+
+and DialogConfiguration[<JavaScript>]() =
 
     [<Name "appendTo">]
     [<Stub>]
@@ -30,7 +45,7 @@ type DialogConfiguration[<JavaScript>]() =
     [<Name "buttons">]
     [<Stub>]
     //[] by default
-    member val Buttons = Unchecked.defaultof<ButtonConfiguration[]> with get, set
+    member val Buttons = Unchecked.defaultof<DialogButton[]> with get, set
 
     [<Name "closeOnEscape">]
     [<Stub>]
@@ -108,15 +123,20 @@ type DialogConfiguration[<JavaScript>]() =
     member val Width = Unchecked.defaultof<int> with get, set
 
 
-module DialogInternal =
+and DialogInternal =
     [<Inline "jQuery($el).dialog($conf)">]
-    let Init (el: Dom.Element, conf: DialogConfiguration) = ()
+    static member Init (el: Dom.Element, conf: DialogConfiguration) = ()
 
 
-[<Require(typeof<Dependencies.JQueryUIJs>)>]
-[<Require(typeof<Dependencies.JQueryUICss>)>]
-type Dialog[<JavaScript>]internal () =
+and
+    [<Require(typeof<Dependencies.JQueryUIJs>)>]
+    [<Require(typeof<Dependencies.JQueryUICss>)>]
+    Dialog[<JavaScript>]internal () =
     inherit Pagelet()
+
+    [<JavaScript>]
+    static member internal OfExisting(el: Element) =
+        new Dialog(element = el)
 
     /// Create a new dialog using the given element
     /// and configuration object.

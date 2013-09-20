@@ -70,10 +70,7 @@ module internal Client =
         conf.Source <- [|"Apa"; "Beta"; "Zeta" ; "Zebra"|]
         let a = Autocomplete.New(Input [], conf)
         a |> OnBeforeRender (fun _ -> Log "Before Render")
-        a |> OnAfterRender ( fun _ ->
-            Log "After Render"
-            a.Search "Z"
-        )
+        a |> OnAfterRender ( fun _ -> Log "After Render")
         a.OnChange (fun _ _ -> Log "Change")
         a.OnClose <| fun _ -> Log "Close"
         a.OnSearch <| fun _ -> Log "Search"
@@ -125,7 +122,7 @@ module internal Client =
 
     let TestDialog () =
         let conf = DialogConfiguration()
-        // conf.Buttons <- [|As (New ["text", box "Ok"])|]
+        conf.Buttons <- [|DialogButton(Text = "Ok", Click = fun d e -> d.Close())|]
         let d = Dialog.New(Div [Text "Dialog"], conf)
         d.OnClose(fun ev ->
             Log "close"
@@ -173,7 +170,7 @@ module internal Client =
         s.OnChange(fun ev ->
             Log "change"
         )
-        let b = JQueryUI.Button.New("inc")
+        let b = JQueryUI.Button.New("check")
         let pan = Div [s :> IPagelet ; b :> _]
         b.OnClick (fun ev ->
             let d = Dialog.New(Div [Text <| string s.Value])
@@ -197,7 +194,7 @@ module internal Client =
         let b = JQueryUI.Button.New("inc")
         b.OnClick (fun ev ->
             JQuery.Of(t.TabContainer.Body).Children().Eq(2).Click().Ignore
-            t.Add( Div [H1 [Text "New tab"]], "tab" + (string t.Length))
+            t.Add( Div [H1 [Text "New tab"]], "Tab" + (string (t.Length + 1)))
         )
         Div [t :> IPagelet ; b :> _]
 
@@ -206,7 +203,7 @@ module internal Client =
             List.init 6 (fun i ->
                 Attr.Src ("http://www.look4design.co.uk/l4design/companies/designercurtains/image" + string (i+1) + ".jpg"))
             |> List.map (fun e -> LI [Img [e]])
-            |> UL
+            |> (-<) (UL [Attr.Style "list-style: none"])
         let sortable = Sortable.New elem
         Div [sortable]
 
