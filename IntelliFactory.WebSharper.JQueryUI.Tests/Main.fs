@@ -17,6 +17,7 @@ open IntelliFactory.WebSharper
 [<JavaScript>]
 module internal Client =
 
+    open IntelliFactory.WebSharper.JQuery
     open IntelliFactory.WebSharper.JQueryUI
     open IntelliFactory.WebSharper.Html
     open IntelliFactory.WebSharper.JavaScript
@@ -121,178 +122,178 @@ module internal Client =
                 DraggableConfiguration(Axis = "x"))
         Div [d]
 
+
+    let TestDialog () =
+        let conf = DialogConfiguration()
+        // conf.Buttons <- [|As (New ["text", box "Ok"])|]
+        let d = Dialog.New(Div [Text "Dialog"], conf)
+        d.OnClose(fun ev ->
+            Log "close"
+        )
+        d |> OnAfterRender(fun _ -> Log "dialog: before render")
+        d |> OnAfterRender(fun _ -> Log "dialog: after render")
+        d.OnOpen(fun ev -> Log "dialog: open")
+        d.OnClose(fun ev -> Log "dialog: close")
+        d.OnResize(fun ev -> Log "dialog: resize")
+        d.OnResizeStop(fun ev -> Log "dialog: resize stop")
+        d.OnResizeStart(fun ev -> Log "dialog: resize start")
+        d.OnFocus(fun ev -> Log "dialog: focus")
+        d.OnDrag(fun ev -> Log "dialog: drag")
+        d.OnDragStart(fun ev -> Log "dialog: drag start")
+        d.OnDragStop(fun ev -> Log "dialog: drag stop")
+        let bO = JQueryUI.Button.New ("open")
+        bO.OnClick (fun ev -> d.Open())
+        let bC = JQueryUI.Button.New "Close"
+        bC.OnClick (fun ev -> d.Close())
+        Div [d] -< [
+            bO
+            bC
+        ]
+
+    let TestProgressbar () =
+        let conf = ProgressbarConfiguration()
+        let p = Progressbar.New(Div [], conf)
+        p |> OnAfterRender(fun _  ->
+            p.Value <- 30
+        )
+
+        let b = JQueryUI.Button.New("inc")
+        b.OnClick (fun ev ->
+            p.Value <- p.Value + 10
+        )
+        Div [p :> IPagelet ; b :> _]
+
+
+    let TestSlider () =
+        let s = Slider.New()
+        s |> OnBeforeRender(fun _ -> Log "slider: before render")
+        s |> OnAfterRender(fun _  ->
+            Log "slider: after render"
+        )
+        s.OnChange(fun ev ->
+            Log "change"
+        )
+        let b = JQueryUI.Button.New("inc")
+        let pan = Div [s :> IPagelet ; b :> _]
+        b.OnClick (fun ev ->
+            let d = Dialog.New(Div [Text <| string s.Value])
+            pan.Append(d)
+        )
+        pan
+
+    let TestTabs () =
+        let conf = new TabsConfiguration()
+        let tabs =
+            [
+                "Tab 1",  Div [H1 [Text "Tab 1"]]
+                "Tab 2",  Div [H1 [Text "Tab 2"]]
+                "Tab 3" , Div [Text "R"]
+            ]
+        let t = Tabs.New(tabs, conf)
+        t |> OnAfterRender(fun _ ->  Log "Aa" )
+
+
+
+        let b = JQueryUI.Button.New("inc")
+        b.OnClick (fun ev ->
+            JQuery.Of(t.TabContainer.Body).Children().Eq(2).Click().Ignore
+            t.Add( Div [H1 [Text "New tab"]], "tab" + (string t.Length))
+        )
+        Div [t :> IPagelet ; b :> _]
+
+    let TestSortable () =
+        let elem =
+            List.init 6 (fun i ->
+                Attr.Src ("http://www.look4design.co.uk/l4design/companies/designercurtains/image" + string (i+1) + ".jpg"))
+            |> List.map (fun e -> LI [Img [e]])
+            |> UL
+        let sortable = Sortable.New elem
+        Div [sortable]
+
+    let TestWidget t w =
+        Div [
+            Attr.Style "border:solid 1px gray; padding:10px; margin-top: 10px"
+            H1 [Text t ] :> _
+            w
+        ]
+    [<Inline "jQuery(document)">]
+    let Document () : Element = Unchecked.defaultof<_>()
+
+    let TestPosition() =
+        let position1Body =
+            Div [Attr.Style "width:50px; height:50px; background-color:#F00;"]
+        let targetBody =
+            Div [Attr.Style "width:240px; height:200px; background-color:#999; margin:30px auto;"; Text "hej"]
+            |>! OnAfterRender (fun el ->
+                let conf1 = new PositionConfiguration()
+                conf1.My <- "center"
+                conf1.At <- "center"
+                conf1.Of <- Target.Element el.Body
+                conf1.Collision <- "fit"
+                conf1.offset <- "10 -10"
+                let p1 = Position.New(position1Body, conf1)
+                ()
+            )
+        Div [
+            position1Body
+            targetBody
+        ]
+
+//        let position2Body =
+//            Div [Style "width:50px; height:50px; background-color:#0F0;"]
+//        let conf2 = new PositionConfiguration()
+//        conf2.My <- "left top"
+//        conf2.At <- "left top"
+//        conf2.Of <- Target.Element targetBody.Dom
+//        conf2.Collision <- "fit"
+//        conf2.offset <- "10 -10"
+//        let p2 = Position.New(position2Body, conf2)
 //
-//    let TestDialog () =
-//        let conf = DialogConfiguration()
-//        conf.Buttons <- "Buttons"
-//        let d = Dialog.New(Div [Text "Dialog"], conf)
-//        d.OnClose(fun ev ->
-//            Log "close"
-//        )
-//        d |> OnAfterRender(fun _ -> Log "dialog: before render")
-//        d |> OnAfterRender(fun _ -> Log "dialog: after render")
-//        d.OnOpen(fun ev -> Log "dialog: open")
-//        d.OnClose(fun ev -> Log "dialog: close")
-//        d.OnResize(fun ev -> Log "dialog: resize")
-//        d.OnResizeStop(fun ev -> Log "dialog: resize stop")
-//        d.OnResizeStart(fun ev -> Log "dialog: resize start")
-//        d.OnFocus(fun ev -> Log "dialog: focus")
-//        d.OnDrag(fun ev -> Log "dialog: drag")
-//        d.OnDragStart(fun ev -> Log "dialog: drag start")
-//        d.OnDragStop(fun ev -> Log "dialog: drag stop")
-//        let bO = JQueryUI.Button.New ("open")
-//        bO.OnClick (fun ev -> d.Open())
-//        let bC = JQueryUI.Button.New "Close"
-//        bC.OnClick (fun ev -> d.Close())
-//        Div [d] -< [
-//            bO
-//            bC
-//        ]
+//        let position3Body =
+//            Div [Style "width:50px; height:50px; background-color:#00F;"]
+//        let conf3 = new PositionConfiguration()
+//        conf3.My <- "right center"
+//        conf3.At <- "right bottom"
+//        conf3.Of <- Target.Element targetBody.Dom
+//        conf3.Collision <- "fit"
+//        conf3.offset <- "10 -10"
+//        let p3 = Position.New(position3Body, conf3)
 //
-//    let TestProgressbar () =
-//        let conf = ProgressbarConfiguration()
-//        let p = Progressbar.New(Div [], conf)
-//        p |> OnAfterRender(fun _  ->
-//            p.Value <- 30
-//        )
+//        let position4Body =
+//            Div [Style "width:50px; height:50px; background-color:#FF0;"]
+//        let conf4 = new PositionConfiguration()
+//        conf4.My <- "left bottom"
+//        conf4.At <- "center"
+//        conf4.Of <- Target.Element targetBody.Dom
+//        conf4.Collision <- "fit"
+//        conf4.offset <- "10 -10"
+//        let p4 = Position.New (position4Body, conf4)
 //
-//        let b = JQueryUI.Button.New("inc")
-//        b.OnClick (fun ev ->
-//            p.Value <- p.Value + 10
-//        )
-//        Div [p ; b]
-//
-//
-//    let TestSlider () =
-//        let s = Slider.New()
-//        s |> OnBeforeRender(fun _ -> Log "slider: before render")
-//        s |> OnAfterRender(fun _  ->
-//            Log "slider: after render"
-//        )
-//        s.OnChange(fun ev ->
-//            Log "change"
-//        )
-//        let b = JQueryUI.Button.New("inc")
-//        let pan = Div [s ; b]
-//        b.OnClick (fun ev ->
-//            let d = Dialog.New(Div [Text <| string s.Value])
-//            pan.Append(d)
-//        )
-//        pan
-//
-//    let TestTabs () =
-//        let conf = new TabsConfiguration()
-//        let tabs =
-//            [
-//                "Tab 1",  Div [H1 [Text "Tab 1"]]
-//                "Tab 2",  Div [H1 [Text "Tab 2"]]
-//                "Tab 3" , Div [Text "R"]
-//            ]
-//        let t = Tabs.New(tabs, conf)
-//        t |> OnAfterRender(fun _ ->  Log "Aa" )
-//
-//
-//
-//        let b = JQueryUI.Button.New("inc")
-//        b.OnClick (fun ev ->
-//            t.Select 2
-//            t.Add( Div [H1 [Text "New tab"]], "tab" + (string t.Length))
-//        )
-//        Div [t ; b]
-//
-////    let TestSortable () =
-////        let elem =
-////            List.init 6 (fun i ->
-////                Attr.Src ("http://www.look4design.co.uk/l4design/companies/designercurtains/image" + string (i+1) + ".jpg"))
-////            |> List.map (fun e -> LI [Img [e]])
-////            |> UL
-////        let sortable = Sortable.New elem
-////        Div [sortable]
-//
-//    let TestWidget t w =
+//        Document()
+//        |>! OnMouseMove (fun _ ev ->
+//            let conf = new PositionConfiguration()
+//            conf.My <- "left bottom"
+//            conf.At <- "center"
+//            conf.Of <- Target.Event ev
+//            conf.Collision <- "fit"
+//            conf.offset <- "10 -10"
+//            Position.New (position4Body, conf)|>ignore)
+//        |> ignore
 //        Div [
-//            Attr.Style "border:solid 1px gray; padding:10px; margin-top: 10px"
-//            H1 [Text t ]
-//            w
-//        ]
-//    [<Inline "jQuery(document)">]
-//    let Document () : Element = Unchecked.defaultof<_>()
-//
-//    let TestPosition() =
-//        let position1Body =
-//            Div [Attr.Style "width:50px; height:50px; background-color:#F00;"]
-//        let targetBody =
-//            Div [Attr.Style "width:240px; height:200px; background-color:#999; margin:30px auto;"; Text "hej"]
-//            |>! OnAfterRender (fun el ->
-//                let conf1 = new PositionConfiguration()
-//                conf1.My <- "center"
-//                conf1.At <- "center"
-//                conf1.Of <- Target.Element el.Body
-//                conf1.Collision <- "fit"
-//                conf1.offset <- "10 -10"
-//                let p1 = Position.New(position1Body, conf1)
-//                ()
-//            )
-//        Div [
-//            position1Body
 //            targetBody
-//        ]
-//
-////        let position2Body =
-////            Div [Style "width:50px; height:50px; background-color:#0F0;"]
-////        let conf2 = new PositionConfiguration()
-////        conf2.My <- "left top"
-////        conf2.At <- "left top"
-////        conf2.Of <- Target.Element targetBody.Dom
-////        conf2.Collision <- "fit"
-////        conf2.offset <- "10 -10"
-////        let p2 = Position.New(position2Body, conf2)
-////
-////        let position3Body =
-////            Div [Style "width:50px; height:50px; background-color:#00F;"]
-////        let conf3 = new PositionConfiguration()
-////        conf3.My <- "right center"
-////        conf3.At <- "right bottom"
-////        conf3.Of <- Target.Element targetBody.Dom
-////        conf3.Collision <- "fit"
-////        conf3.offset <- "10 -10"
-////        let p3 = Position.New(position3Body, conf3)
-////
-////        let position4Body =
-////            Div [Style "width:50px; height:50px; background-color:#FF0;"]
-////        let conf4 = new PositionConfiguration()
-////        conf4.My <- "left bottom"
-////        conf4.At <- "center"
-////        conf4.Of <- Target.Element targetBody.Dom
-////        conf4.Collision <- "fit"
-////        conf4.offset <- "10 -10"
-////        let p4 = Position.New (position4Body, conf4)
-////
-////        Document()
-////        |>! OnMouseMove (fun _ ev ->
-////            let conf = new PositionConfiguration()
-////            conf.My <- "left bottom"
-////            conf.At <- "center"
-////            conf.Of <- Target.Event ev
-////            conf.Collision <- "fit"
-////            conf.offset <- "10 -10"
-////            Position.New (position4Body, conf)|>ignore)
-////        |> ignore
-////        Div [
-////            targetBody
-////            ]
-////            -< [p1; p2; p3; p4 ]
-//
-//    let TestResizable () =
-//        let img = Div [Attr.Src "http://www.look4design.co.uk/l4design/companies/light-iq/image14.jpg" ]
-//        let resizable = Resizable.New img
-//        resizable.OnStart  (fun _ _ -> Log("Started!"))
-//        resizable.OnResize (fun _ _ -> Log("Resized!"))
-//        resizable.OnStop   (fun _ _ -> Log("Stopped!"))
-//        let drag = Draggable.New (Div [resizable])
-//        Div [drag]
-//
-//
+//            ]
+//            -< [p1; p2; p3; p4 ]
+
+    let TestResizable () =
+        let img = Div [Attr.Style "background:url(http://www.look4design.co.uk/l4design/companies/light-iq/image14.jpg);height:100px;width:100px" ]
+        let resizable = Resizable.New img
+        resizable.OnStart  (fun _ _ -> Log("Started!"))
+        resizable.OnResize (fun _ _ -> Log("Resized!"))
+        resizable.OnStop   (fun _ _ -> Log("Stopped!"))
+        let drag = Draggable.New (Div [resizable])
+        Div [drag]
+
+
     let Tests () =
         let tab =
             [
@@ -301,13 +302,13 @@ module internal Client =
                 "Button", TestButton ()
                 "Datepicker", TestDatepicker ()
                 "Draggable", TestDraggable ()
-//                "Dialog", TestDialog ()
-//                "Progressbar", TestProgressbar ()
-//                "Slider", TestSlider ()
-//                "Tabs", TestTabs ()
-//                "Sortable", TestSortable ()
-//                "Position", TestPosition ()
-//                "Resizable",  TestResizable ()
+                "Dialog", TestDialog ()
+                "Progressbar", TestProgressbar ()
+                "Slider", TestSlider ()
+                "Tabs", TestTabs ()
+                "Sortable", TestSortable ()
+                "Position", TestPosition ()
+                "Resizable",  TestResizable ()
             ]
             |> Tabs.New
         Div [tab]

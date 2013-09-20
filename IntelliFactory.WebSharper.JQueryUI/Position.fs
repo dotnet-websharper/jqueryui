@@ -24,26 +24,28 @@ type Target =
     | Id of string
 
     [<JavaScript>]
-    override this.ToString() =
+    member this.Get =
         match this with
-        | Element el -> unbox<string> (box el)
-        | Event ev   -> unbox (box ev)
-        | Id str     -> "#" + str
+        | Element el -> box el
+        | Event ev   -> box ev
+        | Id str     -> box ("#" + str)
 
 
 type PositionConfiguration [<JavaScript>]() =
 
-    [<DefaultValue>]
+    [<Name "my">]
+    [<Stub>]
     //Possible values: "top", "center", "bottom", "left", "right"
-    val mutable my: string
+    member val My = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "at">]
+    [<Stub>]
     //Possible values: "top", "center", "bottom", "left", "right"
-    val mutable at: string
+    member val At = Unchecked.defaultof<string> with get, set
 
     //Element to position against. You can use a browser event object contains pageX and pageY values. Example: "#top-menu"
     [<DefaultValue>]
-    val mutable ``of``: string
+    val mutable ``of``: obj
 
     //Element to position against. You can use a browser event object contains pageX and pageY values. Example: "#top-menu"
     [<DefaultValue>]
@@ -55,7 +57,7 @@ type PositionConfiguration [<JavaScript>]() =
             this.ofTarget
         and set t =
             this.ofTarget <- t
-            this.``of`` <- t.ToString()
+            this.``of`` <- t.Get
 
     //Add these left-top values to the calculated position, eg. "50 50" (left top) A single value such as "50" will apply to both
     [<DefaultValue>]
@@ -64,17 +66,20 @@ type PositionConfiguration [<JavaScript>]() =
     [<DefaultValue>]
     val mutable private offsetTuple: (int * int)
 
-    [<DefaultValue>]
+    [<Name "collision">]
+    [<Stub>]
     //This accepts a single value or a pair for horizontal/vertical, eg. "flip", "fit", "fit flip", "fit none".
-    val mutable collision: string
+    member val Collision = Unchecked.defaultof<string> with get, set
 
-    [<DefaultValue>]
+    [<Name "by">]
+    [<Stub>]
     //When specified the actual property setting is delegated to this callback. Receives a single parameter which is a hash of top and left values for the position that should be set.
-    val mutable by: unit -> unit //should take a one parameter
+    member val By = Unchecked.defaultof<unit -> unit> with get, set //should take a one parameter
 
-    [<DefaultValue>]
+    [<Name "bgiframe">]
+    [<Stub>]
     //true by default
-    val mutable bgiframe: bool
+    member val Bgiframe = Unchecked.defaultof<bool> with get, set
 
     [<JavaScript>]
     member this.Offset

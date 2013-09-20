@@ -16,6 +16,10 @@ open IntelliFactory.WebSharper.Html
 [<AutoOpen>]
 module Utils =
 
+    type JQuery.JQuery with
+        [<Inline "$this.eq($i)">]
+        member this.Eq(i: int) = this
+
     type Pagelet[<JavaScript>]() =
 
         [<DefaultValue>]

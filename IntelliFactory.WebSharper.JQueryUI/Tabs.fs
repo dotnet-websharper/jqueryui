@@ -15,6 +15,7 @@ namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html
 
+
 type TabsAjaxOptionsConfiguration =
     {
     [<Name "ajaxOptions">]
@@ -107,10 +108,6 @@ module internal TabsInternal =
     [<Inline "jQuery($el).tabs($conf)">]
     let Init(el: Dom.Element, conf: TabsConfiguration) = ()
 
-    type JQuery.JQuery with
-        [<Inline "$this.eq($i)">]
-        member this.Eq(i: int) = this
-
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]
 type Tabs[<JavaScript>] internal (tabContainer, panelContainer) =
@@ -200,7 +197,7 @@ type Tabs[<JavaScript>] internal (tabContainer, panelContainer) =
     [<JavaScript>]
     member this.Add(el: Element, label: string, ix: int) =
         let id = NewId()
-        let tab = LI [A [Attr.HRef ("#" + id)] :> IPagelet; Text label]
+        let tab = LI [A [Attr.HRef ("#" + id); Text label]]
         let panel = Div [Attr.Id id] -< [el]
         JQuery.JQuery.Of(tabContainer.Body).Children().Eq(ix).Before(tab.Body).Ignore
         JQuery.JQuery.Of(panelContainer.Body).Children().Eq(ix).After(panel.Body).Ignore // after because the first child is the tabset
@@ -212,11 +209,18 @@ type Tabs[<JavaScript>] internal (tabContainer, panelContainer) =
     [<JavaScript>]
     member this.Add(el: Element, label: string) =
         let id = NewId()
-        let tab = LI [A [Attr.HRef ("#" + id)] :> IPagelet; Text label]
+        let tab = LI [A [Attr.HRef ("#" + id); Text label]]
         let panel = Div [Attr.Id id] -< [el]
         tabContainer.Append(tab)
         panelContainer.Append(panel)
         this.Refresh()
+
+    (****************************************************************
+    * Utilities
+    *****************************************************************)
+
+    [<JavaScript>]
+    member this.TabContainer = tabContainer
 
     (****************************************************************
     * Events

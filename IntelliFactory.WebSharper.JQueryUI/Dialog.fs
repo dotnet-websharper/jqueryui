@@ -28,10 +28,9 @@ type DialogConfiguration[<JavaScript>]() =
     member val AutoOpen = Unchecked.defaultof<bool> with get, set
 
     [<Name "buttons">]
-    //Stub type to be confirmed (string -> (string -> unit) -> unit)
     [<Stub>]
-    //"" by default
-    member val Buttons = Unchecked.defaultof<string> with get, set
+    //[] by default
+    member val Buttons = Unchecked.defaultof<ButtonConfiguration[]> with get, set
 
     [<Name "closeOnEscape">]
     [<Stub>]
