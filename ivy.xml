@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ivy-module version="2.0">
-  <info organisation="IntelliFactory" module="if-ws-jqueryui" revision="2.5" />
-  <publications>
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="dll" type="bin" />
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="xml" type="doc" />
-    <artifact name="IntelliFactory.WebSharper.JQueryUI" ext="pdb" type="debug" />
-  </publications>
+  <info organisation="IntelliFactory" module="websharper.jqueryui" revision="2.5" />
   <dependencies>
     <dependency name="WebSharper" rev="latest.integration" />
   </dependencies>

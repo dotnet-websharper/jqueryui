@@ -19,7 +19,13 @@ bt.Solution [
     test
 
     bt.NuGet.CreatePackage()
-        .Description("WebSharper Extensions for jQuery UI")
+        .Configure(fun c ->
+            { c with
+                Title = Some "WebSharper.JQueryUI-1.10.3"
+                LicenseUrl = Some "http://websharper.com/licensing"
+                ProjectUrl = Some "https://github.com/intellifactory/websharper.jqueryui"
+                Description = "WebSharper Extensions for JQueryUI 1.10.3"
+                RequiresLicenseAcceptance = true })
         .Add(main)
 
 ]
