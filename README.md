@@ -4,9 +4,9 @@ This document explains the main points in using WebSharper.JQueryUI
 and how it differs from the JavaScript library. You can also check
 [some examples](Examples.md).
 
-The original library, jQuery UI, works by doing a jQuery selection on
-an element and calling the relevant widget constructor as an instance
-member, for example:
+The original library, jQuery UI 1.10.3, works by doing a jQuery
+selection on an element and calling the relevant widget constructor as
+an instance member, for example:
 
 ```javascript
 $("#datepicker").datepicker();
