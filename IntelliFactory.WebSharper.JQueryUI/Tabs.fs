@@ -215,6 +215,13 @@ type Tabs[<JavaScript>] internal (tabContainer, panelContainer) =
         panelContainer.Append(panel)
         this.Refresh()
 
+    /// Remove the tab at the specified index.
+    [<JavaScript>]
+    member this.Remove(ix: int) =
+        JQuery.JQuery.Of(tabContainer.Body).Children().Eq(ix).Remove().Ignore
+        JQuery.JQuery.Of(panelContainer.Body).Children().Eq(ix).Remove().Ignore
+        this.Refresh()
+
     (****************************************************************
     * Utilities
     *****************************************************************)
