@@ -157,23 +157,23 @@ type Slider[<JavaScript>] internal () =
     * Events
     *****************************************************************)
 
-    [<Inline "jQuery($this.element.Body).bind('slidercreate', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Body).bind('slidecreate', function (x,y) {$f(x);})">]
     member private this.onCreate(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).bind('sliderstart', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Body).bind('slidestart', function (x,y) {$f(x);})">]
     member private this.onStart(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).bind('sliderchange', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Body).bind('slidechange', function (x,y) {$f(x);})">]
     member private this.onChange(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).bind('sliderslide', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Body).bind('slide', function (x,y) {$f(x);})">]
     member private this.onSlide(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).bind('sliderstop', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Body).bind('slidestop', function (x,y) {$f(x);})">]
     member private this.onStop(f : JQuery.Event -> unit) = ()
 
 
