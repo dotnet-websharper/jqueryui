@@ -11,29 +11,24 @@
 
 namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.Html
+open IntelliFactory.WebSharper.Html.Client
 
 [<AutoOpen>]
+[<JavaScript>]
 module Utils =
 
     type JQuery.JQuery with
         [<Inline "$this.eq($i)">]
         member this.Eq(i: int) = this
 
-    type Pagelet[<JavaScript>]() =
+    type Pagelet() =
+        inherit Html.Client.Pagelet()
 
         [<DefaultValue>]
         val mutable internal element : Element
 
-        (****************************************************************
-        * IPagelet
-        *****************************************************************)
-        interface IPagelet with
+        override this.Render() =
+            this.element.Render()
 
-            [<JavaScript>]
-            member this.Render() =
-                (this.element :> IPagelet).Render()
-
-            [<JavaScript>]
-            member this.Body
-                with get () = this.element.Body :> _
+        override this.Body
+            with get() = this.element.Body

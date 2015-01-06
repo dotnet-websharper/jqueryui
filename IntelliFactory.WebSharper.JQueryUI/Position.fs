@@ -13,7 +13,8 @@
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.Html
+open IntelliFactory.WebSharper.JavaScript
+open IntelliFactory.WebSharper.Html.Client
 
 //
 //module Position =
@@ -98,7 +99,7 @@ module internal PositionInternal =
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]
 type Position [<JavaScript>] internal () =
-    inherit Pagelet()
+    inherit Utils.Pagelet()
 
     (****************************************************************
     * Constructors
@@ -112,7 +113,7 @@ type Position [<JavaScript>] internal () =
         a.element <-
             el
             |>! OnAfterRender (fun el  ->
-                PositionInternal.New(el.Body, conf)
+                PositionInternal.New(el.Dom, conf)
             )
         a
 

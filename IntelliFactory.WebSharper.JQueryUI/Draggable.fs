@@ -13,7 +13,8 @@
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.Html
+open IntelliFactory.WebSharper.JavaScript
+open IntelliFactory.WebSharper.Html.Client
 
 
 type DraggablecursorAtConfiguration =
@@ -207,7 +208,7 @@ module internal DraggableInternal =
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]
 type Draggable[<JavaScript>] internal () =
-    inherit Pagelet ()
+    inherit Utils.Pagelet ()
 
     (****************************************************************
     * Constructors
@@ -221,7 +222,7 @@ type Draggable[<JavaScript>] internal () =
         a.element <-
             el
             |>! OnAfterRender (fun el ->
-                DraggableInternal.New(el.Body, conf)
+                DraggableInternal.New(el.Dom, conf)
             )
         a
 
@@ -237,34 +238,34 @@ type Draggable[<JavaScript>] internal () =
     * Methods
     *****************************************************************)
     /// Removes draggable functionality completely.
-    [<Inline "jQuery($this.element.Body).draggable('destroy')">]
+    [<Inline "jQuery($this.element.Dom).draggable('destroy')">]
     member this.Destroy() = X<unit>
 
     /// Disables the draggable functionality.
-    [<Inline "jQuery($this.element.Body).draggable('disable')">]
+    [<Inline "jQuery($this.element.Dom).draggable('disable')">]
     member this.Disable() = X<unit>
 
     /// Enables the draggable functionality.
-    [<Inline "jQuery($this.element.Body).draggable('enable')">]
+    [<Inline "jQuery($this.element.Dom).draggable('enable')">]
     member this.Enable() = X<unit>
 
     /// Sets a draggable option.
-    [<Inline "jQuery($this.element.Body).draggable('option', $name, $value)">]
+    [<Inline "jQuery($this.element.Dom).draggable('option', $name, $value)">]
     member this.Option (name: string, value: obj) = X<unit>
 
     /// Gets a draggable option.
-    [<Inline "jQuery($this.element.Body).draggable('option', $name)">]
+    [<Inline "jQuery($this.element.Dom).draggable('option', $name)">]
     member this.Option (name: string) = X<obj>
 
     /// Gets all options.
-    [<Inline "jQuery($this.element.Body).draggable('option')">]
+    [<Inline "jQuery($this.element.Dom).draggable('option')">]
     member this.Option () = X<DraggableConfiguration>
 
     /// Sets one or more options.
-    [<Inline "jQuery($this.element.Body).draggable('option', $options)">]
+    [<Inline "jQuery($this.element.Dom).draggable('option', $options)">]
     member this.Option (options: DraggableConfiguration) = X<unit>
 
-    [<Inline "jQuery($this.element.Body).draggable('widget')">]
+    [<Inline "jQuery($this.element.Dom).draggable('widget')">]
     member private this.getWidget () = X<Dom.Element>
 
     /// Returns the .ui-draggable element.
@@ -276,16 +277,16 @@ type Draggable[<JavaScript>] internal () =
     * Events
     *****************************************************************)
 
-    [<Inline "jQuery($this.element.Body).bind('dragcreate', function (x,y) {($f(x))(y);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dragcreate', function (x,y) {($f(x))(y);})">]
     member private this.onCreate(f : JQuery.Event -> DraggableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('dragstart', function (x,y) {($f(x))(y);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dragstart', function (x,y) {($f(x))(y);})">]
     member private this.onStart(f : JQuery.Event -> DraggableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('dragstop', function (x,y) {($f(x))(y);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dragstop', function (x,y) {($f(x))(y);})">]
     member private this.onStop(f : JQuery.Event -> DraggableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('drag', function (x,y) {($f(x))(y);})">]
+    [<Inline "jQuery($this.element.Dom).bind('drag', function (x,y) {($f(x))(y);})">]
     member private this.onDrag(f : JQuery.Event -> DraggableEvent -> unit) = ()
 
     /// Event triggered when dragging is created.

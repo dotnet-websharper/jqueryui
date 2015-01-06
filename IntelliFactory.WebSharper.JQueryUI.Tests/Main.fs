@@ -17,10 +17,12 @@ open IntelliFactory.WebSharper
 [<JavaScript>]
 module internal Client =
 
+    open IntelliFactory.WebSharper.JavaScript
     open IntelliFactory.WebSharper.JQuery
     open IntelliFactory.WebSharper.JQueryUI
-    open IntelliFactory.WebSharper.Html
-    open IntelliFactory.WebSharper.JavaScript
+    open IntelliFactory.WebSharper.Html.Client
+
+    let private Log (x: string) = Console.Log(x)
 
     let TestAccordion () =
         let els1 =
@@ -123,6 +125,7 @@ module internal Client =
     let TestDialog () =
         let conf = DialogConfiguration()
         conf.Buttons <- [|DialogButton(Text = "Ok", Click = fun d e -> d.Close())|]
+        conf.AutoOpen <- false
         let d = Dialog.New(Div [Text "Dialog"], conf)
         d.OnClose(fun ev ->
             Log "close"
@@ -158,7 +161,7 @@ module internal Client =
         b.OnClick (fun ev ->
             p.Value <- p.Value + 10
         )
-        Div [p :> IPagelet ; b :> _]
+        Div [p :> Pagelet ; b :> _]
 
 
     let TestSlider () =
@@ -171,7 +174,7 @@ module internal Client =
             Log "change"
         )
         let b = JQueryUI.Button.New("check")
-        let pan = Div [s :> IPagelet ; b :> _]
+        let pan = Div [s :> Pagelet ; b :> _]
         b.OnClick (fun ev ->
             let d = Dialog.New(Div [Text <| string s.Value])
             pan.Append(d)
@@ -196,7 +199,7 @@ module internal Client =
             JQuery.Of(t.TabContainer.Body).Children().Eq(2).Click().Ignore
             t.Add( Div [H1 [Text "New tab"]], "Tab" + (string (t.Length + 1)))
         )
-        Div [t :> IPagelet ; b :> _]
+        Div [t :> Pagelet ; b :> _]
 
     let TestSortable () =
         let elem =
@@ -225,7 +228,7 @@ module internal Client =
                 let conf1 = new PositionConfiguration()
                 conf1.My <- "center"
                 conf1.At <- "center"
-                conf1.Of <- Target.Element el.Body
+                conf1.Of <- Target.Element el.Dom
                 conf1.Collision <- "fit"
                 conf1.offset <- "10 -10"
                 let p1 = Position.New(position1Body, conf1)
@@ -324,7 +327,7 @@ module Site =
         override this.Body =
             Client.Tests() :> _
 
-    open IntelliFactory.Html
+    open IntelliFactory.WebSharper.Html.Server
 
     let HomePage =
         Content.PageContent <| fun ctx ->

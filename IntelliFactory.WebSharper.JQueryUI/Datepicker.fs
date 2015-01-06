@@ -13,7 +13,8 @@
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.Html
+open IntelliFactory.WebSharper.JavaScript
+open IntelliFactory.WebSharper.Html.Client
 
 type DatepickerShowOptionsConfiguration =
     {
@@ -29,7 +30,7 @@ type internal DatepickerInternal =
     static member Init (el: Dom.Element, conf: DatepickerConfiguration) = ()
 
     [<Inline "jQuery($el).datepicker('getDate')">]
-    static member getDate (el: Dom.Element) : EcmaScript.Date =
+    static member getDate (el: Dom.Element) : Date =
         Unchecked.defaultof<_>
 
 and DatepickerConfiguration[<JavaScript>]() =
@@ -70,7 +71,7 @@ and DatepickerConfiguration[<JavaScript>]() =
     [<Name "calculateWeek">]
     [<Stub>]
     //"iso8601Week" by default
-    member val CalculateWeek = Unchecked.defaultof<EcmaScript.Date -> int> with get, set
+    member val CalculateWeek = Unchecked.defaultof<Date -> int> with get, set
 
     [<Name "changeMonth">]
     [<Stub>]
@@ -120,7 +121,7 @@ and DatepickerConfiguration[<JavaScript>]() =
     [<Name "defaultDate">]
     [<Stub>]
     // null by default
-    member val DefaultDate = Unchecked.defaultof<EcmaScript.Date> with get, set
+    member val DefaultDate = Unchecked.defaultof<Date> with get, set
 
     [<Name "duration">]
     [<Stub>]
@@ -155,7 +156,7 @@ and DatepickerConfiguration[<JavaScript>]() =
     [<Name "minDate">]
     [<Stub>]
     // null by default
-    member val MinDate = Unchecked.defaultof<EcmaScript.Date> with get, set
+    member val MinDate = Unchecked.defaultof<Date> with get, set
 
     [<Name "monthNames">]
     [<Stub>]
@@ -269,7 +270,7 @@ and
     [<Require(typeof<Dependencies.JQueryUIJs>)>]
     [<Require(typeof<Dependencies.JQueryUICss>)>]
     Datepicker[<JavaScript>] internal  () =
-    inherit Pagelet()
+    inherit Utils.Pagelet()
 
     (****************************************************************
     * Constructors
@@ -282,7 +283,7 @@ and
         dp.element <- el
         el
         |> OnAfterRender (fun el  ->
-            DatepickerInternal.Init(el.Body, conf))
+            DatepickerInternal.Init(el.Dom, conf))
         |> ignore
         dp
 
@@ -312,34 +313,34 @@ and
     * Methods
     *****************************************************************)
     /// Destroys the datepicker functionality.
-    [<Inline "jQuery($this.element.Body).datepicker('destroy')">]
+    [<Inline "jQuery($this.element.Dom).datepicker('destroy')">]
     member this.Destroy() = ()
 
     /// Disables the datepicker functionality.
-    [<Inline "jQuery($this.element.Body).datepicker('disable')">]
+    [<Inline "jQuery($this.element.Dom).datepicker('disable')">]
     member this.Disable () = ()
 
     /// Enables the datepicker functionality.
-    [<Inline "jQuery($this.element.Body).datepicker('enable')">]
+    [<Inline "jQuery($this.element.Dom).datepicker('enable')">]
     member this.Enable () = ()
 
     /// Set a datepicker option.
-    [<Inline "jQuery($this.element.Body).datepicker('option', $name, $value)">]
+    [<Inline "jQuery($this.element.Dom).datepicker('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
     /// Get a datepicker option.
-    [<Inline "jQuery($this.element.Body).datepicker('option', $name)">]
+    [<Inline "jQuery($this.element.Dom).datepicker('option', $name)">]
     member this.Option (name: string) = X<obj>
 
     /// Gets all options.
-    [<Inline "jQuery($this.element.Body).datepicker('option')">]
+    [<Inline "jQuery($this.element.Dom).datepicker('option')">]
     member this.Option () = X<DatepickerConfiguration>
 
     /// Sets one or more options.
-    [<Inline "jQuery($this.element.Body).datepicker('option', $options)">]
+    [<Inline "jQuery($this.element.Dom).datepicker('option', $options)">]
     member this.Option (options: DatepickerConfiguration) = X<unit>
 
-    [<Inline "jQuery($this.element.Body).datepicker('widget')">]
+    [<Inline "jQuery($this.element.Dom).datepicker('widget')">]
     member private this.getWidget () = X<Dom.Element>
 
     /// Returns the .ui-datepicker element.
@@ -347,70 +348,70 @@ and
     member this.Widget = this.getWidget()
 
     /// Open a datepicker in a "dialog" box.
-    [<Inline "jQuery($this.element.Body).datepicker('dialog', $date, function(x,y){return ($onSelect(x))(y)}, $settings, $pos)">]
-    member this.Dialog (date: EcmaScript.Date, onSelect: string -> Datepicker -> unit, settings: DatepickerConfiguration, pos: int * int) = ()
+    [<Inline "jQuery($this.element.Dom).datepicker('dialog', $date, function(x,y){return ($onSelect(x))(y)}, $settings, $pos)">]
+    member this.Dialog (date: Date, onSelect: string -> Datepicker -> unit, settings: DatepickerConfiguration, pos: int * int) = ()
 
     /// Open a datepicker in a "dialog" box.
-    [<Inline "jQuery($this.element.Body).datepicker('dialog', $date, function(x,y){return ($onSelect(x))(y)}, $settings)">]
-    member this.Dialog (date: EcmaScript.Date, onSelect: string -> Datepicker -> unit, settings: DatepickerConfiguration) = ()
+    [<Inline "jQuery($this.element.Dom).datepicker('dialog', $date, function(x,y){return ($onSelect(x))(y)}, $settings)">]
+    member this.Dialog (date: Date, onSelect: string -> Datepicker -> unit, settings: DatepickerConfiguration) = ()
 
     /// Open a datepicker in a "dialog" box.
-    [<Inline "jQuery($this.element.Body).datepicker('dialog', $date, function(x,y){return ($onSelect(x))(y)})">]
-    member this.Dialog (date: EcmaScript.Date, onSelect: string -> Datepicker -> unit) = ()
+    [<Inline "jQuery($this.element.Dom).datepicker('dialog', $date, function(x,y){return ($onSelect(x))(y)})">]
+    member this.Dialog (date: Date, onSelect: string -> Datepicker -> unit) = ()
 
     /// Open a datepicker in a "dialog" box.
-    [<Inline "jQuery($this.element.Body).datepicker('dialog', $date)">]
-    member this.Dialog (date: EcmaScript.Date) = ()
+    [<Inline "jQuery($this.element.Dom).datepicker('dialog', $date)">]
+    member this.Dialog (date: Date) = ()
 
     /// Returns true or false wether the datepicker is disabled.
-    [<Inline "jQuery($this.element.Body).datepicker('isDisabled')">]
+    [<Inline "jQuery($this.element.Dom).datepicker('isDisabled')">]
     member this.IsDisabled () : bool = Unchecked.defaultof<_>()
 
     /// Hides the datepicker.
-    [<Inline "jQuery($this.element.Body).datepicker('hide')">]
+    [<Inline "jQuery($this.element.Dom).datepicker('hide')">]
     member this.Hide () = ()
 
     /// Shows the datepicker.
-    [<Inline "jQuery($this.element.Body).datepicker('show')">]
+    [<Inline "jQuery($this.element.Dom).datepicker('show')">]
     member this.Show () = ()
 
     /// Redraw a date picker, after having made some external modifications.
-    [<Inline "jQuery($this.element.Body).datepicker('refresh')">]
+    [<Inline "jQuery($this.element.Dom).datepicker('refresh')">]
     member this.Refresh () = ()
 
     /// Get the currently selected date of the datepicker.
-    [<Inline "jQuery($this.element.Body).datepicker('getDate')">]
-    member this.GetDate () : EcmaScript.Date = Unchecked.defaultof<_>()
+    [<Inline "jQuery($this.element.Dom).datepicker('getDate')">]
+    member this.GetDate () : Date = Unchecked.defaultof<_>()
 
     /// Sets the selected date.
-    [<Inline "jQuery($this.element.Body).datepicker('setDate', $date)">]
+    [<Inline "jQuery($this.element.Dom).datepicker('setDate', $date)">]
     member this.SetDate (date:string) = ()
 
     /// Sets the selected date.
-    [<Inline "jQuery($this.element.Body).datepicker('setDate', $date)">]
-    member this.SetDate (date:EcmaScript.Date) = ()
+    [<Inline "jQuery($this.element.Dom).datepicker('setDate', $date)">]
+    member this.SetDate (date:Date) = ()
 
 
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Body).datepicker({beforeShow: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Dom).datepicker({beforeShow: function (x,y) {($f(x))(y);}})">]
     member private this.onBeforeShow(f : string -> Datepicker -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).datepicker({beforeShowDay: function (x,y) {$f(x);}})">]
-    member private this.onBeforeShowDay(f : EcmaScript.Date -> unit) = ()
+    [<Inline "jQuery($this.element.Dom).datepicker({beforeShowDay: function (x,y) {$f(x);}})">]
+    member private this.onBeforeShowDay(f : Date -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).datepicker({beforeShowDay: function (x,y,z) {(($f(x))(y))(z);}})">]
+    [<Inline "jQuery($this.element.Dom).datepicker({beforeShowDay: function (x,y,z) {(($f(x))(y))(z);}})">]
     member private this.onChangeMonthYear(f : int -> int -> Datepicker -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).datepicker({onSelect: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Dom).datepicker({onSelect: function (x,y) {($f(x))(y);}})">]
     member private this.onSelect(f : string -> Datepicker -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).datepicker({onClose: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Dom).datepicker({onClose: function (x,y) {($f(x))(y);}})">]
     member private this.onClose(f : string -> Datepicker -> unit) = ()
 
     [<JavaScript>]
-    member this.OnBeforeShow(f: EcmaScript.Date -> Datepicker -> unit) : unit =
+    member this.OnBeforeShow(f: Date -> Datepicker -> unit) : unit =
         this
         |> OnBeforeRender(fun _ ->
             this.onBeforeShow <| fun _ d ->
@@ -419,7 +420,7 @@ and
         |> ignore
 
     [<JavaScript>]
-    member this.OnBeforeShowDay(f: EcmaScript.Date -> unit) : unit =
+    member this.OnBeforeShowDay(f: Date -> unit) : unit =
         this
         |> OnBeforeRender(fun _ -> this.onBeforeShowDay f)
         |> ignore
@@ -431,7 +432,7 @@ and
         |> ignore
 
     [<JavaScript>]
-    member this.OnClose(f: EcmaScript.Date -> Datepicker -> unit) : unit =
+    member this.OnClose(f: Date -> Datepicker -> unit) : unit =
         this
         |> OnBeforeRender(fun _ ->
             this.onClose <| fun _ d ->
@@ -442,7 +443,7 @@ and
     // Adding an event and delayin it if the Pagelet is not yet rendered.
     /// Triggered when a date is selected.
     [<JavaScript>]
-    member this.OnSelect(f: EcmaScript.Date -> Datepicker -> unit) : unit =
+    member this.OnSelect(f: Date -> Datepicker -> unit) : unit =
         this
         |> OnBeforeRender(fun _ ->
             this.onSelect <| fun _ d ->

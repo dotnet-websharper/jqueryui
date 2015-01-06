@@ -13,7 +13,8 @@
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.Html
+open IntelliFactory.WebSharper.JavaScript
+open IntelliFactory.WebSharper.Html.Client
 
 type ToleranceOfSelectable =
     | [<Name "fit">] Fit
@@ -68,7 +69,7 @@ module internal SelectableInternal =
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]
 type Selectable[<JavaScript>] internal () =
-    inherit Pagelet()
+    inherit Utils.Pagelet()
 
 
     (****************************************************************
@@ -82,7 +83,7 @@ type Selectable[<JavaScript>] internal () =
         let a = new Selectable()
         a.element <-
             el |>! OnAfterRender (fun el  ->
-                SelectableInternal.New(el.Body, conf)
+                SelectableInternal.New(el.Dom, conf)
             )
         a
 
@@ -98,40 +99,40 @@ type Selectable[<JavaScript>] internal () =
     * Methods
     *****************************************************************)
     /// Removes the selectable functionality.
-    [<Inline "jQuery($this.element.Body).selectable('destroy')">]
+    [<Inline "jQuery($this.element.Dom).selectable('destroy')">]
     member this.Destroy() = ()
 
     /// Disables the selectable functionality.
-    [<Inline "jQuery($this.element.Body).selectable('disable')">]
+    [<Inline "jQuery($this.element.Dom).selectable('disable')">]
     member this.Disable() = ()
 
     /// Enables the selectable functionality.
-    [<Inline "jQuery($this.element.Body).selectable('enable')">]
+    [<Inline "jQuery($this.element.Dom).selectable('enable')">]
     member this.Enable() = ()
 
     /// Refreshes the position and size of each selectee element.
     /// This method can be used to manually recalculate the position
     // and size of each selectee element.
-    [<Inline "jQuery($this.element.Body).selectable('refresh')">]
+    [<Inline "jQuery($this.element.Dom).selectable('refresh')">]
     member this.Refresh() = ()
 
     /// Sets selectable option.
-    [<Inline "jQuery($this.element.Body).selectable('option', $name, $value)">]
+    [<Inline "jQuery($this.element.Dom).selectable('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
     /// Gets selectable option.
-    [<Inline "jQuery($this.element.Body).selectable('option', $name)">]
+    [<Inline "jQuery($this.element.Dom).selectable('option', $name)">]
     member this.Option (name: string) = X<obj>
 
     /// Gets all options.
-    [<Inline "jQuery($this.element.Body).selectable('option')">]
+    [<Inline "jQuery($this.element.Dom).selectable('option')">]
     member this.Option () = X<SelectableConfiguration>
 
     /// Sets one or more options.
-    [<Inline "jQuery($this.element.Body).selectable('option', $options)">]
+    [<Inline "jQuery($this.element.Dom).selectable('option', $options)">]
     member this.Option (options: SelectableConfiguration) = X<unit>
 
-    [<Inline "jQuery($this.element.Body).selectable('widget')">]
+    [<Inline "jQuery($this.element.Dom).selectable('widget')">]
     member private this.getWidget() = X<Dom.Element>
 
     /// Returns the .ui-selectable element.
@@ -142,25 +143,25 @@ type Selectable[<JavaScript>] internal () =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Body).selectable({create: function (x,y) {($f(x))(y.create);}})">]
+    [<Inline "jQuery($this.element.Dom).selectable({create: function (x,y) {($f(x))(y.create);}})">]
     member private this.onCreate(f : JQuery.Event -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).selectable({selected: function (x,y) {($f(x))(y.selected);}})">]
+    [<Inline "jQuery($this.element.Dom).selectable({selected: function (x,y) {($f(x))(y.selected);}})">]
     member private this.onSelected(f : JQuery.Event -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).selectable({selecting: function (x,y) {($f(x))(y.selecting);}})">]
+    [<Inline "jQuery($this.element.Dom).selectable({selecting: function (x,y) {($f(x))(y.selecting);}})">]
     member private this.onSelecting(f : JQuery.Event -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).selectable({start: function (x,y) {($f(x));}})">]
+    [<Inline "jQuery($this.element.Dom).selectable({start: function (x,y) {($f(x));}})">]
     member private this.onStart(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).selectable({stop: function (x,y) {($f(x));}})">]
+    [<Inline "jQuery($this.element.Dom).selectable({stop: function (x,y) {($f(x));}})">]
     member private this.onStop(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).selectable({unselected: function (x,y) {($f(x))(y.unselected);}})">]
+    [<Inline "jQuery($this.element.Dom).selectable({unselected: function (x,y) {($f(x))(y.unselected);}})">]
     member private this.onUnselected(f : JQuery.Event -> Element -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).selectable({unselecting: function (x,y) {($f(x))(y.unselecting);}})">]
+    [<Inline "jQuery($this.element.Dom).selectable({unselecting: function (x,y) {($f(x))(y.unselecting);}})">]
     member private this.onUnselecting(f : JQuery.Event -> Element -> unit) = ()
 
     /// This event is triggered when selectable is created.

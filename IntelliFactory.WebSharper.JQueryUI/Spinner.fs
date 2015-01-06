@@ -13,7 +13,8 @@
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.Html
+open IntelliFactory.WebSharper.JavaScript
+open IntelliFactory.WebSharper.Html.Client
 
 type SpinnerIcons =
     {
@@ -76,7 +77,7 @@ module internal SpinnerInternal =
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]
 type Spinner[<JavaScript>] internal () =
-    inherit Pagelet()
+    inherit Utils.Pagelet()
 
     (****************************************************************
     * Constructors
@@ -89,7 +90,7 @@ type Spinner[<JavaScript>] internal () =
         s.element <-
             Div []
             |>! OnAfterRender (fun el  ->
-                SpinnerInternal.Init(el.Body, conf)
+                SpinnerInternal.Init(el.Dom, conf)
             )
         s
 
@@ -104,26 +105,26 @@ type Spinner[<JavaScript>] internal () =
     * Methods
     *****************************************************************)
     /// Removes the spinner functionality completly.
-    [<Inline "jQuery($this.element.Body).spinner('destroy')">]
+    [<Inline "jQuery($this.element.Dom).spinner('destroy')">]
     member this.Destroy() = ()
 
     /// Disables the spinner functionality.
-    [<Inline "jQuery($this.element.Body).spinner('disable')">]
+    [<Inline "jQuery($this.element.Dom).spinner('disable')">]
     member this.Disable () = ()
 
     /// Enables the spinner functionality.
-    [<Inline "jQuery($this.element.Body).spinner('enable')">]
+    [<Inline "jQuery($this.element.Dom).spinner('enable')">]
     member this.Enable () = ()
 
     /// Sets a spinner option.
-    [<Inline "jQuery($this.element.Body).spinner('option', $name, $value)">]
+    [<Inline "jQuery($this.element.Dom).spinner('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
     /// Gets a spinner option.
-    [<Inline "jQuery($this.element.Body).spinner('option', $name)">]
+    [<Inline "jQuery($this.element.Dom).spinner('option', $name)">]
     member this.Option (name: string) = X<obj>
 
-    [<Inline "jQuery($this.element.Body).spinner('widget')">]
+    [<Inline "jQuery($this.element.Dom).spinner('widget')">]
     member private this.getWidget () = X<Dom.Element>
 
     /// Returns the .ui-spinner element.
@@ -131,41 +132,41 @@ type Spinner[<JavaScript>] internal () =
     member this.Widget = this.getWidget()
 
     /// Decrements the value by the specified number of pages, as defined by the page option.
-    [<Inline "jQuery($this.element.Body).spinner('pageDown')">]
+    [<Inline "jQuery($this.element.Dom).spinner('pageDown')">]
     member this.PageDown () = ()
 
     /// Decrements the value by the specified number of pages, as defined by the page option.
-    [<Inline "jQuery($this.element.Body).spinner('pageDown', $pages)">]
+    [<Inline "jQuery($this.element.Dom).spinner('pageDown', $pages)">]
     member this.PageDown (pages: int) = ()
 
     /// Increments the value by the specified number of pages, as defined by the page option.
-    [<Inline "jQuery($this.element.Body).spinner('pageUp')">]
+    [<Inline "jQuery($this.element.Dom).spinner('pageUp')">]
     member this.PageUp () = ()
 
     /// Increments the value by the specified number of pages, as defined by the page option.
-    [<Inline "jQuery($this.element.Body).spinner('pageUp', $pages)">]
+    [<Inline "jQuery($this.element.Dom).spinner('pageUp', $pages)">]
     member this.PageUp (pages: int) = ()
 
     /// Decrements the value by the specified number of steps.
-    [<Inline "jQuery($this.element.Body).spinner('stepDown')">]
+    [<Inline "jQuery($this.element.Dom).spinner('stepDown')">]
     member this.StepDown () = ()
 
     /// Decrements the value by the specified number of steps.
-    [<Inline "jQuery($this.element.Body).spinner('stepDown', $steps)">]
+    [<Inline "jQuery($this.element.Dom).spinner('stepDown', $steps)">]
     member this.StepDown (steps: int) = ()
 
     /// Increments the value by the specified number of steps.
-    [<Inline "jQuery($this.element.Body).spinner('stepUp')">]
+    [<Inline "jQuery($this.element.Dom).spinner('stepUp')">]
     member this.StepUp () = ()
 
     /// Increments the value by the specified number of steps.
-    [<Inline "jQuery($this.element.Body).spinner('stepUp', $steps)">]
+    [<Inline "jQuery($this.element.Dom).spinner('stepUp', $steps)">]
     member this.StepUp (steps: int) = ()
 
-    [<Inline "jQuery($this.element.Body).spinner('value', $v)">]
+    [<Inline "jQuery($this.element.Dom).spinner('value', $v)">]
     member private this.setValue (v: int) = ()
 
-    [<Inline "jQuery($this.element.Body).spinner('value')">]
+    [<Inline "jQuery($this.element.Dom).spinner('value')">]
     member private this.getValue () = 0
 
     /// Gets or sets the spinner value.
@@ -180,23 +181,23 @@ type Spinner[<JavaScript>] internal () =
     * Events
     *****************************************************************)
 
-    [<Inline "jQuery($this.element.Body).bind('spinnercreate', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('spinnercreate', function (x,y) {$f(x);})">]
     member private this.onCreate(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).bind('spinnerstart', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('spinnerstart', function (x,y) {$f(x);})">]
     member private this.onStart(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).bind('spinnerchange', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('spinnerchange', function (x,y) {$f(x);})">]
     member private this.onChange(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).bind('spinnerspin', function (x,y) {($f(x))($y.value);})">]
+    [<Inline "jQuery($this.element.Dom).bind('spinnerspin', function (x,y) {($f(x))($y.value);})">]
     member private this.onSpin(f : JQuery.Event -> int -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).bind('spinnerstop', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('spinnerstop', function (x,y) {$f(x);})">]
     member private this.onStop(f : JQuery.Event -> unit) = ()
 
 

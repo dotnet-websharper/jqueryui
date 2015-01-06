@@ -13,7 +13,8 @@
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.Html
+open IntelliFactory.WebSharper.JavaScript
+open IntelliFactory.WebSharper.Html.Client
 
 type ProgressbarConfiguration[<JavaScript>]() =
 
@@ -38,7 +39,7 @@ module internal ProgressbarInternal =
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]
 type Progressbar[<JavaScript>]internal () =
-    inherit Pagelet()
+    inherit Utils.Pagelet()
 
     (****************************************************************
     * Constructors
@@ -52,7 +53,7 @@ type Progressbar[<JavaScript>]internal () =
         pb.element <- el
         el
         |> OnAfterRender (fun el  ->
-            ProgressbarInternal.Init(el.Body, conf)
+            ProgressbarInternal.Init(el.Dom, conf)
         )
         pb
 
@@ -82,26 +83,26 @@ type Progressbar[<JavaScript>]internal () =
     * Methods
     *****************************************************************)
     /// Removes the progressbar functionality completely.
-    [<Inline "jQuery($this.element.Body).progressbar('destroy')">]
+    [<Inline "jQuery($this.element.Dom).progressbar('destroy')">]
     member this.Destroy() = ()
 
     /// Disables the progressbar functionality.
-    [<Inline "jQuery($this.element.Body).progressbar('disable')">]
+    [<Inline "jQuery($this.element.Dom).progressbar('disable')">]
     member this.Disable () = ()
 
     /// Enables the progressbar functionality.
-    [<Inline "jQuery($this.element.Body).progressbar('enable')">]
+    [<Inline "jQuery($this.element.Dom).progressbar('enable')">]
     member this.Enable () = ()
 
     /// Sets a progressbar option.
-    [<Inline "jQuery($this.element.Body).progressbar('option', $name, $value)">]
+    [<Inline "jQuery($this.element.Dom).progressbar('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
     /// Gets a progressbar option.
-    [<Inline "jQuery($this.element.Body).progressbar('option', $name)">]
+    [<Inline "jQuery($this.element.Dom).progressbar('option', $name)">]
     member this.Option (name: string) = X<obj>
 
-    [<Inline "jQuery($this.element.Body).progressbar('widget')">]
+    [<Inline "jQuery($this.element.Dom).progressbar('widget')">]
     member private this.getWidget () = X<Dom.Element>
 
     /// Returns the .ui-progressbar element.
@@ -109,11 +110,11 @@ type Progressbar[<JavaScript>]internal () =
     member this.Widget = this.getWidget()
 
     /// Sets the value of the progressbar.
-    [<Inline "jQuery($this.element.Body).progressbar('value', $v)">]
+    [<Inline "jQuery($this.element.Dom).progressbar('value', $v)">]
     member private this.setValue (v: int) = ()
 
     /// Gets the value of the progressbar.
-    [<Inline "jQuery($this.element.Body).progressbar('value')">]
+    [<Inline "jQuery($this.element.Dom).progressbar('value')">]
     member private this.getValue () = 0
 
     /// Gets or sets the value of the progressbar.
@@ -127,13 +128,13 @@ type Progressbar[<JavaScript>]internal () =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Body).bind('accordioncreate', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('progressbarcreate', function (x,y) {$f(x);})">]
     member private this.onCreate(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('accordionchange', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('progressbarchange', function (x,y) {$f(x);})">]
     member private this.onChange(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('accordioncomplete', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('progressbarcomplete', function (x,y) {$f(x);})">]
     member private this.onComplete(f : JQuery.Event -> unit) = ()
 
     /// Event triggered when the progressbar is created.

@@ -13,8 +13,9 @@
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.Html
-open IntelliFactory.WebSharper.Html.Events
+open IntelliFactory.WebSharper.JavaScript
+open IntelliFactory.WebSharper.Html.Client
+open IntelliFactory.WebSharper.Html.Client.Events
 
 type ButtonIconsConfiguration =
     {
@@ -55,7 +56,7 @@ module internal ButtonInternal =
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]
 type Button [<JavaScript>]()=
-    inherit Pagelet()
+    inherit Utils.Pagelet()
 
     [<DefaultValue>]
     val mutable private isEnabled: bool
@@ -76,8 +77,8 @@ type Button [<JavaScript>]()=
         let b = new Button()
         b.isEnabled <- true
         el
-        |> OnAfterRender (fun el  ->
-            ButtonInternal.Init(el.Body, conf)
+        |> OnAfterRender (fun el ->
+            ButtonInternal.Init(el.Dom, conf)
         )
         |> ignore
         b.element <- el
@@ -91,8 +92,8 @@ type Button [<JavaScript>]()=
         button.isEnabled <- true
         button.element <-
             genEl ()
-            |>! OnAfterRender (fun el  ->
-                ButtonInternal.Init(el.Body, conf)
+            |>! OnAfterRender (fun el ->
+                ButtonInternal.Init(el.Dom, conf)
             )
         button
 
@@ -100,7 +101,7 @@ type Button [<JavaScript>]()=
     [<JavaScript>]
     [<Name "New3">]
     static member New (conf: ButtonConfiguration): Button =
-        Button.New(IntelliFactory.WebSharper.Html.Default.Button [], conf)
+        Button.New(IntelliFactory.WebSharper.Html.Client.Default.Button [], conf)
 
     /// Creates a new button with the given label and
     /// using the default configuration object.
@@ -115,10 +116,10 @@ type Button [<JavaScript>]()=
     *****************************************************************)
 
     /// Removes the button functionality completely.
-    [<Inline "jQuery($this.element.Body).button('destroy')">]
+    [<Inline "jQuery($this.element.Dom).button('destroy')">]
     member this.Destroy() = ()
 
-    [<Inline "jQuery($this.element.Body).button('disable')">]
+    [<Inline "jQuery($this.element.Dom).button('disable')">]
     member private this.disable () = ()
 
     /// Disables the button.
@@ -127,7 +128,7 @@ type Button [<JavaScript>]()=
         this.isEnabled <- false
         this.disable()
 
-    [<Inline "jQuery($this.element.Body).button('enable')">]
+    [<Inline "jQuery($this.element.Dom).button('enable')">]
     member private this.enable () = ()
 
     /// Enables the button.
@@ -137,22 +138,22 @@ type Button [<JavaScript>]()=
         this.enable()
 
     /// Set any button option.
-    [<Inline "jQuery($this.element.Body).button('option', $name, $value)">]
+    [<Inline "jQuery($this.element.Dom).button('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
     /// Get any button option.
-    [<Inline "jQuery($this.element.Body).button('option', $name)">]
+    [<Inline "jQuery($this.element.Dom).button('option', $name)">]
     member this.Option (name: string) = X<obj>
 
     /// Gets all options.
-    [<Inline "jQuery($this.element.Body).button('option')">]
+    [<Inline "jQuery($this.element.Dom).button('option')">]
     member this.Option () = X<ButtonConfiguration>
 
     /// Sets one or more options.
-    [<Inline "jQuery($this.element.Body).button('option', $options)">]
+    [<Inline "jQuery($this.element.Dom).button('option', $options)">]
     member this.Option (options: ButtonConfiguration) = X<unit>
 
-    [<Inline "jQuery($this.element.Body).button('widget')">]
+    [<Inline "jQuery($this.element.Dom).button('widget')">]
     member private this.getWidget () = X<Dom.Element>
 
     /// Returns the .ui-button element.
@@ -162,14 +163,14 @@ type Button [<JavaScript>]()=
     /// Refreshes the visual state of the button.
     /// Useful for updating button state after the native element's checked or disabled state
     /// is changed programatically.
-    [<Inline "jQuery($this.element.Body).button('refresh')">]
+    [<Inline "jQuery($this.element.Dom).button('refresh')">]
     member this.Refresh (index: int) = ()
 
     (****************************************************************
     * Events
     *****************************************************************)
 
-    [<Inline "jQuery($this.element.Body).bind('buttoncreate', function (x,y) {($f(x));})">]
+    [<Inline "jQuery($this.element.Dom).bind('buttoncreate', function (x,y) {($f(x));})">]
     member private this.onCreate(f : JQuery.Event -> unit) = ()
 
     /// This event is triggered when button is created.

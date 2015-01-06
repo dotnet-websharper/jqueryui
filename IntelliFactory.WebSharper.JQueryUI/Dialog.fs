@@ -13,11 +13,12 @@
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.Html
+open IntelliFactory.WebSharper.JavaScript
+open IntelliFactory.WebSharper.Html.Client
 
 type DialogButton [<JavaScript>]() =
 
-    [<Inline "void($this.click = function(e){$f({Body:this,Render:function(){}})(e)})">]
+    [<Inline "void($this.click = function(e){$f({Dom:this,Render:function(){}})(e)})">]
     member private this.setClick(f: Element -> JQuery.Event -> unit) = ()
     
     [<Name "click">]
@@ -132,7 +133,7 @@ and
     [<Require(typeof<Dependencies.JQueryUIJs>)>]
     [<Require(typeof<Dependencies.JQueryUICss>)>]
     Dialog[<JavaScript>]internal () =
-    inherit Pagelet()
+    inherit Utils.Pagelet()
 
     [<JavaScript>]
     static member internal OfExisting(el: Element) =
@@ -146,7 +147,7 @@ and
         let d = new Dialog()
         el
         |> OnAfterRender(fun el ->
-            DialogInternal.Init(el.Body, conf)
+            DialogInternal.Init(el.Dom, conf)
         )
         d.element <- el
         d
@@ -162,34 +163,34 @@ and
     * Methods
     *****************************************************************)
     /// Remove the dialog functionality.
-    [<Inline "jQuery($this.element.Body).dialog('destroy')">]
+    [<Inline "jQuery($this.element.Dom).dialog('destroy')">]
     member this.Destroy() = ()
 
     /// Disables the dialog.
-    [<Inline "jQuery($this.element.Body).dialog('disable')">]
+    [<Inline "jQuery($this.element.Dom).dialog('disable')">]
     member this.Disable () = ()
 
     /// Enables the dialog.
-    [<Inline "jQuery($this.element.Body).dialog('enable')">]
+    [<Inline "jQuery($this.element.Dom).dialog('enable')">]
     member this.Enable () = ()
 
     /// Sets dialog option.
-    [<Inline "jQuery($this.element.Body).dialog('option', $name, $value)">]
+    [<Inline "jQuery($this.element.Dom).dialog('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
     /// Gets dialog option.
-    [<Inline "jQuery($this.element.Body).dialog('option', $name)">]
+    [<Inline "jQuery($this.element.Dom).dialog('option', $name)">]
     member this.Option (name: string) = X<obj>
 
     /// Gets all options.
-    [<Inline "jQuery($this.element.Body).dialog('option')">]
+    [<Inline "jQuery($this.element.Dom).dialog('option')">]
     member this.Option () = X<DialogConfiguration>
 
     /// Sets one or more options.
-    [<Inline "jQuery($this.element.Body).dialog('option', $options)">]
+    [<Inline "jQuery($this.element.Dom).dialog('option', $options)">]
     member this.Option (options: DialogConfiguration) = X<unit>
 
-    [<Inline "jQuery($this.element.Body).dialog('widget')">]
+    [<Inline "jQuery($this.element.Dom).dialog('widget')">]
     member private this.getWidget () = X<Dom.Element>
 
     /// Returns the .ui-dialog element.
@@ -197,55 +198,55 @@ and
     member this.Widget = this.getWidget()
 
     /// Close dialog.
-    [<Inline "jQuery($this.element.Body).dialog('close')">]
+    [<Inline "jQuery($this.element.Dom).dialog('close')">]
     member this.Close () = ()
 
     /// Returns whether the dialog is open or not.
-    [<Inline "jQuery($this.element.Body).dialog('isOpen')">]
+    [<Inline "jQuery($this.element.Dom).dialog('isOpen')">]
     member this.IsOpen () = false
 
     /// Move the dialog to the top of the dialogs stack.
-    [<Inline "jQuery($this.element.Body).dialog('moveToTop')">]
+    [<Inline "jQuery($this.element.Dom).dialog('moveToTop')">]
     member this.MoveToTop () = ()
 
     /// Open the dialog.
-    [<Inline "jQuery($this.element.Body).dialog('open')">]
+    [<Inline "jQuery($this.element.Dom).dialog('open')">]
     member this.Open () = ()
 
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Body).bind('dialogcreate', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dialogcreate', function (x,y) {$f(x);})">]
     member private this.onCreate(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('dialogbeforeclose', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dialogbeforeclose', function (x,y) {$f(x);})">]
     member private this.onBeforeClose(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('dialogopen', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dialogopen', function (x,y) {$f(x);})">]
     member private this.onOpen(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('dialogfocus', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dialogfocus', function (x,y) {$f(x);})">]
     member private this.onFocus(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('dialogdragstart', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dialogdragstart', function (x,y) {$f(x);})">]
     member private this.onDragStart(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('dialogdrag', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dialogdrag', function (x,y) {$f(x);})">]
     member private this.onDrag(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('dialogdragstop', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dialogdragstop', function (x,y) {$f(x);})">]
     member private this.onDragStop(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('dialogresizestart', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dialogresizestart', function (x,y) {$f(x);})">]
     member private this.onResizeStart(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('dialogresize', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dialogresize', function (x,y) {$f(x);})">]
     member private this.onResize(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('dialogresizestop', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dialogresizestop', function (x,y) {$f(x);})">]
     member private this.onResizeStop(f : JQuery.Event -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('dialogclose', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dialogclose', function (x,y) {$f(x);})">]
     member private this.onClose(f : JQuery.Event -> unit) = ()
 
 

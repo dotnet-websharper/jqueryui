@@ -13,7 +13,8 @@
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.Html
+open IntelliFactory.WebSharper.JavaScript
+open IntelliFactory.WebSharper.Html.Client
 
 type TooltipConfiguration[<JavaScript>] () =
 
@@ -67,7 +68,7 @@ module internal TooltipInternal =
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]
 type Tooltip[<JavaScript>] internal () =
-    inherit Pagelet()
+    inherit Utils.Pagelet()
 
     (****************************************************************
     * Constructors
@@ -80,7 +81,7 @@ type Tooltip[<JavaScript>] internal () =
         s.element <-
             Div []
             |>! OnAfterRender (fun el  ->
-                TooltipInternal.Init(el.Body, conf)
+                TooltipInternal.Init(el.Dom, conf)
             )
         s
 
@@ -95,26 +96,26 @@ type Tooltip[<JavaScript>] internal () =
     * Methods
     *****************************************************************)
     /// Removes the tooltip functionality completly.
-    [<Inline "jQuery($this.element.Body).tooltip('destroy')">]
+    [<Inline "jQuery($this.element.Dom).tooltip('destroy')">]
     member this.Destroy() = ()
 
     /// Disables the tooltip functionality.
-    [<Inline "jQuery($this.element.Body).tooltip('disable')">]
+    [<Inline "jQuery($this.element.Dom).tooltip('disable')">]
     member this.Disable () = ()
 
     /// Enables the tooltip functionality.
-    [<Inline "jQuery($this.element.Body).tooltip('enable')">]
+    [<Inline "jQuery($this.element.Dom).tooltip('enable')">]
     member this.Enable () = ()
 
     /// Sets a tooltip option.
-    [<Inline "jQuery($this.element.Body).tooltip('option', $name, $value)">]
+    [<Inline "jQuery($this.element.Dom).tooltip('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
     /// Gets a tooltip option.
-    [<Inline "jQuery($this.element.Body).tooltip('option', $name)">]
+    [<Inline "jQuery($this.element.Dom).tooltip('option', $name)">]
     member this.Option (name: string) = X<obj>
 
-    [<Inline "jQuery($this.element.Body).tooltip('widget')">]
+    [<Inline "jQuery($this.element.Dom).tooltip('widget')">]
     member private this.getWidget () = X<Dom.Element>
 
     /// Returns the .ui-tooltip element.
@@ -122,26 +123,26 @@ type Tooltip[<JavaScript>] internal () =
     member this.Widget = this.getWidget()
 
     /// Closes the tooltip.
-    [<Inline "jQuery($this.element.Body).tooltip('close')">]
+    [<Inline "jQuery($this.element.Dom).tooltip('close')">]
     member this.Close () = ()
 
     /// Opens the tooltip.
-    [<Inline "jQuery($this.element.Body).tooltip('open')">]
+    [<Inline "jQuery($this.element.Dom).tooltip('open')">]
     member this.Open () = ()
 
     (****************************************************************
     * Events
     *****************************************************************)
 
-    [<Inline "jQuery($this.element.Body).bind('tooltipcreate', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('tooltipcreate', function (x,y) {$f(x);})">]
     member private this.onCreate(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).bind('tooltipclose', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('tooltipclose', function (x,y) {$f(x);})">]
     member private this.onClose(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).bind('tooltipopen', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('tooltipopen', function (x,y) {$f(x);})">]
     member private this.onOpen(f : JQuery.Event -> unit) = ()
 
 

@@ -13,7 +13,8 @@
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.Html
+open IntelliFactory.WebSharper.JavaScript
+open IntelliFactory.WebSharper.Html.Client
 
 type ToleranceOfDroppable =
     | [<Name "fit">] Fit
@@ -85,7 +86,7 @@ module internal DroppableInternal =
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]
 type Droppable[<JavaScript>] internal () =
-    inherit Pagelet()
+    inherit Utils.Pagelet()
 
     (****************************************************************
     * Constructors
@@ -99,7 +100,7 @@ type Droppable[<JavaScript>] internal () =
         a.element <-
             el
             |>! OnAfterRender (fun el  ->
-                DroppableInternal.New(el.Body, conf)
+                DroppableInternal.New(el.Dom, conf)
             )
         a
 
@@ -115,34 +116,34 @@ type Droppable[<JavaScript>] internal () =
     * Methods
     *****************************************************************)
     /// Removes droppable functionality completely.
-    [<Inline "jQuery($this.element.Body).droppable('destroy')">]
+    [<Inline "jQuery($this.element.Dom).droppable('destroy')">]
     member this.Destroy() = X<unit>
 
     /// Disables droppable functionality.
-    [<Inline "jQuery($this.element.Body).droppable('disable')">]
+    [<Inline "jQuery($this.element.Dom).droppable('disable')">]
     member this.Disable() = X<unit>
 
     /// Enables droppable functionality.
-    [<Inline "jQuery($this.element.Body).droppable('enable')">]
+    [<Inline "jQuery($this.element.Dom).droppable('enable')">]
     member this.Enable() = X<unit>
 
     /// Sets droppable option.
-    [<Inline "jQuery($this.element.Body).droppable('option', $optionName, $value)">]
+    [<Inline "jQuery($this.element.Dom).droppable('option', $optionName, $value)">]
     member this.Option(optionName: string, value: obj) : unit = ()
 
     /// Gets droppable option.
-    [<Inline "jQuery($this.element.Body).droppable('option', $optionName)">]
+    [<Inline "jQuery($this.element.Dom).droppable('option', $optionName)">]
     member this.Option(optionName: string) = X<obj>
 
     /// Gets all options.
-    [<Inline "jQuery($this.element.Body).droppable('option')">]
+    [<Inline "jQuery($this.element.Dom).droppable('option')">]
     member this.Option () = X<DroppableConfiguration>
 
     /// Sets one or more options.
-    [<Inline "jQuery($this.element.Body).droppable('option', $options)">]
+    [<Inline "jQuery($this.element.Dom).droppable('option', $options)">]
     member this.Option (options: DroppableConfiguration) = X<unit>
 
-    [<Inline "jQuery($this.element.Body).droppable('widget')">]
+    [<Inline "jQuery($this.element.Dom).droppable('widget')">]
     member private this.getWidget () = X<Dom.Element>
 
     /// Returns the .ui-droppable element.
@@ -153,27 +154,27 @@ type Droppable[<JavaScript>] internal () =
     * Events
     *****************************************************************)
     /// This event is triggered when droppable is created.
-    [<Inline "jQuery($this.element.Body).bind('dropcreate', function (x,y) {($f(x))(y);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dropcreate', function (x,y) {($f(x))(y);})">]
     member private this.onCreate(f : JQuery.Event -> DroppableEvent -> unit) = ()
 
     /// Event triggered any time an accepted draggable starts dragging.
-    [<Inline "jQuery($this.element.Body).bind('dropactivate', function (x,y) {($f(x))(y);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dropactivate', function (x,y) {($f(x))(y);})">]
     member private this.onActivate(f : JQuery.Event -> DroppableEvent -> unit) = ()
 
     /// Event triggered any time an accepted draggable stops dragging.
-    [<Inline "jQuery($this.element.Body).bind('dropdeactivate', function (x,y) {($f(x))(y);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dropdeactivate', function (x,y) {($f(x))(y);})">]
     member private this.onDeactivate(f : JQuery.Event -> DroppableEvent -> unit) = ()
 
     /// Event is triggered when an accepted draggable is dragged 'over' (within the tolerance of) this droppable.
-    [<Inline "jQuery($this.element.Body).bind('dropover', function (x,y) {($f(x))(y);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dropover', function (x,y) {($f(x))(y);})">]
     member private this.onOver(f : JQuery.Event -> DroppableEvent -> unit) = ()
 
     /// Event triggered when an accepted draggable is dragged out (within the tolerance of) this droppable.
-    [<Inline "jQuery($this.element.Body).bind('dropout', function (x,y) {($f(x))(y);})">]
+    [<Inline "jQuery($this.element.Dom).bind('dropout', function (x,y) {($f(x))(y);})">]
     member private this.onOut(f : JQuery.Event -> DroppableEvent -> unit) = ()
 
     /// Event triggered when an accepted draggable is dropped 'over' (within the tolerance of) this droppable.
-    [<Inline "jQuery($this.element.Body).bind('drop', function (x,y) {($f(x))(y);})">]
+    [<Inline "jQuery($this.element.Dom).bind('drop', function (x,y) {($f(x))(y);})">]
     member private this.onDrop(f : JQuery.Event -> DroppableEvent -> unit) = ()
 
     /// This event is triggered when droppable is created.

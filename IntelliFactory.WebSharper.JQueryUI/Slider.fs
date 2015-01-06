@@ -13,7 +13,8 @@
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.Html
+open IntelliFactory.WebSharper.JavaScript
+open IntelliFactory.WebSharper.Html.Client
 
 
 type SliderConfiguration[<JavaScript>] () =
@@ -69,7 +70,7 @@ module internal SliderInternal =
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]
 type Slider[<JavaScript>] internal () =
-    inherit Pagelet()
+    inherit Utils.Pagelet()
 
     (****************************************************************
     * Constructors
@@ -82,7 +83,7 @@ type Slider[<JavaScript>] internal () =
         s.element <-
             Div []
             |>! OnAfterRender (fun el  ->
-                SliderInternal.Init(el.Body, conf)
+                SliderInternal.Init(el.Dom, conf)
             )
         s
 
@@ -97,42 +98,42 @@ type Slider[<JavaScript>] internal () =
     * Methods
     *****************************************************************)
     /// Removes the slider functionality completly.
-    [<Inline "jQuery($this.element.Body).slider('destroy')">]
+    [<Inline "jQuery($this.element.Dom).slider('destroy')">]
     member this.Destroy() = ()
 
     /// Disables the slider functionality.
-    [<Inline "jQuery($this.element.Body).slider('disable')">]
+    [<Inline "jQuery($this.element.Dom).slider('disable')">]
     member this.Disable () = ()
 
     /// Enables the slider functionality.
-    [<Inline "jQuery($this.element.Body).slider('enable')">]
+    [<Inline "jQuery($this.element.Dom).slider('enable')">]
     member this.Enable () = ()
 
     /// Sets a slider option.
-    [<Inline "jQuery($this.element.Body).slider('option', $name, $value)">]
+    [<Inline "jQuery($this.element.Dom).slider('option', $name, $value)">]
     member this.Option (name: string, value: obj) = ()
 
     /// Gets a slider option.
-    [<Inline "jQuery($this.element.Body).slider('option', $name)">]
+    [<Inline "jQuery($this.element.Dom).slider('option', $name)">]
     member this.Option (name: string) = X<obj>
 
-    [<Inline "jQuery($this.element.Body).slider('widget')">]
+    [<Inline "jQuery($this.element.Dom).slider('widget')">]
     member private this.getWidget () = X<Dom.Element>
 
     /// Returns the .ui-slider element.
     [<JavaScript>]
     member this.Widget = this.getWidget()
 
-    [<Inline "jQuery($this.element.Body).slider('value', $v)">]
+    [<Inline "jQuery($this.element.Dom).slider('value', $v)">]
     member private this.setValue (v: int) = ()
 
-    [<Inline "jQuery($this.element.Body).slider('value')">]
+    [<Inline "jQuery($this.element.Dom).slider('value')">]
     member private this.getValue () = 0
 
-    [<Inline "jQuery($this.element.Body).slider('values', $v)">]
+    [<Inline "jQuery($this.element.Dom).slider('values', $v)">]
     member private this.setValues (v: int []) = ()
 
-    [<Inline "jQuery($this.element.Body).slider('values')">]
+    [<Inline "jQuery($this.element.Dom).slider('values')">]
     member private this.getValues () : int [] = [||]
 
 
@@ -157,23 +158,23 @@ type Slider[<JavaScript>] internal () =
     * Events
     *****************************************************************)
 
-    [<Inline "jQuery($this.element.Body).bind('slidecreate', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('slidecreate', function (x,y) {$f(x);})">]
     member private this.onCreate(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).bind('slidestart', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('slidestart', function (x,y) {$f(x);})">]
     member private this.onStart(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).bind('slidechange', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('slidechange', function (x,y) {$f(x);})">]
     member private this.onChange(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).bind('slide', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('slide', function (x,y) {$f(x);})">]
     member private this.onSlide(f : JQuery.Event -> unit) = ()
 
 
-    [<Inline "jQuery($this.element.Body).bind('slidestop', function (x,y) {$f(x);})">]
+    [<Inline "jQuery($this.element.Dom).bind('slidestop', function (x,y) {$f(x);})">]
     member private this.onStop(f : JQuery.Event -> unit) = ()
 
 

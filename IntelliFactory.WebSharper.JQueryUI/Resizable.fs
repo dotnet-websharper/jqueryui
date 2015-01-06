@@ -13,7 +13,8 @@
 namespace IntelliFactory.WebSharper.JQueryUI
 
 open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.Html
+open IntelliFactory.WebSharper.JavaScript
+open IntelliFactory.WebSharper.Html.Client
 
 type ResizablePosition =
     {
@@ -161,7 +162,7 @@ module internal ResizableInternal =
 [<Require(typeof<Dependencies.JQueryUIJs>)>]
 [<Require(typeof<Dependencies.JQueryUICss>)>]
 type Resizable[<JavaScript>] internal () =
-    inherit Pagelet()
+    inherit Utils.Pagelet()
 
     (****************************************************************
     * Constructors
@@ -174,7 +175,7 @@ type Resizable[<JavaScript>] internal () =
         let a = new Resizable()
         a.element <-
             el |>! OnAfterRender (fun el  ->
-                ResizableInternal.New(el.Body, conf)
+                ResizableInternal.New(el.Dom, conf)
             )
         a
 
@@ -190,34 +191,34 @@ type Resizable[<JavaScript>] internal () =
     * Methods
     *****************************************************************)
     /// Removes resizable functionality.
-    [<Inline "jQuery($this.element.Body).resizable('destroy')">]
+    [<Inline "jQuery($this.element.Dom).resizable('destroy')">]
     member this.Destroy() = ()
 
     /// Disables resizable functionality.
-    [<Inline "jQuery($this.element.Body).resizable('disable')">]
+    [<Inline "jQuery($this.element.Dom).resizable('disable')">]
     member this.Disable() = ()
 
     /// Enables resizable functionality.
-    [<Inline "jQuery($this.element.Body).resizable('enable')">]
+    [<Inline "jQuery($this.element.Dom).resizable('enable')">]
     member this.Enable() = ()
 
     /// Gets a resizable option.
-    [<Inline "jQuery($this.element.Body).resizable('option', $optionName)">]
+    [<Inline "jQuery($this.element.Dom).resizable('option', $optionName)">]
     member this.Option(optionName: string) = X<obj>
 
     /// Sets a resizable option.
-    [<Inline "jQuery($this.element.Body).resizable('option', $optionName, $value)">]
+    [<Inline "jQuery($this.element.Dom).resizable('option', $optionName, $value)">]
     member this.Option(optionName: string, value: obj) : unit = ()
 
     /// Gets all options.
-    [<Inline "jQuery($this.element.Body).resizable('option')">]
+    [<Inline "jQuery($this.element.Dom).resizable('option')">]
     member this.Option () = X<ResizableConfiguration>
 
     /// Sets one or more options.
-    [<Inline "jQuery($this.element.Body).resizable('option', $options)">]
+    [<Inline "jQuery($this.element.Dom).resizable('option', $options)">]
     member this.Option (options: ResizableConfiguration) = X<unit>
 
-    [<Inline "jQuery($this.element.Body).resizable('widget')">]
+    [<Inline "jQuery($this.element.Dom).resizable('widget')">]
     member private this.getWidget() = X<Dom.Element>
 
     /// Returns the .ui-resizable element.
@@ -228,16 +229,16 @@ type Resizable[<JavaScript>] internal () =
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Body).bind('resizecreate', function (x,y) {($f(x))(y);})">]
+    [<Inline "jQuery($this.element.Dom).bind('resizecreate', function (x,y) {($f(x))(y);})">]
     member private this.onCreate(f : JQuery.Event -> ResizableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('resizestart', function (x,y) {($f(x))(y);})">]
+    [<Inline "jQuery($this.element.Dom).bind('resizestart', function (x,y) {($f(x))(y);})">]
     member private this.onStart(f : JQuery.Event -> ResizableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('resize', function (x,y) {($f(x))(y);})">]
+    [<Inline "jQuery($this.element.Dom).bind('resize', function (x,y) {($f(x))(y);})">]
     member private this.onResize(f : JQuery.Event -> ResizableEvent -> unit) = ()
 
-    [<Inline "jQuery($this.element.Body).bind('resizestop', function (x,y) {($f(x))(y);})">]
+    [<Inline "jQuery($this.element.Dom).bind('resizestop', function (x,y) {($f(x))(y);})">]
     member private this.onStop(f : JQuery.Event -> ResizableEvent -> unit) = ()
 
     /// Event triggered at the creation of a resizable.
