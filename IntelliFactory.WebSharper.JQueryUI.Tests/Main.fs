@@ -18,16 +18,16 @@ open IntelliFactory.WebSharper
 module internal Client =
 
     open IntelliFactory.WebSharper.JavaScript
+    open IntelliFactory.WebSharper.Html.Client
     open IntelliFactory.WebSharper.JQuery
     open IntelliFactory.WebSharper.JQueryUI
-    open IntelliFactory.WebSharper.Html.Client
 
     let private Log (x: string) = Console.Log(x)
 
     let TestAccordion () =
         let els1 =
             [
-                "Foo", Div [Button [Text "click"]]
+                "Foo", Div [Tags.Button [Text "click"]]
                 "Bar", Div [Text "Second content"]
                 "Baz", Div [Text "Third content"]
             ]
