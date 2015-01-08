@@ -13,13 +13,8 @@ namespace IntelliFactory.WebSharper.JQueryUI
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Html.Client
 
-[<AutoOpen>]
 [<JavaScript>]
 module Utils =
-
-    type JQuery.JQuery with
-        [<Inline "$this.eq($i)">]
-        member this.Eq(i: int) = this
 
     type Pagelet() =
         inherit Html.Client.Pagelet()
