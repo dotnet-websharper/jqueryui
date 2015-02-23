@@ -10,12 +10,12 @@
 // $end{copyright}
 
 //JQueryUI Wrapping: (version Stable 1.8rc1)
-namespace IntelliFactory.WebSharper.JQueryUI
+namespace WebSharper.JQueryUI
 
-open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.JavaScript
-open IntelliFactory.WebSharper.Html.Client
-open IntelliFactory.WebSharper.Html.Client.Events
+open WebSharper
+open WebSharper.JavaScript
+open WebSharper.Html.Client
+open WebSharper.Html.Client.Events
 
 type ButtonIconsConfiguration =
     {
@@ -101,7 +101,7 @@ type Button [<JavaScript>]()=
     [<JavaScript>]
     [<Name "New3">]
     static member New (conf: ButtonConfiguration): Button =
-        Button.New(IntelliFactory.WebSharper.Html.Client.Default.Button [], conf)
+        Button.New(WebSharper.Html.Client.Default.Button [], conf)
 
     /// Creates a new button with the given label and
     /// using the default configuration object.

@@ -9,9 +9,9 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-namespace IntelliFactory.WebSharper.JQueryUI
-open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.Html.Client
+namespace WebSharper.JQueryUI
+open WebSharper
+open WebSharper.Html.Client
 
 [<JavaScript>]
 module Utils =

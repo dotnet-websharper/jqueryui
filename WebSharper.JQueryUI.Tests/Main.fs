@@ -10,17 +10,17 @@
 // $end{copyright}
 
 //JQueryUI Wrapping: (version Stable 1.8rc1)
-namespace IntelliFactory.WebSharper.JQueryUI.Tests
+namespace WebSharper.JQueryUI.Tests
 
-open IntelliFactory.WebSharper
+open WebSharper
 
 [<JavaScript>]
 module internal Client =
 
-    open IntelliFactory.WebSharper.JavaScript
-    open IntelliFactory.WebSharper.Html.Client
-    open IntelliFactory.WebSharper.JQuery
-    open IntelliFactory.WebSharper.JQueryUI
+    open WebSharper.JavaScript
+    open WebSharper.Html.Client
+    open WebSharper.JQuery
+    open WebSharper.JQueryUI
 
     let private Log (x: string) = Console.Log(x)
 
@@ -313,7 +313,7 @@ module internal Client =
             |> Tabs.New
         Div [tab]
 
-open IntelliFactory.WebSharper.Sitelets
+open WebSharper.Sitelets
 
 type Action = | Index
 
@@ -327,7 +327,7 @@ module Site =
         override this.Body =
             Client.Tests() :> _
 
-    open IntelliFactory.WebSharper.Html.Server
+    open WebSharper.Html.Server
 
     let HomePage =
         Content.PageContent <| fun ctx ->

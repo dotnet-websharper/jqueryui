@@ -7,11 +7,11 @@ let bt =
     |> fun bt -> bt.WithFramework(bt.Framework.Net40)
 
 let main =
-    bt.WebSharper.Library("IntelliFactory.WebSharper.JQueryUI")
+    bt.WebSharper.Library("WebSharper.JQueryUI")
         .SourcesFromProject()
 
 let test =
-    bt.WebSharper.HtmlWebsite("IntelliFactory.WebSharper.JQueryUI.Tests")
+    bt.WebSharper.HtmlWebsite("WebSharper.JQueryUI.Tests")
         .SourcesFromProject()
         .References(fun r -> [r.Project main])
 

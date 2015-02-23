@@ -9,12 +9,12 @@
 //-----------------------------------------------------------------
 // $end{copyright}
 
-module IntelliFactory.WebSharper.JQueryUI.Dependencies
+module WebSharper.JQueryUI.Dependencies
 
-module R = IntelliFactory.WebSharper.Core.Resources
-module A = IntelliFactory.WebSharper.Core.Attributes
+module R = WebSharper.Core.Resources
+module A = WebSharper.Core.Attributes
 
-[<A.Require(typeof<IntelliFactory.WebSharper.JQuery.Resources.JQuery>)>]
+[<A.Require(typeof<WebSharper.JQuery.Resources.JQuery>)>]
 [<Sealed>]
 type JQueryUIJs() =
     inherit R.BaseResource("//code.jquery.com/ui/1.11.1/jquery-ui.js")

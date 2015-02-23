@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>082521a5-c421-4bc8-b283-794d19a79f9e</ProjectGuid>
     <OutputType>Library</OutputType>
-    <Name>IntelliFactory.WebSharper.JQueryUI.Tests</Name>
+    <Name>WebSharper.JQueryUI.Tests</Name>
     <OutputPath>../build/net45</OutputPath>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">10</MinimumVisualStudioVersion>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>

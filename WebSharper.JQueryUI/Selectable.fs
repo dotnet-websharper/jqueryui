@@ -10,11 +10,11 @@
 // $end{copyright}
 
 //JQueryUI Wrapping: (version Stable 1.8rc1)
-namespace IntelliFactory.WebSharper.JQueryUI
+namespace WebSharper.JQueryUI
 
-open IntelliFactory.WebSharper
-open IntelliFactory.WebSharper.JavaScript
-open IntelliFactory.WebSharper.Html.Client
+open WebSharper
+open WebSharper.JavaScript
+open WebSharper.Html.Client
 
 type ToleranceOfSelectable =
     | [<Name "fit">] Fit
