@@ -5,9 +5,9 @@
     <ProjectGuid>082521a5-c421-4bc8-b283-794d19a79f9e</ProjectGuid>
     <OutputType>Library</OutputType>
     <Name>WebSharper.JQueryUI.Tests</Name>
-    <OutputPath>../build/net45</OutputPath>
+    <OutputPath>../build/net40</OutputPath>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">10</MinimumVisualStudioVersion>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '11.0'">
@@ -22,7 +22,7 @@
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
-  <Import Project="../build/net45/$(Name).proj" />
+  <Import Project="../build/net40/$(Name).proj" />
   <ItemGroup>
     <Compile Include="Main.fs" />
   </ItemGroup>

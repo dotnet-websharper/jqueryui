@@ -115,7 +115,7 @@ module internal Client =
         let d =
             Draggable.New(
                 Div [
-                    Attr.Style "width:200px;background:lightgray;text-align:center"
+                    Style "width:200px;background:lightgray;text-align:center"
                     Text "Drag me!"
                 ],
                 DraggableConfiguration(Axis = "x"))
@@ -204,15 +204,15 @@ module internal Client =
     let TestSortable () =
         let elem =
             List.init 6 (fun i ->
-                Attr.Src ("http://www.look4design.co.uk/l4design/companies/designercurtains/image" + string (i+1) + ".jpg"))
+                Src ("http://www.look4design.co.uk/l4design/companies/designercurtains/image" + string (i+1) + ".jpg"))
             |> List.map (fun e -> LI [Img [e]])
-            |> (-<) (UL [Attr.Style "list-style: none"])
+            |> (-<) (UL [Style "list-style: none"])
         let sortable = Sortable.New elem
         Div [sortable]
 
     let TestWidget t w =
         Div [
-            Attr.Style "border:solid 1px gray; padding:10px; margin-top: 10px"
+            Style "border:solid 1px gray; padding:10px; margin-top: 10px"
             H1 [Text t ] :> _
             w
         ]
@@ -221,14 +221,14 @@ module internal Client =
 
     let TestPosition() =
         let position1Body =
-            Div [Attr.Style "width:50px; height:50px; background-color:#F00;"]
+            Div [Style "width:50px; height:50px; background-color:#F00;"]
         let targetBody =
-            Div [Attr.Style "width:240px; height:200px; background-color:#999; margin:30px auto;"; Text "hej"]
+            Div [Style "width:240px; height:200px; background-color:#999; margin:30px auto;"; Text "hej"]
             |>! OnAfterRender (fun el ->
                 let conf1 = new PositionConfiguration()
                 conf1.My <- "center"
                 conf1.At <- "center"
-                conf1.Of <- Target.Element el.Dom
+                conf1.Of <- JQueryUI.Target.Element el.Dom
                 conf1.Collision <- "fit"
                 conf1.offset <- "10 -10"
                 let p1 = Position.New(position1Body, conf1)
@@ -285,7 +285,7 @@ module internal Client =
 //            -< [p1; p2; p3; p4 ]
 
     let TestResizable () =
-        let img = Div [Attr.Style "background:url(http://www.look4design.co.uk/l4design/companies/light-iq/image14.jpg);height:100px;width:100px" ]
+        let img = Div [Style "background:url(http://www.look4design.co.uk/l4design/companies/light-iq/image14.jpg);height:100px;width:100px" ]
         let resizable = Resizable.New img
         resizable.OnStart  (fun _ _ -> Log("Started!"))
         resizable.OnResize (fun _ _ -> Log("Resized!"))

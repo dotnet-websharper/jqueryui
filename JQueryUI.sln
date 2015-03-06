@@ -3,14 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.20617.1 PREVIEW
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "IntelliFactory.WebSharper.JQueryUI", "IntelliFactory.WebSharper.JQueryUI\IntelliFactory.WebSharper.JQueryUI.fsproj", "{4A6BAE18-3F58-4ADD-A7E8-B5380EFDF0D1}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WebSharper.JQueryUI", "WebSharper.JQueryUI\WebSharper.JQueryUI.fsproj", "{4A6BAE18-3F58-4ADD-A7E8-B5380EFDF0D1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E0C7FC5F-7638-4312-AD7E-3E26A3861E1C}"
 	ProjectSection(SolutionItems) = preProject
 		ivy.xml = ivy.xml
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "IntelliFactory.WebSharper.JQueryUI.Tests", "IntelliFactory.WebSharper.JQueryUI.Tests\IntelliFactory.WebSharper.JQueryUI.Tests.fsproj", "{082521A5-C421-4BC8-B283-794D19A79F9E}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WebSharper.JQueryUI.Tests", "WebSharper.JQueryUI.Tests\WebSharper.JQueryUI.Tests.fsproj", "{082521A5-C421-4BC8-B283-794D19A79F9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

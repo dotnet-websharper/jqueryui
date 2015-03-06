@@ -101,7 +101,7 @@ type Button [<JavaScript>]()=
     [<JavaScript>]
     [<Name "New3">]
     static member New (conf: ButtonConfiguration): Button =
-        Button.New(WebSharper.Html.Client.Default.Button [], conf)
+        Button.New(Tags.Button [], conf)
 
     /// Creates a new button with the given label and
     /// using the default configuration object.

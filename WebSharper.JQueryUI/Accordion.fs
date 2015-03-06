@@ -109,7 +109,7 @@ type Accordion[<JavaScript>] internal () =
                 els
                 |> List.map (fun (header, el) ->
                     [
-                        H3 [A [Attr.HRef "#"; Text header]]
+                        H3 [A [HRef "#"; Text header]]
                         Div [el]
                     ]
                 )

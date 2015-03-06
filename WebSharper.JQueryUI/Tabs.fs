@@ -127,8 +127,8 @@ type Tabs[<JavaScript>] internal (tabContainer, panelContainer) =
                 els
                 |> List.map (fun (label, panel) ->
                    let id = NewId()
-                   let item = LI [A [Attr.HRef ("#" + id); Text label]]
-                   let tab = Div [Attr.Id id] -< [panel]
+                   let item = LI [A [HRef ("#" + id); Text label]]
+                   let tab = Div [Id id] -< [panel]
                    (item :> Pagelet, tab :> Pagelet)
                 )
             let tabs = UL (Seq.map fst itemPanels)
@@ -198,8 +198,8 @@ type Tabs[<JavaScript>] internal (tabContainer, panelContainer) =
     [<JavaScript>]
     member this.Add(el: Element, label: string, ix: int) =
         let id = NewId()
-        let tab = LI [A [Attr.HRef ("#" + id); Text label]]
-        let panel = Div [Attr.Id id] -< [el]
+        let tab = LI [A [HRef ("#" + id); Text label]]
+        let panel = Div [Id id] -< [el]
         JQuery.JQuery.Of(tabContainer.Dom).Children().Eq(ix).Before(tab.Dom).Ignore
         JQuery.JQuery.Of(panelContainer.Dom).Children().Eq(ix).After(panel.Dom).Ignore // after because the first child is the tabset
         tab.Render()
@@ -210,8 +210,8 @@ type Tabs[<JavaScript>] internal (tabContainer, panelContainer) =
     [<JavaScript>]
     member this.Add(el: Element, label: string) =
         let id = NewId()
-        let tab = LI [A [Attr.HRef ("#" + id); Text label]]
-        let panel = Div [Attr.Id id] -< [el]
+        let tab = LI [A [HRef ("#" + id); Text label]]
+        let panel = Div [Id id] -< [el]
         tabContainer.Append(tab)
         panelContainer.Append(panel)
         this.Refresh()
