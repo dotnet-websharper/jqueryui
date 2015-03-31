@@ -2,7 +2,7 @@
 open IntelliFactory.Build
 
 let bt =
-    BuildTool().PackageId("WebSharper.JQueryUI", "3.0-alpha")
+    BuildTool().PackageId("WebSharper.JQueryUI", "3.0")
         .References(fun r -> [r.Assembly "System.Web"])
     |> fun bt -> bt.WithFramework(bt.Framework.Net40)
 
