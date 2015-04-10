@@ -22,7 +22,7 @@ type AxisConfiguration =
 
 type ToleranceConfiguration =
     | [<Name "intersect">] Intersect
-    | [<Name "Pointer">] Pointer
+    | [<Name "pointer">] Pointer
 
 type SortablePosition =
     {

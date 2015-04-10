@@ -22,7 +22,7 @@ type ButtonIconsConfiguration =
         [<Name "primary">]
         Primary: string
 
-        [<Name "Secondary">]
+        [<Name "secondary">]
         Secondary: string
     }
     [<JavaScript>]
