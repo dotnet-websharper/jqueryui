@@ -34,14 +34,13 @@ include the required JavaScript and Css resources.
 You may override the location of the fetched resources by modifying the `app settings`
 in in your `web.config` file.
 
-There are two configurable values: One for the root folder of the JavaScript files and
-another one for the root folder of the Css files. Here is an example of how to override 
-both settings.
+There are two configurable values: One for the JavaScript file and another one for the
+Css file. Here is an example of how to override both settings.
 
 ```xml
 <appSettings>
-  <add key="IntelliFactory.WebSharper.JQueryUI" value="scripts/jquery-ui" />
-  <add key="IntelliFactory.WebSharper.JQueryUICss" value="css/jquery-ui" />
+  <add key="WebSharper.JQueryUI.Dependencies+JQueryUIJs" value="scripts/jquery-ui.js" />
+  <add key="WebSharper.JQueryUI.Dependencies+JQueryUICss" value="css/jquery-ui.css" />
 </appSettings>
 ```
 
