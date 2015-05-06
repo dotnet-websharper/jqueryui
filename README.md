@@ -39,8 +39,8 @@ Css file. Here is an example of how to override both settings.
 
 ```xml
 <appSettings>
-  <add key="WebSharper.JQueryUI.Dependencies+JQueryUIJs" value="scripts/jquery-ui.js" />
-  <add key="WebSharper.JQueryUI.Dependencies+JQueryUICss" value="css/jquery-ui.css" />
+  <add key="WebSharper.JQueryUI.Dependencies+JQueryUIJs" value="/scripts/jquery-ui.js" />
+  <add key="WebSharper.JQueryUI.Dependencies+JQueryUICss" value="/css/jquery-ui.css" />
 </appSettings>
 ```
 
