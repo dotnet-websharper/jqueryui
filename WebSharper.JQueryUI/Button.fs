@@ -184,7 +184,7 @@ type Button [<JavaScript>]()=
     [<JavaScript>]
     member this.OnClick (f : Events.MouseEvent -> unit) : unit =
         this.element
-        |> Events.OnClick (fun _ ev ->
+        |> OnClick (fun _ ev ->
             // ev.PreventDefault()
             if this.isEnabled then
                 f ev
