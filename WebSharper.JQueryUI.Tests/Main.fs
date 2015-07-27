@@ -329,11 +329,11 @@ module Site =
 
     open WebSharper.Html.Server
 
-    let HomePage =
-        Content.PageContent <| fun ctx ->
-            { Page.Default with
-                Title = Some "WebSharper JQueryUI Tests"
-                Body = [Div [new TestControl()]] }
+    let HomePage ctx =
+        Content.Page(
+            Title = "WebSharper JQueryUI Tests",
+            Body = [Div [new TestControl()]]
+        )
 
     let Main = Sitelet.Content "/" Index HomePage
 
