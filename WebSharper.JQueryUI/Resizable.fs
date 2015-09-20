@@ -19,19 +19,19 @@ open WebSharper.Html.Client
 type ResizablePosition =
     {
         [<Name "left">]
-        Left : int
+        mutable Left : int
 
         [<Name "top">]
-        Top : int
+        mutable Top : int
     }
 
 type ResizableSize =
     {
         [<Name "width">]
-        Width : int
+        mutable Width : int
 
         [<Name "height">]
-        Height : int
+        mutable Height : int
     }
 
 type ResizableEvent =
