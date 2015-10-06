@@ -288,7 +288,12 @@ module internal Client =
         let img = Div [Style "background:url(http://www.look4design.co.uk/l4design/companies/light-iq/image14.jpg);height:100px;width:100px" ]
         let resizable = Resizable.New img
         resizable.OnStart  (fun _ _ -> Log("Started!"))
-        resizable.OnResize (fun _ _ -> Log("Resized!"))
+        resizable.OnResize (fun event ui -> 
+            if ui.Size.Width > 300 then
+                ui.Size.Width <- 300
+            if ui.Size.Height < 200  then
+                ui.Size.Height <- 200
+            Log("Resized!"))
         resizable.OnStop   (fun _ _ -> Log("Stopped!"))
         let drag = Draggable.New (Div [resizable])
         Div [drag]
