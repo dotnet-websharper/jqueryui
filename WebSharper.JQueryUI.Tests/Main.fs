@@ -67,9 +67,7 @@ module internal Client =
         )
         Div [acc2] -< [button]
 
-    let TestAutocomplete () =
-        let conf = new AutocompleteConfiguration()
-        conf.Source <- [|"Apa"; "Beta"; "Zeta" ; "Zebra"|]
+    let RunAutocompleter conf =
         let a = Autocomplete.New(Input [], conf)
         a |> OnBeforeRender (fun _ -> Log "Before Render")
         a |> OnAfterRender ( fun _ -> Log "After Render")
@@ -88,6 +86,32 @@ module internal Client =
             bClose
             bDestroy
         ]
+
+    let TestAutocomplete1 () =
+        let conf = new AutocompleteConfiguration()
+        conf.Source <| Listing [|"Apa"; "Beta"; "Zeta" ; "Zebra"|]
+        RunAutocompleter conf
+
+    let TestAutocomplete2 () =
+        let conf = new AutocompleteConfiguration()
+        let x : array<AutocompleteItem> =
+            [|{Label = "test"; Value = "value"}|]
+        conf.Source <| Items x
+        RunAutocompleter conf
+
+    let TestAutocomplete3 () =
+        let conf = new AutocompleteConfiguration()
+        let completef (_ : AutocompleteRequest, f : array<AutocompleteItem> -> unit) =
+            let x : array<AutocompleteItem> =
+                [|{Label = "test"; Value = "value"}|]
+            f x
+        conf.Source <| Callback completef
+        RunAutocompleter conf
+
+    let TestAutocomplete () =
+        TestAutocomplete1 ()
+        TestAutocomplete2 ()
+        TestAutocomplete3 ()
 
     let TestButton () =
         let b1 = JQueryUI.Button.New ("Click")
@@ -288,7 +312,7 @@ module internal Client =
         let img = Div [Style "background:url(http://www.look4design.co.uk/l4design/companies/light-iq/image14.jpg);height:100px;width:100px" ]
         let resizable = Resizable.New img
         resizable.OnStart  (fun _ _ -> Log("Started!"))
-        resizable.OnResize (fun event ui -> 
+        resizable.OnResize (fun event ui ->
             if ui.Size.Width > 300 then
                 ui.Size.Width <- 300
             if ui.Size.Height < 200  then
@@ -303,7 +327,8 @@ module internal Client =
         let tab =
             [
                 "Accordion", TestAccordion ()
-                "Autocomplete", TestAutocomplete ()
+                "Autocomplete1", TestAutocomplete1 ()
+                "Autocomplete2", TestAutocomplete2 ()
                 "Button", TestButton ()
                 "Datepicker", TestDatepicker ()
                 "Draggable", TestDraggable ()
