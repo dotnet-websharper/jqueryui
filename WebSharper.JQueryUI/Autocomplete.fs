@@ -31,7 +31,23 @@ type AutocompleteItem =
         Value : string
     }
 
+type AutocompleteCallback =
+    AutocompleteRequest * (AutocompleteItem[] -> unit) -> unit
+
+[<JavaScript>]
+type AutocompleteSource =
+    | Listing of array<string>
+    | Items of array<AutocompleteItem>
+    | Url of string
+    | Callback of AutocompleteCallback
+
 type AutocompleteConfiguration[<JavaScript>]() =
+
+    [<DefaultValue>]
+    val mutable source : obj
+
+    [<Direct "this.source=function(x, y) { $scall([x, y]) }">]
+    let setCallback (scall : AutocompleteCallback) = ()
 
     [<Name "appendTo">]
     [<Stub>]
@@ -57,21 +73,13 @@ type AutocompleteConfiguration[<JavaScript>]() =
     [<Stub>]
     member val Position = Unchecked.defaultof<PositionConfiguration> with get, set
 
-    [<Name "source">]
-    [<Stub>]
-    member val Source = Unchecked.defaultof<array<string>> with get, set
-
-    [<Name "source">]
-    [<Stub>]
-    member val SourceItems = Unchecked.defaultof<array<AutocompleteItem>> with get, set
-
-    [<Name "source">]
-    [<Stub>]
-    member val SourceUrl = Unchecked.defaultof<string> with get, set
-
-    [<Name "source">]
-    [<Stub>]
-    member val SourceCallback = Unchecked.defaultof<AutocompleteRequest * (AutocompleteItem[] -> unit) -> unit> with get, set
+    [<JavaScript>]
+    member this.Source (s : AutocompleteSource) =
+        match s with
+            | Listing x -> this.source <- unbox x
+            | Items x -> this.source <- unbox x
+            | Url x -> this.source <- unbox x
+            | Callback x -> setCallback x
 
 module internal AutocompleteInternal =
     [<Inline "jQuery($el).autocomplete($conf)">]
