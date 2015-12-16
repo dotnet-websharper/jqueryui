@@ -8,6 +8,11 @@
     <OutputPath>../build/net40</OutputPath>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">10</MinimumVisualStudioVersion>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <WebSharperProject>Html</WebSharperProject>
+    <WebSharperHtmlDirectory>$(MSBuildThisFileDirectory)..\build\html</WebSharperHtmlDirectory>
+    <StartAction>Program</StartAction>
+    <StartProgram>$([System.Environment]::GetEnvironmentVariable(`WinDir`))\explorer.exe</StartProgram>
+    <StartArguments>$(WebSharperHtmlDirectory)</StartArguments>
   </PropertyGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '11.0'">

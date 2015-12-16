@@ -12,6 +12,7 @@
     <AssemblyName>$(Name)</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">10</MinimumVisualStudioVersion>
+    <WebSharperProject>Library</WebSharperProject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

@@ -108,11 +108,6 @@ module internal Client =
         conf.Source <| Callback completef
         RunAutocompleter conf
 
-    let TestAutocomplete () =
-        TestAutocomplete1 ()
-        TestAutocomplete2 ()
-        TestAutocomplete3 ()
-
     let TestButton () =
         let b1 = JQueryUI.Button.New ("Click")
         b1 |> OnAfterRender(fun _ -> Log "After Render")
@@ -329,6 +324,7 @@ module internal Client =
                 "Accordion", TestAccordion ()
                 "Autocomplete1", TestAutocomplete1 ()
                 "Autocomplete2", TestAutocomplete2 ()
+                "Autocomplete3", TestAutocomplete3 ()
                 "Button", TestButton ()
                 "Datepicker", TestDatepicker ()
                 "Draggable", TestDraggable ()
