@@ -9,7 +9,7 @@ let bt =
         .References(fun r ->
             [
                 r.Assembly "System.Web"
-                r.NuGet("Zafir.Html").ForceFoundVersion().Reference()
+                r.NuGet("Zafir.Html").Latest(true).ForceFoundVersion().Reference()
             ])
 
 let main =
@@ -19,7 +19,10 @@ let main =
 let test =
     bt.Zafir.HtmlWebsite("WebSharper.JQueryUI.Tests")
         .SourcesFromProject()
-        .References(fun r -> [r.Project main])
+        .References(fun r -> [
+                r.Project main
+                r.NuGet("Zafir.Html").Latest(true).ForceFoundVersion().Reference()
+            ])
 
 bt.Solution [
     main
