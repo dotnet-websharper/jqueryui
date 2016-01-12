@@ -89,14 +89,14 @@ module internal Client =
 
     let TestAutocomplete1 () =
         let conf = new AutocompleteConfiguration()
-        conf.Source <| Listing [|"Apa"; "Beta"; "Zeta" ; "Zebra"|]
+        conf.Source <- Listing [|"Apa"; "Beta"; "Zeta" ; "Zebra"|]
         RunAutocompleter conf
 
     let TestAutocomplete2 () =
         let conf = new AutocompleteConfiguration()
         let x : array<AutocompleteItem> =
             [|{Label = "test"; Value = "value"}|]
-        conf.Source <| Items x
+        conf.Source <- Items x
         RunAutocompleter conf
 
     let TestAutocomplete3 () =
@@ -105,7 +105,7 @@ module internal Client =
             let x : array<AutocompleteItem> =
                 [|{Label = "test"; Value = "value"}|]
             f x
-        conf.Source <| Callback completef
+        conf.Source <- Callback completef
         RunAutocompleter conf
 
     let TestButton () =

@@ -74,8 +74,9 @@ type AutocompleteConfiguration[<JavaScript>]() =
     member val Position = Unchecked.defaultof<PositionConfiguration> with get, set
 
     [<JavaScript>]
-    member this.Source (s : AutocompleteSource) =
-        match s with
+    member this.Source
+        with set (s : AutocompleteSource) =
+            match s with
             | Listing x -> this.source <- unbox x
             | Items x -> this.source <- unbox x
             | Url x -> this.source <- unbox x
