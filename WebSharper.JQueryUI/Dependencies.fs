@@ -12,9 +12,12 @@
 module WebSharper.JQueryUI.Dependencies
 
 module R = WebSharper.Core.Resources
+#if ZAFIR
+[<WebSharper.Require(typeof<WebSharper.JQuery.Resources.JQuery>)>]
+#else
 module A = WebSharper.Core.Attributes
-
 [<A.Require(typeof<WebSharper.JQuery.Resources.JQuery>)>]
+#endif
 [<Sealed>]
 type JQueryUIJs() =
     inherit R.BaseResource("//code.jquery.com/ui/1.11.1/jquery-ui.js")
