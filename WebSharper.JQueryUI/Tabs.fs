@@ -191,7 +191,7 @@ type Tabs[<JavaScript>] internal (tabContainer, panelContainer) =
 
     /// Retrieve the number of tabs of the first matched tab pane.
     [<JavaScript>]
-    member this.Length = JQuery.JQuery.Of(tabContainer.Dom).Children().Size()
+    member this.Length = JQuery.JQuery.Of(tabContainer.Dom).Children().Length
 
     /// Add a new tab with the given element and label
     /// inserted at the specified index.
