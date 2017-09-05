@@ -3,13 +3,13 @@ open IntelliFactory.Build
 
 let bt =
     BuildTool().PackageId("WebSharper.JQueryUI")
-        .VersionFrom("WebSharper")
+        .VersionFrom("WebSharper", versionSpec = "(,4.0)")
         .WithFSharpVersion(FSharpVersion.FSharp30)
         .WithFramework(fun fw -> fw.Net40)
         .References(fun r ->
             [
                 r.Assembly "System.Web"
-                r.NuGet("WebSharper.Html").ForceFoundVersion().Reference()
+                r.NuGet("WebSharper.Html").Version("(,4.0)").ForceFoundVersion().Reference()
             ])
 
 let main =
