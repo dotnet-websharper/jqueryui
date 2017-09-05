@@ -9,17 +9,20 @@ let bt =
         .References(fun r ->
             [
                 r.Assembly "System.Web"
-                r.NuGet("WebSharper.Html").ForceFoundVersion().Reference()
+                r.NuGet("WebSharper.Html").Latest(true).ForceFoundVersion().Reference()
             ])
 
 let main =
-    bt.WebSharper.Library("WebSharper.JQueryUI")
+    bt.WebSharper4.Library("WebSharper.JQueryUI")
         .SourcesFromProject()
 
 let test =
-    bt.WebSharper.HtmlWebsite("WebSharper.JQueryUI.Tests")
+    bt.WebSharper4.HtmlWebsite("WebSharper.JQueryUI.Tests")
         .SourcesFromProject()
-        .References(fun r -> [r.Project main])
+        .References(fun r -> [
+                r.Project main
+                r.NuGet("WebSharper.Html").Latest(true).ForceFoundVersion().Reference()
+            ])
 
 bt.Solution [
     main
