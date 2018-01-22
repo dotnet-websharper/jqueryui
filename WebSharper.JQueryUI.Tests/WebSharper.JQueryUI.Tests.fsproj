@@ -1,34 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>082521a5-c421-4bc8-b283-794d19a79f9e</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <Name>WebSharper.JQueryUI.Tests</Name>
-    <OutputPath>../build/net40</OutputPath>
-    <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">10</MinimumVisualStudioVersion>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <WebSharperProject>Html</WebSharperProject>
-    <WebSharperHtmlDirectory>$(MSBuildThisFileDirectory)..\build\html</WebSharperHtmlDirectory>
-    <StartAction>Program</StartAction>
-    <StartProgram>$([System.Environment]::GetEnvironmentVariable(`WinDir`))\explorer.exe</StartProgram>
-    <StartArguments>$(WebSharperHtmlDirectory)</StartArguments>
+    <WebSharperSourceMap>false</WebSharperSourceMap>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-  <Choose>
-    <When Condition="'$(VisualStudioVersion)' == '11.0'">
-      <PropertyGroup Condition="Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')">
-        <FSharpTargetsPath>$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets</FSharpTargetsPath>
-      </PropertyGroup>
-    </When>
-    <Otherwise>
-      <PropertyGroup Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets')">
-        <FSharpTargetsPath>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets</FSharpTargetsPath>
-      </PropertyGroup>
-    </Otherwise>
-  </Choose>
-  <Import Project="$(FSharpTargetsPath)" />
-  <Import Project="../build/net40/$(Name).proj" />
   <ItemGroup>
     <Compile Include="Main.fs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../WebSharper.JQueryUI\WebSharper.JQueryUI.fsproj" />
+  </ItemGroup>
+  <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
