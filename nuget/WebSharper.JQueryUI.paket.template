@@ -14,5 +14,5 @@ files
     ../WebSharper.JQueryUI/bin/Release/netstandard2.0/WebSharper.JQueryUI.dll ==> lib/netstandard2.0
     ../WebSharper.JQueryUI/bin/Release/netstandard2.0/WebSharper.JQueryUI.xml ==> lib/netstandard2.0
 dependencies
-        WebSharper.Html LOCKEDVERSION
-        WebSharper LOCKEDVERSION
+        WebSharper.Html ~> 4.2.0
+        WebSharper ~> 4.2.0
