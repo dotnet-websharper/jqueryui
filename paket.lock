@@ -215,6 +215,6 @@ NUGET
       Newtonsoft.Json
 GITHUB
   remote: intellifactory/websharper
-    tools/WebSharper.Fake.cmd (20fd9badedefbb2d68bc6c0fe15644527f08b062)
-    tools/WebSharper.Fake.fsx (20fd9badedefbb2d68bc6c0fe15644527f08b062)
-    tools/WebSharper.Fake.sh (20fd9badedefbb2d68bc6c0fe15644527f08b062)
+    tools/WebSharper.Fake.cmd (f4cbdc4b8c4be3250b25b23d65e6a0c5ab199650)
+    tools/WebSharper.Fake.fsx (f4cbdc4b8c4be3250b25b23d65e6a0c5ab199650)
+    tools/WebSharper.Fake.sh (f4cbdc4b8c4be3250b25b23d65e6a0c5ab199650)
