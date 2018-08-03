@@ -123,12 +123,69 @@ module internal Client =
         )
         Div [b1; b2]
 
-    let TestDatepicker () =
+    let TestDatepicker1 () =
         let conf = new DatepickerConfiguration()
         let dp = Datepicker.New(Input [], conf)
         dp |> OnAfterRender(fun _ -> Log "Dp After Render")
         dp |> OnBeforeRender(fun _ -> Log "Dp Before Render")
         Div [dp]
+
+    let TestDatepicker2 () =
+        let conf = new DatepickerConfiguration(AutoSize = true)
+        let dp = Datepicker.New(Input [],conf)
+
+        dp.OnClose(fun dt elem ->
+            Log "Dp2 OnClose"
+            Console.Log dt
+            Console.Log elem
+        )
+        dp.OnSelect(fun dt elem ->
+            Log "Dp2 OnSelect"
+            Console.Log dt
+            Console.Log elem
+        )
+
+        dp
+        |> OnAfterRender (fun picker ->
+            picker.Option("changeYear", true)
+        )
+        dp |> OnAfterRender(fun picker -> 
+            Log "Dp2 After Render"
+            Log (picker.Option("changeYear").ToString())
+            Log (picker.Option("autoSize").ToString())
+            Console.Log <| picker.Option()
+        )
+        dp |> OnBeforeRender(fun _ -> Log "Dp2 Before Render")
+        Div [dp]
+
+    let TestDatepicker3 () =
+        let conf = 
+            new DatepickerConfiguration(
+                AutoSize = true,
+                OnClose = (
+                    fun dt ->
+                        Log "Dp3 OnClose"
+                        Console.Log dt),
+                OnSelect = (
+                    fun dt ->
+                        Log "Dp3 OnSelect"
+                        Console.Log dt)
+            )
+        let dp = Datepicker.New(Input [],conf)
+
+        dp
+        |> OnAfterRender (fun picker ->
+            picker.Option("changeYear", true)
+        )
+        dp |> OnAfterRender(fun picker -> 
+            Log "Dp3 After Render"
+            Log (picker.Option("changeYear").ToString())
+            Log (picker.Option("autoSize").ToString())
+            Console.Log <| picker.Option()
+        )
+        dp |> OnBeforeRender(fun _ -> Log "Dp3 Before Render")
+        Div [dp]
+
 
     let TestDraggable () =
         let d =
@@ -326,7 +383,9 @@ module internal Client =
                 "Autocomplete2", TestAutocomplete2 ()
                 "Autocomplete3", TestAutocomplete3 ()
                 "Button", TestButton ()
-                "Datepicker", TestDatepicker ()
+                "Datepicker1", TestDatepicker1 ()
+                "Datepicker2", TestDatepicker2 ()
+                "Datepicker3", TestDatepicker3 ()
                 "Draggable", TestDraggable ()
                 "Dialog", TestDialog ()
                 "Progressbar", TestProgressbar ()

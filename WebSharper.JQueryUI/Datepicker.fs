@@ -189,7 +189,11 @@ and DatepickerConfiguration[<JavaScript>]() =
 
     [<Name "onClose">]
     [<Stub>]
-    member val OnClose = Unchecked.defaultof<string * Datepicker -> unit> with get, set
+    member val OnClose = Unchecked.defaultof<string -> unit> with get, set
+
+    [<Name "onSelect">]
+    [<Stub>]
+    member val OnSelect = Unchecked.defaultof<string -> unit> with get, set
 
     [<Name "prevText">]
     [<Stub>]
@@ -306,6 +310,8 @@ and
     [<JavaScript>]
     [<Name "New4">]
     static member New (): Datepicker =
+        //WARNING! Datepicker behaves on a different fashion when 
+        //attached to a div, compared to an input (i.e. hide/show methods)
         Datepicker.New(Div [], new DatepickerConfiguration())
 
 
@@ -333,7 +339,7 @@ and
     member this.Option (name: string) = X<obj>
 
     /// Gets all options.
-    [<Inline "jQuery($this.element.Dom).datepicker('option')">]
+    [<Inline "jQuery($this.element.Dom).datepicker('option','all')">]
     member this.Option () = X<DatepickerConfiguration>
 
     /// Sets one or more options.
@@ -395,25 +401,25 @@ and
     (****************************************************************
     * Events
     *****************************************************************)
-    [<Inline "jQuery($this.element.Dom).datepicker({beforeShow: function (x,y) {($f(x))(y);}})">]
+    [<Inline "jQuery($this.element.Dom).datepicker('option',{beforeShow: function (x,y) {($f(x))(y);}})">]
     member private this.onBeforeShow(f : string -> Datepicker -> unit) = ()
 
-    [<Inline "jQuery($this.element.Dom).datepicker({beforeShowDay: function (x,y) {$f(x);}})">]
+    [<Inline "jQuery($this.element.Dom).datepicker('option',{beforeShowDay: function (x,y) {$f(x);}})">]
     member private this.onBeforeShowDay(f : Date -> unit) = ()
 
-    [<Inline "jQuery($this.element.Dom).datepicker({beforeShowDay: function (x,y,z) {(($f(x))(y))(z);}})">]
+    [<Inline "jQuery($this.element.Dom).datepicker('option',{onChangeMonthYear: function (x,y,z) {(($f(x))(y))(z);}})">]
     member private this.onChangeMonthYear(f : int -> int -> Datepicker -> unit) = ()
 
-    [<Inline "jQuery($this.element.Dom).datepicker({onSelect: function (x,y) {($f(x))(y);}})">]
-    member private this.onSelect(f : string -> Datepicker -> unit) = ()
+    [<Inline "jQuery($this.element.Dom).datepicker('option',{onSelect: function (x,y) {($f(x))(y);}})">]
+    member private this.onSelect(f : Date -> Datepicker -> unit) = ()
 
-    [<Inline "jQuery($this.element.Dom).datepicker({onClose: function (x,y) {($f(x))(y);}})">]
-    member private this.onClose(f : string -> Datepicker -> unit) = ()
+    [<Inline "jQuery($this.element.Dom).datepicker('option',{onClose: function (x,y) {($f(x))(y);}})">]
+    member private this.onClose(f : Date -> Datepicker -> unit) = ()
 
     [<JavaScript>]
     member this.OnBeforeShow(f: Date -> Datepicker -> unit) : unit =
         this
-        |> OnBeforeRender(fun _ ->
+        |> OnAfterRender(fun _ ->
             this.onBeforeShow <| fun _ d ->
                 f (DatepickerInternal.getDate this.element.Dom) d
         )
@@ -422,19 +428,19 @@ and
     [<JavaScript>]
     member this.OnBeforeShowDay(f: Date -> unit) : unit =
         this
-        |> OnBeforeRender(fun _ -> this.onBeforeShowDay f)
+        |> OnAfterRender(fun _ -> this.onBeforeShowDay f)
         |> ignore
 
     [<JavaScript>]
     member this.OnChangeMonthYear(f: int -> int -> Datepicker -> unit) : unit =
         this
-        |> OnBeforeRender(fun _ -> this.onChangeMonthYear f)
+        |> OnAfterRender(fun _ -> this.onChangeMonthYear f)
         |> ignore
 
     [<JavaScript>]
     member this.OnClose(f: Date -> Datepicker -> unit) : unit =
         this
-        |> OnBeforeRender(fun _ ->
+        |> OnAfterRender(fun _ ->
             this.onClose <| fun _ d ->
                 f (DatepickerInternal.getDate this.element.Dom) d
         )
@@ -442,10 +448,14 @@ and
 
     // Adding an event and delayin it if the Pagelet is not yet rendered.
     /// Triggered when a date is selected.
+    /// Changelog: these events are supposed to append behavior to the
+    ///   existing config set (see the use of 'option' at each handler),
+    ///   instead of overwriting them. To do so, they must be called after
+    ///   the Pagelet has been rendered.
     [<JavaScript>]
     member this.OnSelect(f: Date -> Datepicker -> unit) : unit =
         this
-        |> OnBeforeRender(fun _ ->
+        |> OnAfterRender(fun _ ->
             this.onSelect <| fun _ d ->
                 f (DatepickerInternal.getDate this.element.Dom) d
         )
