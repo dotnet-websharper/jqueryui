@@ -11,10 +11,9 @@ description
 tags
     Web JavaScript F# C#
 files
-    ../WebSharper.JQueryUI/bin/Release/net461/WebSharper.JQueryUI.dll ==> lib/net461
-    ../WebSharper.JQueryUI/bin/Release/net461/WebSharper.JQueryUI.xml ==> lib/net461
     ../WebSharper.JQueryUI/bin/Release/netstandard2.0/WebSharper.JQueryUI.dll ==> lib/netstandard2.0
     ../WebSharper.JQueryUI/bin/Release/netstandard2.0/WebSharper.JQueryUI.xml ==> lib/netstandard2.0
 dependencies
-        WebSharper.Html ~> LOCKEDVERSION:[3]
-        WebSharper ~> LOCKEDVERSION:[3]
+    framework: netstandard2.0
+            WebSharper.Html ~> LOCKEDVERSION:[3]
+            WebSharper ~> LOCKEDVERSION:[3]
